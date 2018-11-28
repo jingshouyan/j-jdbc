@@ -28,10 +28,6 @@ public class TableInfo {
 
     private List<ColumnInfo> columns = new ArrayList<>();
 
-    private Set<ColumnInfo> encryptColumns = new HashSet<>();
-
-    private Map<Field, ColumnInfo> fieldMap = new HashMap<>();
-
     private Map<String, ColumnInfo> fieldNameMap = new HashMap<>();
 
     private Map<String, ColumnInfo> lowerCaseColumnMap = new HashMap<>();
@@ -79,7 +75,6 @@ public class TableInfo {
      */
     private void addColumnInfo(ColumnInfo column) {
         columns.add(column);
-        fieldMap.put(column.getField(), column);
         fieldNameMap.put(column.getFieldName(), column);
         lowerCaseColumnMap.put(column.getColumnName().toLowerCase(), column);
         if (column.isKey() && key == null) {
