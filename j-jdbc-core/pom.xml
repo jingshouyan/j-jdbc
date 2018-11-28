@@ -6,6 +6,7 @@
         <artifactId>j-jdbc-parent</artifactId>
         <groupId>com.github.jingshouyan</groupId>
         <version>0.1.0</version>
+        <relativePath>../j-jdbc-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
