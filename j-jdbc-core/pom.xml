@@ -33,6 +33,10 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.jingshouyan</groupId>
+            <artifactId>j-jdbc-comm</artifactId>
+        </dependency>
 
     </dependencies>
 

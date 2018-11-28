@@ -18,10 +18,16 @@
     <properties>
         <lombok.version>1.16.18</lombok.version>
         <guava.version>18.0</guava.version>
+        <j-jdbc.verion>0.1.0</j-jdbc.verion>
     </properties>
 
     <dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>com.github.jingshouyan</groupId>
+            <artifactId>j-jdbc-comm</artifactId>
+            <version>${j-jdbc.verion}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
