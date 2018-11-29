@@ -1,8 +1,10 @@
 package com.github.jingshouyan.jdbc.core.util.table;
 
+import com.github.jingshouyan.jdbc.comm.bean.BaseBean;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
+import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorUtil;
 import com.github.jingshouyan.jdbc.core.util.aes.AesUtil;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.base.Preconditions;
@@ -91,5 +93,32 @@ public class TableUtil {
         return value;
     }
 
+    @SneakyThrows
+    public static void genKey(Object bean){
+        ColumnInfo columnInfo = tableInfo(bean.getClass()).getKey();
+        if(null == columnInfo || !columnInfo.isAutoGen()){
+            return;
+        }
+        Object value = fieldValue(bean,columnInfo.getFieldName());
+        if(isEmpty(value)){
+            Class<?> c = columnInfo.getField().getType();
+            long l = KeyGeneratorUtil
+                    .getKeyGenerator()
+                    .generateKey(bean.getClass().getSimpleName());
 
+            if(c == Long.class || c == long.class){
+                columnInfo.getField().set(bean,l);
+            } else if(c == String.class){
+                String v = String.valueOf(l);
+                if(bean instanceof BaseBean){
+                    v = ((BaseBean) bean).idPrefix() + v;
+                }
+                columnInfo.getField().set(bean,v);
+            }
+        }
+    }
+
+    public static boolean isEmpty(Object obj){
+        return null == obj;
+    }
 }

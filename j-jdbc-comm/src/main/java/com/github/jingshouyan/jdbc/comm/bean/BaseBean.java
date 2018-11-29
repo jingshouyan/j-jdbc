@@ -25,6 +25,10 @@ public abstract class BaseBean implements Serializable {
     @Column(order = 1003,comment = "删除时间")
     private Long deletedAt;
 
+    public String idPrefix(){
+        return "";
+    }
+
 
     public void forCreate() {
         long now = System.currentTimeMillis();
