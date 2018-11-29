@@ -56,7 +56,7 @@ public interface BaseDao<T> {
      * @param page     页
      * @return 页信息及数据
      */
-    Page<T> query(List<Condition> conditions, Page<T> page);
+    Page<T> queryPage(List<Condition> conditions, Page<T> page);
 
     /**
      * 条件计数

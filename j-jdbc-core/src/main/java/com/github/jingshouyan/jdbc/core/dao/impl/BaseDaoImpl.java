@@ -78,7 +78,7 @@ public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
 
 
     @Override
-    public Page<T> query(List<Condition> conditions, Page<T> page) {
+    public Page<T> queryPage(List<Condition> conditions, Page<T> page) {
         int count = count(conditions);
         page.totalCount(count);
         List<T> ts = queryLimit(conditions,page);
@@ -257,7 +257,7 @@ public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
      * @param t 对象
      */
     private void genKey(T t) {
-//        Bean4DbUtil.genKey(t,clazz);
+        TableUtil.genKey(t);
     }
 
 }

@@ -74,7 +74,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         Map<String, Object> param = Maps.newHashMap();
         for (String key : valueMap.keySet()) {
             // 空值不插入
-            if (isEmtry(valueMap.get(key))) {
+            if (isEmpty(valueMap.get(key))) {
                 continue;
             }
             //拼装keys字符串
@@ -127,7 +127,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         for (String key : beanMap.keySet()) {
             Object value = beanMap.get(key);
             // 空 不更新
-            if (isEmtry(value)) {
+            if (isEmpty(value)) {
                 continue;
             }
             //主键不更新
@@ -266,8 +266,8 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.tableInfo(clazz).getFieldNameMap().containsKey(fieldName);
     }
 
-    protected boolean isEmtry(Object obj) {
-        return obj == null;
+    protected boolean isEmpty(Object obj) {
+        return TableUtil.isEmpty(obj);
     }
 
 }

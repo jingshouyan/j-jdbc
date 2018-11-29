@@ -13,5 +13,7 @@
         <module>j-jdbc-parent</module>
         <module>j-jdbc-core</module>
         <module>j-jdbc-comm</module>
+        <module>j-jdbc-starter</module>
+        <module>j-jdbc-test</module>
     </modules>
 </project>
