@@ -148,4 +148,17 @@ public interface BaseDao<T> {
      * @return 影响行数
      */
     int dropTable();
+
+    /**
+     * 表是否存在
+     *
+     * @return 表是否存在
+     */
+    boolean existTable();
+
+    /**
+     *  更新表
+     * @return 添加的行数
+     */
+    int updateTable();
 }

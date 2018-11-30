@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
+import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
@@ -68,4 +69,12 @@ public interface SqlGenerator<T> {
      * @return sql语句和参数
      */
     SqlPrepared dropTableSql();
+
+    /**
+     *  查询空行
+     * @return SqlPrepared
+     */
+    SqlPrepared selectNull();
+
+    SqlPrepared addColumn(ColumnInfo columnInfo);
 }

@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.core.dao.impl;
 
 import com.github.jingshouyan.jdbc.comm.bean.BaseBean;
+import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
@@ -13,16 +14,21 @@ import com.github.jingshouyan.jdbc.core.sql.generator.factory.SqlGeneratorFactor
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
@@ -240,6 +246,49 @@ public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
     public int dropTable() {
         SqlPrepared sqlPrepared = sqlGenerator().dropTableSql();
         return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+    }
+
+    @Override
+    public boolean existTable(){
+        try {
+            SqlPrepared sqlPrepared = sqlGenerator().selectNull();
+            template.queryForRowSet(sqlPrepared.getSql(),sqlPrepared.getParams());
+            return true;
+        }catch (BadSqlGrammarException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public int updateTable(){
+        SqlPrepared sqlPrepared = sqlGenerator().selectNull();
+        SqlRowSet rowSet = template.queryForRowSet(sqlPrepared.getSql(),sqlPrepared.getParams());
+        SqlRowSetMetaData md = rowSet.getMetaData();
+        Set<String> cn = Sets.newHashSet();
+        for(String columnName : md.getColumnNames()){
+            System.out.println(columnName);
+            cn.add(columnName.toLowerCase());
+        }
+        Map<String,ColumnInfo> map = TableUtil.tableInfo(clazz)
+                .getLowerCaseColumnMap();
+        List<ColumnInfo> columnInfos = Lists.newArrayList();
+        for (String key : map.keySet()){
+            if(!cn.contains(key)){
+                columnInfos.add(map.get(key));
+            }
+        }
+
+        if(columnInfos.isEmpty()) {
+            return 0;
+        }
+
+        for (ColumnInfo columnInfo : columnInfos) {
+            SqlPrepared sqlPrepared1 = sqlGenerator().addColumn(columnInfo);
+            return template.update(sqlPrepared1.getSql(), sqlPrepared1.getParams());
+        }
+
+        return columnInfos.size();
     }
 
     private Object fieldValue(T t,String fieldName){

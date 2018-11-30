@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
+import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.OrderBy;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
@@ -161,7 +162,19 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return sqlPrepared;
     }
 
+    @Override
+    public SqlPrepared selectNull(){
+        SqlPrepared sqlPrepared = new SqlPrepared();
+        String sql = "SELECT * FROM " + tableName() + " WHERE 1 = 2";
+        sqlPrepared.setSql(sql);
+        sqlPrepared.setParams(Maps.newHashMap());
+        return sqlPrepared;
+    }
 
+    @Override
+    public SqlPrepared addColumn(ColumnInfo columnInfo) {
+        throw new UnsupportedOperationException("not support yet.");
+    }
 
     protected String orderBy(List<OrderBy> orderBies) {
         if (null == orderBies || orderBies.isEmpty()) {

@@ -81,6 +81,14 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         return sqlPrepared;
     }
 
+    @Override
+    public SqlPrepared addColumn(ColumnInfo columnInfo) {
+        SqlPrepared sqlPrepared = new SqlPrepared();
+        String sql = "ALTER TABLE `" + tableName() + "` ADD "+ columnString(columnInfo) +";";
+        sqlPrepared.setSql(sql);
+        return sqlPrepared;
+    }
+
     protected String columnString(@NonNull ColumnInfo column) {
         String str;
         Class clazz = column.getField().getType();
