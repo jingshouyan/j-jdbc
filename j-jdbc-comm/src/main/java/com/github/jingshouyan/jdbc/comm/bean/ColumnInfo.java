@@ -28,6 +28,7 @@ public class ColumnInfo {
     private boolean key;
     private boolean autoGen;
     private boolean index;
+    private String defaultData;
     private String comment;
     private int order;
 
@@ -61,6 +62,9 @@ public class ColumnInfo {
             encryptType = column.encryptType();
             encryptKey = column.encryptKey();
             index = column.index();
+            if(!"".equals(column.defaultData())){
+                defaultData = column.defaultData();
+            }
             comment = column.comment();
             order = column.order();
         }

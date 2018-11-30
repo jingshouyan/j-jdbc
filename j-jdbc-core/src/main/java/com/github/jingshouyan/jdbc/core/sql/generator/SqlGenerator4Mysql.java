@@ -84,7 +84,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     @Override
     public SqlPrepared addColumn(ColumnInfo columnInfo) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "ALTER TABLE `" + tableName() + "` ADD "+ columnString(columnInfo) +";";
+        String sql = "ALTER TABLE `" + tableName() + "` ADD "+ columnString(columnInfo) + ";";
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
@@ -94,34 +94,40 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         Class clazz = column.getField().getType();
         switch (clazz.getSimpleName().toLowerCase()) {
             case "byte":
-                str = "tinyint";
+                str = "TINYINT";
                 break;
             case "short":
-                str = "smallint";
+                str = "SMALLINT";
                 break;
             case "int":
             case "integer":
-                str = "int";
+                str = "INT";
                 break;
             case "long":
-                str = "bigint";
+                str = "BIGINT";
                 break;
             case "boolean":
-                str = "tinyint";
+                str = "TINYINT";
                 break;
             case "float":
             case "double":
-                str = "double";
+                str = "DOUBLE";
                 break;
             default:
                 if (column.getColumnLength() < Constant.VARCHAR_MAX_LENGTH) {
-                    str = "varchar(" + column.getColumnLength() + ")";
+                    str = "VARCHAR(" + column.getColumnLength() + ")";
                 } else {
-                    str = "text";
+                    str = "TEXT";
                 }
                 break;
         }
-        str = "`" + column.getColumnName() + "` " + str +" COMMENT '"+column.getComment()+"'";
+        str = "`" + column.getColumnName() + "` " + str;
+        if(null != column.getDefaultData()){
+            str += " DEFAULT '"+column.getDefaultData()+"'";
+        }
+        if(null != column.getComment()){
+            str += " COMMENT '" + column.getComment() +"'";
+        }
         return str;
     }
 

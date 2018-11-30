@@ -39,7 +39,9 @@ public class DbTest {
         userBean.setName("张三");
         userBean.setAge(30);
         userBean.setTags(Lists.newArrayList("a","b"));
+        userBean.setNickname("alkaksdjflk");
         userDao.insert(userBean);
+
         log.info(userBean.toString());
         UserBean userBean1 = userDao.find(userBean.getId()).get();
         log.info(userBean1.toString());

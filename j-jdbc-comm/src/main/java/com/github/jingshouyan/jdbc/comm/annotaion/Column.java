@@ -46,6 +46,11 @@ public @interface Column {
     boolean index() default false;
 
     /**
+     * @return 默认值
+     */
+    String defaultData() default "";
+
+    /**
      * @return 备注
      */
     String comment() default "";
