@@ -27,6 +27,10 @@ public class UserBean extends BaseBean {
     @Column(encryptType = EncryptType.FIXED,encryptKey = "abcd",json = true)
     private List<String> tags;
 
+    @Column("NICK_NAME")
+    private String nickname;
+
+
     @Override
     public String idPrefix() {
         return "U";

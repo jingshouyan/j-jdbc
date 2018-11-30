@@ -71,15 +71,24 @@ public class JdbcAutoConfiguration implements ApplicationRunner {
     }
 
     private void createTable(BaseDao dao){
-        dao.createTable();
+        if(!dao.existTable()) {
+            dao.createTable();
+        }
     }
 
     private void dropCreateTable(BaseDao dao){
-        dao.dropTable();
+        if(dao.existTable()){
+            dao.dropTable();
+        }
         dao.createTable();
     }
 
     private void updateTable(BaseDao dao){
-        log.warn("update table is not support yet.");
+        if(dao.existTable()){
+            dao.updateTable();
+        }else {
+            dao.createTable();
+        }
+
     }
 }

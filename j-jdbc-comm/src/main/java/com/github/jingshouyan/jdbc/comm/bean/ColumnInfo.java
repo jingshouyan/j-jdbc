@@ -41,7 +41,7 @@ public class ColumnInfo {
         json = false;
         encrypt = false;
         encryptType = EncryptType.NONE;
-        encryptKey = Constant.COLUMN_ENCRYPT_KEY_DEFAULT;
+        encryptKey = "";
         key = false;
         autoGen = false;
         index = false;
