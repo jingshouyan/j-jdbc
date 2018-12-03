@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.jingshouyan</groupId>
-            <artifactId>j-jdbc-comm</artifactId>
+            <artifactId>j-jdbc-common</artifactId>
         </dependency>
 
     </dependencies>
