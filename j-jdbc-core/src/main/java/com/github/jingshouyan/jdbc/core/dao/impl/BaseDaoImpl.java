@@ -266,7 +266,6 @@ public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
         SqlRowSetMetaData md = rowSet.getMetaData();
         Set<String> cn = Sets.newHashSet();
         for(String columnName : md.getColumnNames()){
-            System.out.println(columnName);
             cn.add(columnName.toLowerCase());
         }
         Map<String,ColumnInfo> map = TableUtil.tableInfo(clazz)
