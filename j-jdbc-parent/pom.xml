@@ -17,7 +17,9 @@
     </parent>
 
     <properties>
+        <java.version>1.8</java.version>
         <lombok.version>1.16.18</lombok.version>
+        <lombok-maven-plugin.version>1.16.18.0</lombok-maven-plugin.version>
         <guava.version>18.0</guava.version>
         <j-jdbc.verion>0.1.0</j-jdbc.verion>
     </properties>
@@ -52,5 +54,34 @@
         </dependency>
     </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>${lombok-maven-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- 忽略测试 -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+        <defaultGoal>compile</defaultGoal>
+
+    </build>
     
 </project>
