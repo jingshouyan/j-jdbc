@@ -255,7 +255,6 @@ public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
             template.queryForRowSet(sqlPrepared.getSql(),sqlPrepared.getParams());
             return true;
         }catch (BadSqlGrammarException e){
-            e.printStackTrace();
         }
         return false;
     }
