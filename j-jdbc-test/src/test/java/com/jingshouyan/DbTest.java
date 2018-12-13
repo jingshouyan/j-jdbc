@@ -56,27 +56,6 @@ public class DbTest {
 
     }
 
-    @Test
-    public void rowSet() throws Exception{
-        SqlRowSet rowSet = userDao.test();
-        SqlRowSetMetaData md = rowSet.getMetaData();
-        int count  = md.getColumnCount();
-        Set<String> cn = Sets.newHashSet();
-        for(String columnName : md.getColumnNames()){
-            System.out.println(columnName);
-            cn.add(columnName.toLowerCase());
-        }
-        Map<String,ColumnInfo> map = TableUtil.tableInfo(UserBean.class)
-                .getLowerCaseColumnMap();
-        List<ColumnInfo> columnInfos = Lists.newArrayList();
-        for (String key : map.keySet()){
-            if(!cn.contains(key)){
-                columnInfos.add(map.get(key));
-            }
-        }
-        rowSet.getMetaData().getColumnCount();
-        System.out.println(rowSet);
-    }
 
     @Test
     public void exist(){
