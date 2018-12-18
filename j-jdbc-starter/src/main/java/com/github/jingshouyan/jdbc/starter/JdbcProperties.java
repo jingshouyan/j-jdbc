@@ -12,4 +12,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class JdbcProperties {
 
     private int tableInit = 0;
+    private boolean showSql = true;
 }
