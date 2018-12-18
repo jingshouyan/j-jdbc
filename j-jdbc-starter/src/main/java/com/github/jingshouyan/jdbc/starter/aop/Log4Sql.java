@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.starter.aop;
 
 
+import com.github.jingshouyan.jdbc.starter.JdbcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -8,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.swing.tree.RowMapper;
 import java.util.List;
 
@@ -19,7 +21,8 @@ import java.util.List;
 @Slf4j(topic = "J-JDBC")
 public class Log4Sql {
 
-    private static boolean showSql = true;
+    @Resource
+    private JdbcProperties jdbcProperties;
 
     @Pointcut("bean(*JdbcTemplate)")
     public void aspect() {
@@ -27,7 +30,7 @@ public class Log4Sql {
 
     @Around("aspect()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        if(!showSql){
+        if(!jdbcProperties.isShowSql()){
             return joinPoint.proceed();
         }
         long start = System.currentTimeMillis();
