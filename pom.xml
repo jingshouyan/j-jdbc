@@ -15,5 +15,6 @@
         <module>j-jdbc-common</module>
         <module>j-jdbc-starter</module>
         <module>j-jdbc-test</module>
+        <module>j-jdbc-zipkin-starter</module>
     </modules>
 </project>

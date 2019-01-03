@@ -42,6 +42,11 @@
             <version>${j-jdbc.verion}</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jingshouyan</groupId>
+            <artifactId>j-jdbc-zipkin-starter</artifactId>
+            <version>${j-jdbc.verion}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
