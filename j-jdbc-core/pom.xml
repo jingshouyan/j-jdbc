@@ -35,7 +35,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.jingshouyan</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>j-jdbc-common</artifactId>
         </dependency>
 
