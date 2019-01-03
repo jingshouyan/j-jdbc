@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.jingshouyan</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>j-jdbc-core</artifactId>
         </dependency>
         <dependency>
