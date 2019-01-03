@@ -51,8 +51,7 @@ public class Log4Sql {
             } else if(result instanceof Number) {
                 fetch = ((Number) result).longValue();
             }
-            log.info("sql execution end. use time : {}ms, fetch : {}", (end - start), fetch);
-            log.info("sql execution end. result : {} ", result);
+            log.info("sql execution end. use time : {}ms, fetch : {}, result: {}", (end - start), fetch, result);
             return result;
         } catch (Throwable e) {
             long end = System.currentTimeMillis();
