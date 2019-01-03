@@ -48,11 +48,8 @@ public class Log4Sql {
             long fetch = 0;
             if (result instanceof List) {
                 fetch = ((List) result).size();
-            } else {
-                try {
-                    fetch = Long.valueOf(String.valueOf(result));
-                } catch (Exception e) {
-                }
+            } else if(result instanceof Number) {
+                fetch = ((Number) result).longValue();
             }
             log.info("sql execution end. use time : {}ms, fetch : {}", (end - start), fetch);
             log.info("sql execution end. result : {} ", result);
