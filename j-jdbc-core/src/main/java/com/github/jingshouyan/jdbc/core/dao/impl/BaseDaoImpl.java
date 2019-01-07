@@ -1,6 +1,6 @@
 package com.github.jingshouyan.jdbc.core.dao.impl;
 
-import com.github.jingshouyan.jdbc.comm.bean.BaseBean;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
  * @author jingshouyan
  * 11/27/18 3:22 PM
  */
-public abstract class BaseDaoImpl<T extends BaseBean> implements BaseDao<T> {
+public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     private Class<T> clazz;
     private RowMapper<T> rowMapper;
 

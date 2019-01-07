@@ -1,6 +1,6 @@
 package com.github.jingshouyan.jdbc.core.util.table;
 
-import com.github.jingshouyan.jdbc.comm.bean.BaseBean;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
@@ -110,8 +110,8 @@ public class TableUtil {
                 columnInfo.getField().set(bean,l);
             } else if(c == String.class){
                 String v = String.valueOf(l);
-                if(bean instanceof BaseBean){
-                    v = ((BaseBean) bean).idPrefix() + v;
+                if(bean instanceof BaseDO){
+                    v = ((BaseDO) bean).idPrefix() + v + ((BaseDO) bean).idSubfix();
                 }
                 columnInfo.getField().set(bean,v);
             }

@@ -1,7 +1,7 @@
 package com.github.jingshouyan.jdbc.starter.keygen;
 
 import com.github.jingshouyan.jdbc.core.keygen.KeyGenerator;
-import com.github.jingshouyan.jdbc.starter.bean.IdBean;
+import com.github.jingshouyan.jdbc.starter.bean.IdDO;
 import com.github.jingshouyan.jdbc.starter.dao.IdDao;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +31,15 @@ public class DbKeyGenerator implements KeyGenerator {
         synchronized (type.intern()){
             Long id = MAP.get(type);
             if(null == id){
-                Optional<IdBean> idBeanOptional = idDao.find(type);
+                Optional<IdDO> idBeanOptional = idDao.find(type);
                 if(idBeanOptional.isPresent()){
-                    IdBean idBean = idBeanOptional.get();
+                    IdDO idBean = idBeanOptional.get();
                     id = idBean.getSeed();
                     idBean.setSeed(id + STEP*2);
                     idDao.update(idBean);
                 }else{
                     id = INIT_ID;
-                    IdBean idBean = new IdBean();
+                    IdDO idBean = new IdDO();
                     idBean.setIdType(type);
                     idBean.setSeed(id + STEP*2);
                     idDao.insert(idBean);
@@ -48,7 +48,7 @@ public class DbKeyGenerator implements KeyGenerator {
             id++;
             MAP.put(type,id);
             if(id % STEP == 0){
-                IdBean idBean = new IdBean();
+                IdDO idBean = new IdDO();
                 idBean.setIdType(type);
                 idBean.setSeed(id + STEP*2);
                 idDao.update(idBean);
