@@ -29,27 +29,24 @@ public class DbKeyGenerator implements KeyGenerator {
 
     @Override
     public long generateKey(String type) {
-        LongAdder longAdder = MAP.get(type);
-        if(null == longAdder){
-            synchronized (type.intern()) {
-                Optional<IdDO> idBeanOptional = idDao.find(type);
-                if (idBeanOptional.isPresent()) {
-                    IdDO idBean = idBeanOptional.get();
-                    longAdder = new LongAdder();
-                    longAdder.add(idBean.getSeed());
-                    idBean.setSeed(newSeed(longAdder));
-                    idDao.update(idBean);
-                } else {
-                    longAdder = new LongAdder();
-                    longAdder.add(INIT_ID);
-                    IdDO idBean = new IdDO();
-                    idBean.setIdType(type);
-                    idBean.setSeed(newSeed(longAdder));
-                    idDao.insert(idBean);
-                }
-                MAP.put(type,longAdder);
+        LongAdder longAdder = MAP.computeIfAbsent(type, idType -> {
+            LongAdder ladd = new LongAdder();
+            Optional<IdDO> idBeanOptional = idDao.find(idType);
+            if (idBeanOptional.isPresent()) {
+                IdDO idBean = idBeanOptional.get();
+                ladd.add(idBean.getSeed());
+                idBean.setSeed(newSeed(ladd));
+                idDao.update(idBean);
+            } else {
+                ladd.add(INIT_ID);
+                IdDO idBean = new IdDO();
+                idBean.setIdType(idType);
+                idBean.setSeed(newSeed(ladd));
+                idDao.insert(idBean);
             }
-        }
+            return ladd;
+        });
+
         longAdder.increment();
 
         if(longAdder.longValue() % STEP == 0){
