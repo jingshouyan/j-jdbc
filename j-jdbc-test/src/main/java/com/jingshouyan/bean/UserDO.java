@@ -2,7 +2,7 @@ package com.jingshouyan.bean;
 
 import com.github.jingshouyan.jdbc.comm.annotaion.Column;
 import com.github.jingshouyan.jdbc.comm.annotaion.Key;
-import com.github.jingshouyan.jdbc.comm.bean.BaseBean;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.List;
  * 11/29/18 5:20 PM
  */
 @Getter@Setter@ToString
-public class UserBean extends BaseBean {
+public class UserDO extends BaseDO {
     @Key
     private String id;
 

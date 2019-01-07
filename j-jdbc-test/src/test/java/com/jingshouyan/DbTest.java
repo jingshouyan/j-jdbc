@@ -1,25 +1,18 @@
 package com.jingshouyan;
 
-import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
-import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.jingshouyan.bean.UserBean;
+import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author jingshouyan
@@ -35,7 +28,7 @@ public class DbTest {
 
     @Test
     public void insert(){
-        UserBean userBean = new UserBean();
+        UserDO userBean = new UserDO();
         userBean.setName("张三");
         userBean.setAge(30);
         userBean.setTags(Lists.newArrayList("a","b"));
@@ -43,7 +36,7 @@ public class DbTest {
         userDao.insert(userBean);
 
         log.info(userBean.toString());
-        UserBean userBean1 = userDao.find(userBean.getId()).get();
+        UserDO userBean1 = userDao.find(userBean.getId()).get();
         log.info(userBean1.toString());
     }
 
@@ -51,7 +44,7 @@ public class DbTest {
     public void query(){
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age").gt(20).conditions();
-        List<UserBean> userBeans = userDao.query(conditions);
+        List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
 
     }

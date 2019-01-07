@@ -1,4 +1,4 @@
-package com.github.jingshouyan.jdbc.comm.bean;
+package com.github.jingshouyan.jdbc.comm.entity;
 
 import com.github.jingshouyan.jdbc.comm.annotaion.Column;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public abstract class BaseBean implements Serializable {
+public abstract class BaseDO implements Serializable {
 
     public static final long NO_DELETE = -1;
 
@@ -25,7 +25,18 @@ public abstract class BaseBean implements Serializable {
     @Column(order = 1003,comment = "删除时间")
     private Long deletedAt;
 
+    /**
+     *  自动生成Id时,String 类型的前缀
+     * @return 前缀
+     */
     public String idPrefix(){
+        return "";
+    }
+    /**
+     *  自动生成Id时,String 类型的后缀
+     * @return 后缀
+     */
+    public String idSubfix() {
         return "";
     }
 
@@ -62,7 +73,7 @@ public abstract class BaseBean implements Serializable {
         return deletedAt != null && deletedAt != NO_DELETE;
     }
 
-    public static boolean deleted(BaseBean bean) {
+    public static boolean deleted(BaseDO bean) {
         return bean == null || bean.deleted();
     }
 
