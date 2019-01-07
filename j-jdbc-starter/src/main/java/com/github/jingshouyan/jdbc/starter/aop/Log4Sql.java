@@ -56,7 +56,7 @@ public class Log4Sql {
         } catch (Throwable e) {
             long end = System.currentTimeMillis();
             if (log.isErrorEnabled()) {
-                log.error("call {} error. use time : {}ms", joinPoint.toShortString(), (end - start), e);
+                log.error("call {} error. use time : {}ms ,message: {}", joinPoint.toShortString(), (end - start), e.getMessage());
             }
             throw e;
         }
