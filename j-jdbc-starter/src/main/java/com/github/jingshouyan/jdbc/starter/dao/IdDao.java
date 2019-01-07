@@ -1,7 +1,7 @@
 package com.github.jingshouyan.jdbc.starter.dao;
 
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
-import com.github.jingshouyan.jdbc.starter.bean.IdDO;
+import com.github.jingshouyan.jdbc.starter.entity.IdDO;
 
 /**
  * @author jingshouyan
