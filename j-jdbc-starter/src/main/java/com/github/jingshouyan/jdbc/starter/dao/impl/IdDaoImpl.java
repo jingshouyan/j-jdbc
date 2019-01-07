@@ -1,7 +1,7 @@
 package com.github.jingshouyan.jdbc.starter.dao.impl;
 
 import com.github.jingshouyan.jdbc.core.dao.impl.BaseDaoImpl;
-import com.github.jingshouyan.jdbc.starter.bean.IdDO;
+import com.github.jingshouyan.jdbc.starter.entity.IdDO;
 import com.github.jingshouyan.jdbc.starter.dao.IdDao;
 import org.springframework.stereotype.Repository;
 
