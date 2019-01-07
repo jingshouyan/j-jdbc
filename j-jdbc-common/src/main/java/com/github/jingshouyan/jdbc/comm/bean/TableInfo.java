@@ -39,7 +39,7 @@ public class TableInfo {
         comment = "";
         Table table = clazz.getAnnotation(Table.class);
         if(null != table){
-            if(StringUtil.isNullOrEmpty(table.value())){
+            if(!StringUtil.isNullOrEmpty(table.value())){
                 tableName = table.value();
             }
             comment = table.comment();
