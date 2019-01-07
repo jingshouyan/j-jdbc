@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @author jingshouyan
@@ -21,39 +22,46 @@ public class DbKeyGenerator implements KeyGenerator {
 
     private static final long INIT_ID = 10000L;
 
-    private static final Map<String,Long> MAP = Maps.newConcurrentMap();
+    private static final Map<String, LongAdder> MAP = Maps.newConcurrentMap();
 
     @Autowired
     private IdDao idDao;
 
     @Override
     public long generateKey(String type) {
-        synchronized (type.intern()){
-            Long id = MAP.get(type);
-            if(null == id){
+        LongAdder longAdder = MAP.get(type);
+        if(null == longAdder){
+            synchronized (type.intern()) {
                 Optional<IdDO> idBeanOptional = idDao.find(type);
-                if(idBeanOptional.isPresent()){
+                if (idBeanOptional.isPresent()) {
                     IdDO idBean = idBeanOptional.get();
-                    id = idBean.getSeed();
-                    idBean.setSeed(id + STEP*2);
+                    longAdder = new LongAdder();
+                    longAdder.add(idBean.getSeed());
+                    idBean.setSeed(newSeed(longAdder));
                     idDao.update(idBean);
-                }else{
-                    id = INIT_ID;
+                } else {
+                    longAdder = new LongAdder();
+                    longAdder.add(INIT_ID);
                     IdDO idBean = new IdDO();
                     idBean.setIdType(type);
-                    idBean.setSeed(id + STEP*2);
+                    idBean.setSeed(newSeed(longAdder));
                     idDao.insert(idBean);
                 }
+                MAP.put(type,longAdder);
             }
-            id++;
-            MAP.put(type,id);
-            if(id % STEP == 0){
-                IdDO idBean = new IdDO();
-                idBean.setIdType(type);
-                idBean.setSeed(id + STEP*2);
-                idDao.update(idBean);
-            }
-            return id;
         }
+        longAdder.increment();
+
+        if(longAdder.longValue() % STEP == 0){
+            IdDO idBean = new IdDO();
+            idBean.setIdType(type);
+            idBean.setSeed(newSeed(longAdder));
+            idDao.update(idBean);
+        }
+        return longAdder.longValue();
+    }
+
+    private long newSeed(LongAdder longAdder){
+        return longAdder.longValue() + STEP * 2;
     }
 }
