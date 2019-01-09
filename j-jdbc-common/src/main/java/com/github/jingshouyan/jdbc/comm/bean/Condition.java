@@ -2,7 +2,7 @@ package com.github.jingshouyan.jdbc.comm.bean;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author jingshouyan
@@ -53,12 +53,12 @@ public class Condition {
     /**
      * 在范围
      */
-    private List<?> in;
+    private Collection<?> in;
 
     /**
      * 不在范围
      */
-    private List<?> notIn;
+    private Collection<?> notIn;
 
     /**
      * 是否为空

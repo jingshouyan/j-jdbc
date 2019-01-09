@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -60,11 +61,11 @@ public class ConditionUtil {
         last.setNe(ne);
         return this;
     }
-    public ConditionUtil in(List<?> in){
+    public ConditionUtil in(Collection<?> in){
         last.setIn(in);
         return this;
     }
-    public ConditionUtil notIn(List<?> notIn){
+    public ConditionUtil notIn(Collection<?> notIn){
         last.setNotIn(notIn);
         return this;
     }

@@ -25,10 +25,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -76,7 +73,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
 
     @Override
-    public List<T> findByIds(List<?> ids) {
+    public List<T> findByIds(Collection<?> ids) {
         Preconditions.checkNotNull(ids, "ids is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).in(ids).conditions();
         return query(conditions);
@@ -146,7 +143,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public int batchInsert(@NonNull List<T> list) {
+    public int batchInsert(@NonNull Collection<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         SqlPrepared sqlPrepared = null;
         List<Map<String, Object>> values = Lists.newArrayList();
@@ -182,7 +179,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public int batchUpdate(List<T> list){
+    public int batchUpdate(Collection<T> list){
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         SqlPrepared sqlPrepared = null;
         List<Map<String, Object>> values = Lists.newArrayList();
@@ -206,7 +203,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public int delete4List(List<?> ids) {
+    public int delete4List(Collection<?> ids) {
         Preconditions.checkNotNull(ids, "ids is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).in(ids).conditions();
         List<T> list = Lists.newArrayList();
