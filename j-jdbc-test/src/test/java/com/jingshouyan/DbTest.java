@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,6 +49,20 @@ public class DbTest {
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
 
+    }
+
+    @Test
+    public void batchInsert(){
+        Collection<UserDO> users = new HashSet<>();
+        for (int i = 0; i < 10; i++) {
+            UserDO userBean = new UserDO();
+            userBean.setName("张三");
+            userBean.setAge(30);
+            userBean.setTags(Lists.newArrayList("a","b"));
+            userBean.setNickname("alkaksdjflk");
+            users.add(userBean);
+        }
+        userDao.batchInsert(users);
     }
 
 

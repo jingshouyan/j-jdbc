@@ -16,9 +16,9 @@ import javax.sql.DataSource;
 public class AppConfig {
 
 
-    public static final String url="jdbc:mysql://127.0.0.1:3306/IM_USER?useUnicode=true&characterEncoding=utf8&useSSL=false";
-    public static final String username="jing";
-    public static final String password="Jing1234!@#$";
+    public static final String url="jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false";
+    public static final String username="root";
+    public static final String password="abcd1234";
     public static final String driver="com.mysql.jdbc.Driver";
 
     @Bean
