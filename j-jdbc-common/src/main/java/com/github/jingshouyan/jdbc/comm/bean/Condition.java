@@ -64,4 +64,11 @@ public class Condition {
      * 是否为空
      */
     private Boolean empty;
+
+    public Condition(){}
+
+    public Condition(String field, Object eq){
+        this.field = field;
+        this.eq = eq;
+    }
 }
