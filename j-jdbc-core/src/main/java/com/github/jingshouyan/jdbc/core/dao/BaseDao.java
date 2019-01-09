@@ -3,6 +3,7 @@ package com.github.jingshouyan.jdbc.core.dao;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public interface BaseDao<T> {
      * @param ids 主键列表
      * @return 数据列表
      */
-    List<T> findByIds(List<?> ids);
+    List<T> findByIds(Collection<?> ids);
 
     /**
      * 条件查询
@@ -83,7 +84,7 @@ public interface BaseDao<T> {
      * @param list 数据集合
      * @return 影响行数
      */
-    int batchInsert(List<T> list);
+    int batchInsert(Collection<T> list);
 
     /**
      * 基于主键的数据更新
@@ -100,7 +101,7 @@ public interface BaseDao<T> {
      * @param list 数据集合
      * @return 影响行数
      */
-    int batchUpdate(List<T> list);
+    int batchUpdate(Collection<T> list);
 
     /**
      * 根据条件更新数据
@@ -117,7 +118,7 @@ public interface BaseDao<T> {
      * @param ids 主键列表
      * @return 影响行数
      */
-    int delete4List(List<?> ids);
+    int delete4List(Collection<?> ids);
 
     /**
      * 根据主键列表删除数据
