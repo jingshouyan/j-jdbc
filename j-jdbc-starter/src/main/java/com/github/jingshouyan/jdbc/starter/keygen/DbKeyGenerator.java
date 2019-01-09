@@ -48,14 +48,14 @@ public class DbKeyGenerator implements KeyGenerator {
         });
 
         longAdder.increment();
-
-        if(longAdder.longValue() % STEP == 0){
+        long result = longAdder.longValue();
+        if(result % STEP == 0){
             IdDO idBean = new IdDO();
             idBean.setIdType(type);
             idBean.setSeed(newSeed(longAdder));
             idDao.update(idBean);
         }
-        return longAdder.longValue();
+        return result;
     }
 
     private long newSeed(LongAdder longAdder){
