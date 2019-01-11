@@ -51,7 +51,4 @@ public class IdHelper {
         idDao.update(idBean);
     }
 
-    public static void main(String[] args) {
-        System.out.println(STEP);
-    }
 }
