@@ -6,6 +6,8 @@ import com.github.jingshouyan.jdbc.starter.dao.IdDao;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +29,7 @@ public class DbKeyGenerator implements KeyGenerator {
     @Autowired
     private IdDao idDao;
 
-    @Override
+    @Override@Transactional(propagation = Propagation.REQUIRES_NEW)
     public long generateKey(String type) {
         LongAdder longAdder = MAP.computeIfAbsent(type, idType -> {
             LongAdder ladd = new LongAdder();
