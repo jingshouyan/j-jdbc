@@ -50,4 +50,8 @@ public class IdHelper {
         idBean.setSeed(old + DB_STEP);
         idDao.update(idBean);
     }
+
+    public static void main(String[] args) {
+        System.out.println(STEP);
+    }
 }
