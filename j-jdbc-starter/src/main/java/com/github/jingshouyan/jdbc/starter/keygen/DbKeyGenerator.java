@@ -1,16 +1,12 @@
 package com.github.jingshouyan.jdbc.starter.keygen;
 
 import com.github.jingshouyan.jdbc.core.keygen.KeyGenerator;
-import com.github.jingshouyan.jdbc.starter.entity.IdDO;
-import com.github.jingshouyan.jdbc.starter.dao.IdDao;
+import com.github.jingshouyan.jdbc.starter.help.IdHelper;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -27,40 +23,22 @@ public class DbKeyGenerator implements KeyGenerator {
     private static final Map<String, LongAdder> MAP = Maps.newConcurrentMap();
 
     @Autowired
-    private IdDao idDao;
+    private IdHelper idHelper;
 
-    @Override@Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
     public long generateKey(String type) {
         LongAdder longAdder = MAP.computeIfAbsent(type, idType -> {
             LongAdder ladd = new LongAdder();
-            Optional<IdDO> idBeanOptional = idDao.find(idType);
-            if (idBeanOptional.isPresent()) {
-                IdDO idBean = idBeanOptional.get();
-                ladd.add(idBean.getSeed());
-                idBean.setSeed(newSeed(ladd));
-                idDao.update(idBean);
-            } else {
-                ladd.add(INIT_ID);
-                IdDO idBean = new IdDO();
-                idBean.setIdType(idType);
-                idBean.setSeed(newSeed(ladd));
-                idDao.insert(idBean);
-            }
+            ladd.add(idHelper.get(idType));
             return ladd;
         });
 
         longAdder.increment();
         long result = longAdder.longValue();
-        if(result % STEP == 0){
-            IdDO idBean = new IdDO();
-            idBean.setIdType(type);
-            idBean.setSeed(newSeed(longAdder));
-            idDao.update(idBean);
+        if(result % IdHelper.STEP == 0){
+            idHelper.update(type, result);
         }
         return result;
     }
 
-    private long newSeed(LongAdder longAdder){
-        return longAdder.longValue() + STEP * 2;
-    }
 }
