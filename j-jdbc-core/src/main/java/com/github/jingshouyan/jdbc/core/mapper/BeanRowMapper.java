@@ -4,7 +4,7 @@ import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
-import com.github.jingshouyan.jdbc.core.util.aes.AesUtil;
+import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.base.Preconditions;
@@ -96,7 +96,7 @@ public class BeanRowMapper<T> implements RowMapper<T>,Constant {
                 }
             }
             Preconditions.checkNotNull(password,"encryptType/decrypt password is null");
-            value = AesUtil.decrypt(value.toString(),password);
+            value = EncryptionProvider.decrypt(value.toString(),password);
         }
         if(columnInfo.isJson()){
             try {

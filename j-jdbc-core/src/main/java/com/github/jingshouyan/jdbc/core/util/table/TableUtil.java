@@ -4,8 +4,8 @@ import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
+import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorUtil;
-import com.github.jingshouyan.jdbc.core.util.aes.AesUtil;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -88,7 +88,7 @@ public class TableUtil {
                 }
             }
             Preconditions.checkNotNull(password,"encryptType/decrypt password is null");
-            value = AesUtil.encrypt(String.valueOf(value),password);
+            value = EncryptionProvider.encrypt(String.valueOf(value),password);
         }
         return value;
     }
