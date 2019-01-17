@@ -1,5 +1,6 @@
-package com.github.jingshouyan.jdbc.core.util.aes;
+package com.github.jingshouyan.jdbc.core.encryption.aes;
 
+import com.github.jingshouyan.jdbc.core.encryption.Encryption;
 import com.google.common.io.BaseEncoding;
 import lombok.SneakyThrows;
 
@@ -10,11 +11,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
 /**
- * aes 工具类
  * @author jingshouyan
- * @date 2018/4/14 17:25
+ * #date 2019/1/17 16:58
  */
-public class AesUtil {
+
+public class AES implements Encryption{
 
     /**
      * 加密
@@ -24,7 +25,7 @@ public class AesUtil {
      * @return 加密后字符串
      */
     @SneakyThrows
-    public static String encrypt(String content, String password) {
+    public String encrypt(String content, String password) {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         random.setSeed(password.getBytes());
@@ -50,7 +51,7 @@ public class AesUtil {
      * @return 解密后字符串
      */
     @SneakyThrows
-    public static String decrypt(String content, String password) {
+    public String decrypt(String content, String password) {
         byte[] buf = base64Decode(content);
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
@@ -76,5 +77,4 @@ public class AesUtil {
     private static byte[] base64Decode(String content) {
         return BaseEncoding.base64().decode(content);
     }
-
 }
