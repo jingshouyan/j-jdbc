@@ -5,6 +5,7 @@ import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface SqlGenerator<T> {
      * @param conditions 条件
      * @return sql语句和参数
      */
-    SqlPrepared query(List<Condition> conditions);
+    SqlPrepared query(List<Condition> conditions, Collection<String> fields);
 
     /**
      * 带分页的条件查询语句生成
@@ -27,7 +28,7 @@ public interface SqlGenerator<T> {
      * @param page 分页信息
      * @return sql语句和参数
      */
-    SqlPrepared query(List<Condition> conditions, Page<T> page);
+    SqlPrepared queryLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
     /**
      *  条件查询计数语句生成

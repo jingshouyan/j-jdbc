@@ -6,10 +6,13 @@ import com.github.jingshouyan.jdbc.comm.bean.OrderBy;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * sql 生成器抽象类
@@ -42,19 +45,21 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     @Override
-    public SqlPrepared query(List<Condition> compares) {
+    public SqlPrepared query(List<Condition> compares, Collection<String> fields) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT * FROM " + tableName();
+        String sql = "SELECT "+ columns(fields) +" FROM " + tableName();
         SqlPrepared whereSql = where(compares);
         sqlPrepared.setSql(sql + whereSql.getSql());
         sqlPrepared.setParams(whereSql.getParams());
         return sqlPrepared;
     }
 
+
+
     @Override
     public SqlPrepared count(List<Condition> compares) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT COUNT(*) C FROM " + tableName();
+        String sql = "SELECT COUNT(1) C FROM " + tableName();
         SqlPrepared whereSql = where(compares);
         sqlPrepared.setSql(sql + whereSql.getSql());
         sqlPrepared.setParams(whereSql.getParams());
@@ -254,6 +259,14 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         sqlPrepared.setSql(sql.toString());
         return sqlPrepared;
     }
+
+    protected String columns(Collection<String> fields){
+        if(fields == null || fields.isEmpty()){
+            return " * ";
+        }
+        return fields.stream().map(this::columnName).collect(Collectors.joining(","));
+    }
+
 
     protected String key() {
         return TableUtil.keyFieldName(clazz);

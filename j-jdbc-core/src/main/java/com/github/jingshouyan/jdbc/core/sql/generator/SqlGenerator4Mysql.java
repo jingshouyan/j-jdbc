@@ -9,6 +9,7 @@ import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import lombok.NonNull;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,9 +30,9 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     }
 
     @Override
-    public SqlPrepared query(List<Condition> conditions, Page<T> page) {
+    public SqlPrepared queryLimit(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT * FROM " + tableName();
+        String sql = "SELECT "+ columns(fields) +" FROM " + tableName();
         SqlPrepared whereSql = where(conditions);
         sql += whereSql.getSql();
         sql += orderBy(page.getOrderBies());
