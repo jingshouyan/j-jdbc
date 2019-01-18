@@ -82,18 +82,20 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public Page<T> queryPage(List<Condition> conditions, Page<T> page) {
+        return queryFieldPage(conditions, page, null);
+    }
+
+    public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> field) {
         int count = count(conditions);
         page.totalCount(count);
-        List<T> ts = queryLimit(conditions,page);
+        List<T> ts = queryFieldLimit(conditions,page,field);
         page.setList(ts);
         return page;
     }
 
     @Override
     public List<T> query(List<Condition> conditions) {
-        SqlPrepared sqlPrepared = sqlGenerator().query(conditions, null);
-        List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
-        return ts;
+        return queryField(conditions, null);
     }
 
     public List<T> queryField(List<Condition> conditions, Collection<String> fields){
@@ -104,7 +106,11 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public List<T> queryLimit(List<Condition> conditions,Page<T> page) {
-        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,null);
+        return queryFieldLimit(conditions, page, null);
+    }
+
+    public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> field) {
+        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,field);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
         return ts;
     }
