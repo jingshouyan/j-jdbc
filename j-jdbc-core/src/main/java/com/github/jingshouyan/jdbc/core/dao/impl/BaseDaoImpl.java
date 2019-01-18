@@ -82,9 +82,10 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public Page<T> queryPage(List<Condition> conditions, Page<T> page) {
-        return queryFieldPage(conditions, page, null);
+        return queryFieldPage(conditions, page, fields());
     }
 
+    @Override
     public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> field) {
         int count = count(conditions);
         page.totalCount(count);
@@ -95,9 +96,10 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public List<T> query(List<Condition> conditions) {
-        return queryField(conditions, null);
+        return queryField(conditions, fields());
     }
 
+    @Override
     public List<T> queryField(List<Condition> conditions, Collection<String> fields){
         SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
@@ -106,9 +108,10 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public List<T> queryLimit(List<Condition> conditions,Page<T> page) {
-        return queryFieldLimit(conditions, page, null);
+        return queryFieldLimit(conditions, page, fields());
     }
 
+    @Override
     public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> field) {
         SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,field);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
@@ -296,6 +299,15 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         }
 
         return columnInfos.size();
+    }
+
+    /**
+     * 查询时默认指定的列
+     * @return 查询时默认指定的列
+     */
+    protected List<String> fields() {
+
+        return null;
     }
 
     private Object fieldValue(T t,String fieldName){
