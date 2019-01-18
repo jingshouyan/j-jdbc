@@ -33,6 +33,8 @@ public interface BaseDao<T> {
      */
     List<T> findByIds(Collection<?> ids);
 
+
+
     /**
      * 条件查询
      *
@@ -40,6 +42,8 @@ public interface BaseDao<T> {
      * @return 结果集
      */
     List<T> query(List<Condition> conditions);
+
+    List<T> queryField(List<Condition> conditions, Collection<String> fields);
 
     /**
      * 条件查询（取一页数据）
@@ -50,6 +54,7 @@ public interface BaseDao<T> {
      */
     List<T> queryLimit(List<Condition> conditions, Page<T> page);
 
+    List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> field);
     /**
      * 条件分页查询
      *
@@ -58,6 +63,8 @@ public interface BaseDao<T> {
      * @return 页信息及数据
      */
     Page<T> queryPage(List<Condition> conditions, Page<T> page);
+
+    Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> field);
 
     /**
      * 条件计数
@@ -102,6 +109,8 @@ public interface BaseDao<T> {
      * @return 影响行数
      */
     int batchUpdate(Collection<T> list);
+
+
 
     /**
      * 根据条件更新数据
