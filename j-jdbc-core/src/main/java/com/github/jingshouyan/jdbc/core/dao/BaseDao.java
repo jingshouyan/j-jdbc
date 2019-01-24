@@ -113,7 +113,7 @@ public interface BaseDao<T extends BaseDO> {
     int count(List<Condition> conditions);
 
     /**
-     * 数据插入
+     * 数据插入,值为 null 的不插入
      *
      * @param t 数据对象
      * @return 影响行数
@@ -124,7 +124,8 @@ public interface BaseDao<T extends BaseDO> {
 
     /**
      * 数据批量插入
-     * 注：数据字段是否设值需要保持一致
+     * 注：数据字段需要对齐,
+     * 即 list中第一个对象的 a 属性不为null,其他对象的 a 属性也不能为 null
      *
      * @param list 数据集合
      * @return 影响行数
@@ -132,7 +133,7 @@ public interface BaseDao<T extends BaseDO> {
     int batchInsert(Collection<T> list);
 
     /**
-     * 基于主键的数据更新
+     * 基于主键的数据更新,null字段不更新,必须有主键且不能为空
      *
      * @param t 数据对象
      * @return 影响行数
@@ -140,8 +141,9 @@ public interface BaseDao<T extends BaseDO> {
     int update(T t);
 
     /**
-     * 基于主键的数据批量更新
-     * 注：数据字段是否设值需要保持一致
+     * 基于主键的数据批量更新,null字段不更新,必须有主键且不能为空
+     * 注：数据字段需要对齐,
+     * 即 list中第一个对象的 a 属性不为null,其他对象的 a 属性也不能为 null
      *
      * @param list 数据集合
      * @return 影响行数
@@ -151,7 +153,7 @@ public interface BaseDao<T extends BaseDO> {
 
 
     /**
-     * 根据条件更新数据
+     * 根据条件更新数据,主键不会被更新
      *
      * @param t        数据值存放位置（忽略主键）
      * @param conditions 条件
@@ -160,7 +162,7 @@ public interface BaseDao<T extends BaseDO> {
     int update(T t, List<Condition> conditions);
 
     /**
-     * 根据主键列表删除数据
+     * 根据主键列表删除数据,必须有主键
      *
      * @param ids 主键列表
      * @return 影响行数
@@ -168,7 +170,7 @@ public interface BaseDao<T extends BaseDO> {
     int delete4List(Collection<?> ids);
 
     /**
-     * 根据主键列表删除数据
+     * 根据主键列表删除数据,必须有主键
      *
      * @param id 主键列表
      * @return 影响行数
