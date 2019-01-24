@@ -45,7 +45,9 @@ public class DbTest {
     @Test
     public void query(){
         List<Condition> conditions = ConditionUtil.newInstance()
-                .field("age").gt(20).conditions();
+                .field("age").gt(20).lte(89)
+                .field("nickname").like("%张三%")
+                .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
 

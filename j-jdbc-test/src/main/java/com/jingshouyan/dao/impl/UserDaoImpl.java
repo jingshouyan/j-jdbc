@@ -15,10 +15,4 @@ import java.util.HashMap;
 @Repository
 public class UserDaoImpl extends BaseDaoImpl<UserDO> implements UserDao {
 
-
-    public SqlRowSet test(){
-        SqlRowSet rowSet = template.queryForRowSet("select * from UserDO where 1=2",new HashMap<>());
-
-        return rowSet;
-    }
 }

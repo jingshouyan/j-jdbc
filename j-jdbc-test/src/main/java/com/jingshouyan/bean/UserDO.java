@@ -32,7 +32,7 @@ public class UserDO extends BaseDO {
     //列类型使用包装类型,因为在更新操作时 null 值不更新
     private Integer age;
     //列注解,选择加密方式为固定值abcd
-    //数据以json格式入库,本例为 json 字符串加密后存储,未来可能移除json的加密模式
+    //数据以json格式入库,本例为 json 字符串加密后存储,未来可能移除json同时又是加密字段的模式
     @Column(encryptType = EncryptType.FIXED,encryptKey = "abcd",json = true,length = 1000)
     private List<String> tags;
     //设置数据库字段名,默认为属性名
