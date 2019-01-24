@@ -21,10 +21,16 @@ public interface BaseDao<T> {
      * 根据主键查询数据
      *
      * @param id 主键
-     * @return null或单条数据
+     * @return optional 记录
      */
     Optional<T> find(Object id);
-
+    /**
+     * 根据主键查询数据
+     *
+     * @param id 主键
+     * @param fields 查询的属性
+     * @return optional 记录
+     */
     Optional<T> findField(Object id, Collection<String> fields);
 
     /**
@@ -34,7 +40,13 @@ public interface BaseDao<T> {
      * @return 数据列表
      */
     List<T> findByIds(Collection<?> ids);
-
+    /**
+     * 根据主键列表查询数据
+     *
+     * @param ids 主键列表
+     * @param fields 查询的属性
+     * @return 数据列表
+     */
     List<T> findByIdsField(Collection<?> ids, Collection<String> fields);
 
     /**
@@ -44,7 +56,13 @@ public interface BaseDao<T> {
      * @return 结果集
      */
     List<T> query(List<Condition> conditions);
-
+    /**
+     * 条件查询
+     *
+     * @param conditions 条件
+     * @param fields 查询的属性
+     * @return 结果集
+     */
     List<T> queryField(List<Condition> conditions, Collection<String> fields);
 
     /**
@@ -55,7 +73,14 @@ public interface BaseDao<T> {
      * @return 结果集
      */
     List<T> queryLimit(List<Condition> conditions, Page<T> page);
-
+    /**
+     * 条件查询（取一页数据）
+     *
+     * @param conditions 条件
+     * @param page     页
+     * @param fields 查询的属性
+     * @return 结果集
+     */
     List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
 
@@ -68,7 +93,14 @@ public interface BaseDao<T> {
      * @return 页信息及数据
      */
     Page<T> queryPage(List<Condition> conditions, Page<T> page);
-
+    /**
+     * 条件分页查询
+     *
+     * @param conditions 条件
+     * @param page     页信息
+     * @param fields 查询的属性
+     * @return 页信息及数据
+     */
     Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
     /**
@@ -176,4 +208,10 @@ public interface BaseDao<T> {
      * @return 添加的行数
      */
     int updateTable();
+
+    /**
+     * 列表查询默认查询的字段列表
+     * @return 列表查询默认查询的字段列表,返回 null 则查询 *(全部字段)
+     */
+    List<String> fields();
 }
