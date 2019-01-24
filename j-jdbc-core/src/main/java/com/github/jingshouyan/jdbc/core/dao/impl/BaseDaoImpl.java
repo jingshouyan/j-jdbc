@@ -67,16 +67,28 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     public Optional<T> find(Object id) {
         Preconditions.checkNotNull(id,"id is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).eq(id).conditions();
-        List<T> ts = query(conditions);
+        List<T> ts = queryField(conditions, null);
         return ts.stream().findFirst();
     }
 
+    @Override
+    public Optional<T> findField(Object id, Collection<String> fields) {
+        Preconditions.checkNotNull(id,"id is null");
+        List<Condition> conditions = ConditionUtil.newInstance().field(key()).eq(id).conditions();
+        List<T> ts = queryField(conditions, fields);
+        return ts.stream().findFirst();
+    }
 
     @Override
     public List<T> findByIds(Collection<?> ids) {
+        return findByIdsField(ids, fields());
+    }
+
+    @Override
+    public List<T> findByIdsField(Collection<?> ids, Collection<String> fields) {
         Preconditions.checkNotNull(ids, "ids is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).in(ids).conditions();
-        return queryField(conditions, fields());
+        return queryField(conditions, fields);
     }
 
 
@@ -86,10 +98,10 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> field) {
+    public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         int count = count(conditions);
         page.totalCount(count);
-        List<T> ts = queryFieldLimit(conditions,page,field);
+        List<T> ts = queryFieldLimit(conditions,page,fields);
         page.setList(ts);
         return page;
     }
@@ -112,8 +124,8 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> field) {
-        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,field);
+    public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields) {
+        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,fields);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
         return ts;
     }
