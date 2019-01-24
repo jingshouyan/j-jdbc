@@ -317,8 +317,8 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
      * 查询时默认指定的列
      * @return 查询时默认指定的列
      */
-    protected List<String> fields() {
-
+    @Override
+    public List<String> fields() {
         return null;
     }
 
