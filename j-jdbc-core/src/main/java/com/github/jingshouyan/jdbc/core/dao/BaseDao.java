@@ -2,6 +2,7 @@ package com.github.jingshouyan.jdbc.core.dao;
 
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Optional;
  * @author jingshouyan
  * 11/27/18 3:21 PM
  */
-public interface BaseDao<T> {
+public interface BaseDao<T extends BaseDO> {
     /**
      * 获取 T 的类型
      * @return
