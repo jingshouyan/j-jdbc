@@ -76,7 +76,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     public List<T> findByIds(Collection<?> ids) {
         Preconditions.checkNotNull(ids, "ids is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).in(ids).conditions();
-        return query(conditions);
+        return queryField(conditions, fields());
     }
 
 
