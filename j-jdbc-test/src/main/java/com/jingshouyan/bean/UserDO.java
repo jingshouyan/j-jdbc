@@ -20,7 +20,8 @@ import java.util.List;
 @Table(value = "DEMO_USER",comment = "用户表")
 public class UserDO extends BaseDO {
     //主键注解,主键只能是Long/String,且只能有一个,若没有主键 find/findByIds 方法不能使用
-    @Key
+    //默认当未设值(为 null)时,只用id生成器自动设值
+    @Key(generatorIfNotSet = true)
     //列注解,设置列长度
     @Column(length = 50,comment = "主键")
     private String id;
@@ -40,8 +41,8 @@ public class UserDO extends BaseDO {
 
 
     /**
-     *
-     * @return
+     * 当使用string类型主键时,主键前缀
+     * @return 主键前缀
      */
     @Override
     public String idPrefix() {
@@ -49,8 +50,8 @@ public class UserDO extends BaseDO {
     }
 
     /**
-     *
-     * @return
+     * 当使用string类型主键时,主键后缀
+     * @return 主键后缀
      */
     @Override
     public String idSuffix() {
