@@ -23,7 +23,8 @@
 ```
 或者 引入 j-jdbc-starter
 
-
+这里使用的主键生成器为 基于数据库种子表的 id生成器
+主要 添加了自动建表和日志功能
 ```pom
 <dependency>
     <groupId>com.github.jingshouyan</groupId>
@@ -31,7 +32,11 @@
     <version>${j-jdbc-version}</version>
 </dependency>
 ```
-
+spring 配置
+```yml
+j-jdbc:
+  tableInit: 3 # 1:自动创建不存在的表,2:删除表并创建表(慎用),3:自动创建不存在的表并添加缺少字段
+```
 
 ### 创建数据库对象
 ```java
@@ -95,7 +100,7 @@ public class UserDaoImpl extends BaseDaoImpl<UserDO> implements UserDao {
 ### 使用 Dao
 参见 [BaseDao](j-jdbc-core/src/main/java/com/github/jingshouyan/jdbc/core/dao/BaseDao.java)
 
-List\<Condition\> 可以由 [ConditionUtil](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/util/ConditionUtil.java) 快速创建
+List/<Condition/> 可以由 [ConditionUtil](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/util/ConditionUtil.java) 快速创建
 ```java
 List<Condition> conditions = ConditionUtil.newInstance()
         .field("age").gt(20).lte(89)
@@ -103,3 +108,11 @@ List<Condition> conditions = ConditionUtil.newInstance()
         .conditions();
 List<UserDO> userBeans = userDao.query(conditions);
 ```
+
+### 其他配置
+1. 数据加密可以使用 
+[EncryptionProvider](j-jdbc-core/src/main/java/com/github/jingshouyan/jdbc/core/encryption/EncryptionProvider.java) 
+来设置自定义的加密算法,默认为AES
+2. 主键生成器可以使用
+[KeyGeneratorProvider](j-jdbc-core/src/main/java/com/github/jingshouyan/jdbc/core/keygen/KeyGeneratorProvider.java)
+来设置自定义的主键生成器
