@@ -25,6 +25,8 @@ public interface BaseDao<T> {
      */
     Optional<T> find(Object id);
 
+    Optional<T> findField(Object id, Collection<String> fields);
+
     /**
      * 根据主键列表查询数据
      *
@@ -33,7 +35,7 @@ public interface BaseDao<T> {
      */
     List<T> findByIds(Collection<?> ids);
 
-
+    List<T> findByIdsField(Collection<?> ids, Collection<String> fields);
 
     /**
      * 条件查询
@@ -54,7 +56,10 @@ public interface BaseDao<T> {
      */
     List<T> queryLimit(List<Condition> conditions, Page<T> page);
 
-    List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> field);
+    List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
+
+
+
     /**
      * 条件分页查询
      *
@@ -64,7 +69,7 @@ public interface BaseDao<T> {
      */
     Page<T> queryPage(List<Condition> conditions, Page<T> page);
 
-    Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> field);
+    Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
     /**
      * 条件计数
