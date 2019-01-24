@@ -36,7 +36,7 @@ public abstract class BaseDO implements Serializable {
      *  自动生成Id时,String 类型的后缀
      * @return 后缀
      */
-    public String idSubfix() {
+    public String idSuffix() {
         return "";
     }
 
