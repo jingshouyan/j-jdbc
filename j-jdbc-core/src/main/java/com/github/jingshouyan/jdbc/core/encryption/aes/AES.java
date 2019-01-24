@@ -17,6 +17,9 @@ import java.security.SecureRandom;
 
 public class AES implements Encryption{
 
+    public static final String CHARSET = "utf-8";
+    public static final String CIPHER_ALGORITHM = "AES";
+    public static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
     /**
      * 加密
      *
@@ -26,16 +29,16 @@ public class AES implements Encryption{
      */
     @SneakyThrows
     public String encrypt(String content, String password) {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-        random.setSeed(password.getBytes());
+        KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
+        SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+        random.setSeed(password.getBytes(CHARSET));
         kgen.init(128,random);
         SecretKey secretKey = kgen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
-        SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+        SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
         // 创建密码器
-        Cipher cipher = Cipher.getInstance("AES");
-        byte[] byteContent = content.getBytes("utf-8");
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+        byte[] byteContent = content.getBytes(CHARSET);
         // 初始化
         cipher.init(Cipher.ENCRYPT_MODE, key);
         // 加密
@@ -53,20 +56,20 @@ public class AES implements Encryption{
     @SneakyThrows
     public String decrypt(String content, String password) {
         byte[] buf = base64Decode(content);
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-        random.setSeed(password.getBytes());
+        KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
+        SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+        random.setSeed(password.getBytes(CHARSET));
         kgen.init(128,random);
         SecretKey secretKey = kgen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
-        SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+        SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
         // 创建密码器
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         // 初始化
         cipher.init(Cipher.DECRYPT_MODE, key);
         //解密
         byte[] result = cipher.doFinal(buf);
-        return new String(result, "utf-8");
+        return new String(result, CHARSET);
     }
 
 
