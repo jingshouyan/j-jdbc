@@ -1,7 +1,7 @@
 package com.github.jingshouyan.jdbc.starter;
 
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
-import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorUtil;
+import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorProvider;
 import com.github.jingshouyan.jdbc.starter.keygen.DbKeyGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class JdbcAutoConfiguration implements ApplicationRunner {
         }
 
 
-        KeyGeneratorUtil.setKeyGenerator(dbKeyGenerator);
+        KeyGeneratorProvider.setKeyGenerator(dbKeyGenerator);
     }
 
     private void createTable(BaseDao dao){

@@ -7,7 +7,7 @@ import lombok.Setter;
  * @author jingshouyan
  * 11/29/18 1:50 PM
  */
-public class KeyGeneratorUtil {
+public class KeyGeneratorProvider {
     public static final KeyGenerator DEFAULT = new DefaultKeyGenerator();
 
     @Getter@Setter

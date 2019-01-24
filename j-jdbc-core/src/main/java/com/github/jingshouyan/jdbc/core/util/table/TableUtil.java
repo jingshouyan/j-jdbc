@@ -5,7 +5,7 @@ import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
-import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorUtil;
+import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorProvider;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -102,7 +102,7 @@ public class TableUtil {
         Object value = fieldValue(bean,columnInfo.getFieldName());
         if(isEmpty(value)){
             Class<?> c = columnInfo.getField().getType();
-            long l = KeyGeneratorUtil
+            long l = KeyGeneratorProvider
                     .getKeyGenerator()
                     .generateKey(bean.getClass().getSimpleName());
 
