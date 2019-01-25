@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.comm.entity;
 
+import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.annotaion.Column;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +16,6 @@ import java.io.Serializable;
 @Setter
 @ToString
 public abstract class BaseDO implements Serializable {
-
-    public static final long NO_DELETE = -1;
 
     @Column(order = 1001,comment = "创建时间")
     private Long createdAt;
@@ -45,7 +44,7 @@ public abstract class BaseDO implements Serializable {
         long now = System.currentTimeMillis();
         createdAt = now;
         updatedAt = now;
-        deletedAt = NO_DELETE;
+        deletedAt = Constant.NO_DELETE;
     }
 
     public void forUpdate() {
@@ -65,12 +64,12 @@ public abstract class BaseDO implements Serializable {
         long now = System.currentTimeMillis();
         createdAt = null;
         updatedAt = now;
-        deletedAt = NO_DELETE;
+        deletedAt = Constant.NO_DELETE;;
     }
 
 
     public boolean deleted() {
-        return deletedAt != null && deletedAt != NO_DELETE;
+        return deletedAt != null && deletedAt != Constant.NO_DELETE;
     }
 
     public static boolean deleted(BaseDO bean) {

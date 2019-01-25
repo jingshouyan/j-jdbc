@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.comm.util;
 
+import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -72,5 +73,13 @@ public class ConditionUtil {
     public ConditionUtil empty(boolean empty){
         last.setEmpty(empty);
         return this;
+    }
+
+    public ConditionUtil noDeleted(){
+        return field("deletedAt").eq(Constant.NO_DELETE);
+    }
+
+    public ConditionUtil deleted(){
+        return field("deletedAt").ne(Constant.NO_DELETE);
     }
 }
