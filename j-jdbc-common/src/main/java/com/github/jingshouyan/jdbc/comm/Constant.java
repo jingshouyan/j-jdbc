@@ -7,6 +7,7 @@ import java.util.Optional;
  * 11/22/18 4:52 PM
  */
 public interface Constant {
+    long NO_DELETE = -1;
     int ID_FIELD_LENGTH = 50;
     int COLUMN_ORDER_DEFAULT = 10;
     int COLUMN_LENGTH_DEFAULT = 255;
