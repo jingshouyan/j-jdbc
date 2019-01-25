@@ -111,7 +111,7 @@ public class TableUtil {
             } else if(c == String.class){
                 String v = String.valueOf(l);
                 if(bean instanceof BaseDO){
-                    v = ((BaseDO) bean).idPrefix() + v + ((BaseDO) bean).idSubfix();
+                    v = ((BaseDO) bean).idPrefix() + v + ((BaseDO) bean).idSuffix();
                 }
                 columnInfo.getField().set(bean,v);
             }
