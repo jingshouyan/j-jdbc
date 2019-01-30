@@ -1,6 +1,7 @@
 package com.jingshouyan.bean;
 
 import com.github.jingshouyan.jdbc.comm.annotaion.Column;
+import com.github.jingshouyan.jdbc.comm.annotaion.Index;
 import com.github.jingshouyan.jdbc.comm.annotaion.Key;
 import com.github.jingshouyan.jdbc.comm.annotaion.Table;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
@@ -18,6 +19,8 @@ import java.util.List;
 @Getter@Setter@ToString
 //表注解,指定表明,不加默认为类名
 @Table(value = "DEMO_USER",comment = "用户表")
+@Index({"age","nickname"})
+@Index({"id","name"})
 public class UserDO extends BaseDO {
     //主键注解,主键只能是Long/String,且只能有一个,若没有主键 find/findByIds 方法不能使用
     //默认当未设值(为 null)时,只用id生成器自动设值
