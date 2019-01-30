@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(indices.class)
+@Repeatable(Indices.class)
 @Documented
 public @interface Index {
     String[] value();
