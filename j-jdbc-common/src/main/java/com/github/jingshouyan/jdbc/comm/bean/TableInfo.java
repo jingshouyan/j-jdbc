@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.comm.bean;
 
 import com.github.jingshouyan.jdbc.comm.annotaion.Ignore;
+import com.github.jingshouyan.jdbc.comm.annotaion.Index;
 import com.github.jingshouyan.jdbc.comm.annotaion.Table;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.ToString;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author jingshouyan
@@ -31,6 +33,8 @@ public class TableInfo {
     private Map<String, ColumnInfo> fieldNameMap = new HashMap<>();
 
     private Map<String, ColumnInfo> lowerCaseColumnMap = new HashMap<>();
+
+    private List<List<ColumnInfo>> indices;
 
 
     public TableInfo(Class<?> clazz){
@@ -66,6 +70,16 @@ public class TableInfo {
             }
         }
         getColumns().sort(Comparator.comparing(ColumnInfo::getOrder));
+        indices = Arrays.stream(clazz.getAnnotationsByType(Index.class))
+                .map(
+                        index -> Arrays.stream(index.value())
+                        .map(fieldName -> {
+                            ColumnInfo columnInfo = fieldNameMap.get(fieldName);
+                            assert columnInfo != null;
+                            return columnInfo;
+                        })
+                        .collect(Collectors.toList())
+                ).collect(Collectors.toList());
     }
 
     /**

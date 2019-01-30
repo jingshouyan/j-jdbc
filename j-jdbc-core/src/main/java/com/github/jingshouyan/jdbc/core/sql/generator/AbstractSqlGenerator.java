@@ -264,7 +264,9 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         if(fields == null || fields.isEmpty()){
             return " * ";
         }
-        return fields.stream().map(this::columnName).collect(Collectors.joining(","));
+        return fields.stream()
+                .map(this::columnName)
+                .collect(Collectors.joining(","));
     }
 
 
@@ -273,7 +275,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     protected String tableName() {
-        return TableUtil.tableInfo(clazz).getTableName();
+        return q() + TableUtil.tableInfo(clazz).getTableName() + q();
     }
 
     protected String tableComment(){
@@ -282,6 +284,10 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
     protected String columnName(String fieldName) {
         return q()+TableUtil.columnName(clazz, fieldName)+q();
+    }
+
+    protected String columnName(ColumnInfo columnInfo) {
+        return q() + columnInfo.getColumnName() + q();
     }
 
     protected Map<String, Object> valueMap(Object bean) {

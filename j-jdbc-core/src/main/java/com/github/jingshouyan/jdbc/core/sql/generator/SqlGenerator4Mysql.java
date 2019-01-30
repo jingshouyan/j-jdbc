@@ -11,6 +11,7 @@ import lombok.NonNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * mysql
@@ -47,9 +48,9 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     public SqlPrepared createTableSql() {
         SqlPrepared sqlPrepared = new SqlPrepared();
         StringBuilder sql = new StringBuilder();
-        sql.append("CREATE TABLE IF NOT EXISTS `");
+        sql.append("CREATE TABLE IF NOT EXISTS ");
         sql.append(tableName());
-        sql.append("` (");
+        sql.append(" (");
         TableInfo tableInfo = TableUtil.tableInfo(clazz);
         for (ColumnInfo column : tableInfo.getColumns()) {
             sql.append(columnString(column));
@@ -64,10 +65,16 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         }
         for (ColumnInfo column : tableInfo.getColumns()) {
             if (column.isIndex()) {
-                sql.append(", KEY (`");
-                sql.append(column.getColumnName());
-                sql.append("`)");
+                sql.append(", KEY (");
+                sql.append(columnName(column));
+                sql.append(")");
             }
+        }
+        for (List<ColumnInfo> cIndex : tableInfo.getIndices()) {
+            sql.append(", KEY (");
+            String index = cIndex.stream().map(this::columnName).collect(Collectors.joining(","));
+            sql.append(index);
+            sql.append(")");
         }
         sql.append(")  COMMENT='"+ tableComment()+"';");
         sqlPrepared.setSql(sql.toString());
@@ -77,7 +84,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     @Override
     public SqlPrepared dropTableSql() {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "DROP TABLE IF EXISTS `" + tableName() + "`;";
+        String sql = "DROP TABLE IF EXISTS " + tableName() + ";";
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
@@ -85,7 +92,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     @Override
     public SqlPrepared addColumn(ColumnInfo columnInfo) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "ALTER TABLE `" + tableName() + "` ADD "+ columnString(columnInfo) + ";";
+        String sql = "ALTER TABLE " + tableName() + " ADD "+ columnString(columnInfo) + ";";
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
@@ -122,7 +129,8 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
                 }
                 break;
         }
-        str = "`" + column.getColumnName() + "` " + str;
+
+        str =  columnName(column) + " " + str;
         if(null != column.getDefaultData()){
             str += " DEFAULT '"+column.getDefaultData()+"'";
         }
