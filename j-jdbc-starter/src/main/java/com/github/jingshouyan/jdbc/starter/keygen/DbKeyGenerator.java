@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -20,23 +21,18 @@ public class DbKeyGenerator implements KeyGenerator {
 
     private static final long INIT_ID = 10000L;
 
-    private static final Map<String, LongAdder> MAP = Maps.newConcurrentMap();
+    private static final Map<String, AtomicLong> MAP = Maps.newConcurrentMap();
 
     @Autowired
     private IdHelper idHelper;
 
     @Override
     public long generateKey(String type) {
-        LongAdder longAdder = MAP.computeIfAbsent(type, idType -> {
-            LongAdder ladd = new LongAdder();
-            ladd.add(idHelper.get(idType));
-            return ladd;
-        });
-        long result;
-        synchronized (type.intern()){
-            longAdder.increment();
-            result = longAdder.longValue();
-        }
+        AtomicLong longAdder = MAP.computeIfAbsent(type, idType ->
+                new AtomicLong(idHelper.get(idType))
+        )
+        ;
+        long result = longAdder.incrementAndGet();
         if(result % IdHelper.STEP == 0){
             idHelper.update(type, result);
         }
