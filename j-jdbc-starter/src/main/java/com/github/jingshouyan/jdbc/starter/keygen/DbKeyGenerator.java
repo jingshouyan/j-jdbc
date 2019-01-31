@@ -32,9 +32,11 @@ public class DbKeyGenerator implements KeyGenerator {
             ladd.add(idHelper.get(idType));
             return ladd;
         });
-
-        longAdder.increment();
-        long result = longAdder.longValue();
+        long result;
+        synchronized (type.intern()){
+            longAdder.increment();
+            result = longAdder.longValue();
+        }
         if(result % IdHelper.STEP == 0){
             idHelper.update(type, result);
         }
