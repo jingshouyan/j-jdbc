@@ -18,8 +18,8 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <lombok.version>1.16.18</lombok.version>
-        <lombok-maven-plugin.version>1.16.18.0</lombok-maven-plugin.version>
+        <lombok.version>1.18.4</lombok.version>
+        <lombok-maven-plugin.version>1.18.4.0</lombok-maven-plugin.version>
         <guava.version>18.0</guava.version>
         <brave.version>5.5.0</brave.version>
     </properties>
