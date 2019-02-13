@@ -36,12 +36,12 @@ public class Log4Sql {
         long start = System.currentTimeMillis();
         try {
             Object[] args = joinPoint.getArgs();
-            log.info("sql execution starting");
+            log.debug("sql execution starting");
             for (int i = 0; i < args.length; i++) {
                 if(args[i] instanceof RowMapper){
                     continue;
                 }
-                log.info("arg.{}===>{}", i, args[i]);
+                log.debug("arg.{}===>{}", i, args[i]);
             }
             Object result = joinPoint.proceed();
             long end = System.currentTimeMillis();
@@ -51,7 +51,7 @@ public class Log4Sql {
             } else if(result instanceof Number) {
                 fetch = ((Number) result).longValue();
             }
-            log.info("sql execution end. use time : {}ms, fetch : {}, result: {}", (end - start), fetch, result);
+            log.debug("sql execution end. use time : {}ms, fetch : {}, result: {}", (end - start), fetch, result);
             return result;
         } catch (Throwable e) {
             long end = System.currentTimeMillis();

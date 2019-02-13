@@ -37,9 +37,9 @@ public class DbTest {
         userBean.setNickname("alkaksdjflk");
         userDao.insert(userBean);
 
-        log.info(userBean.toString());
+        log.debug(userBean.toString());
         UserDO userBean1 = userDao.find(userBean.getId()).get();
-        log.info(userBean1.toString());
+        log.debug(userBean1.toString());
     }
 
     @Test
