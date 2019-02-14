@@ -75,9 +75,9 @@ public class BeanRowMapper<T> implements RowMapper<T>,Constant {
         if(null == index){
             return null;
         }
-        Class<?> clazz = String.class;
-        if(!columnInfo.isJson() || !columnInfo.isEncrypt()){
-            clazz = columnInfo.getField().getType();
+        Class<?> clazz = columnInfo.getField().getType();
+        if(columnInfo.isJson() || columnInfo.isEncrypt()){
+            clazz = String.class;
         }
         value = JdbcUtils.getResultSetValue(rs, index, clazz);
         if(null == value){
