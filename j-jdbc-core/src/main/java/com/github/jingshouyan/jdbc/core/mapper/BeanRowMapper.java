@@ -17,6 +17,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -70,7 +71,7 @@ public class BeanRowMapper<T> implements RowMapper<T>,Constant {
     }
 
     private Object dbValue(Map<ColumnInfo,Integer> map,ResultSet rs,ColumnInfo columnInfo) throws SQLException{
-        Object value = null;
+        Object value ;
         Integer index = map.get(columnInfo);
         if(null == index){
             return null;
