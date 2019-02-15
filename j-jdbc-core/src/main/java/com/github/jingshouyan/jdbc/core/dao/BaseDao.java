@@ -212,9 +212,4 @@ public interface BaseDao<T extends BaseDO> {
      */
     int updateTable();
 
-    /**
-     * 列表查询默认查询的字段列表
-     * @return 列表查询默认查询的字段列表,返回 null 则查询 *(全部字段)
-     */
-    List<String> fields();
 }

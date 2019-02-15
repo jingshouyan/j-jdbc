@@ -2,6 +2,7 @@ package com.github.jingshouyan.jdbc.comm.bean;
 
 import com.github.jingshouyan.jdbc.comm.annotaion.Ignore;
 import com.github.jingshouyan.jdbc.comm.annotaion.Index;
+import com.github.jingshouyan.jdbc.comm.annotaion.ListQueryFields;
 import com.github.jingshouyan.jdbc.comm.annotaion.Table;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author jingshouyan
@@ -36,6 +38,8 @@ public class TableInfo {
 
     private List<List<ColumnInfo>> indices;
 
+    private List<String> listQueryFields;
+
 
     public TableInfo(Class<?> clazz){
         this.clazz = clazz;
@@ -47,6 +51,10 @@ public class TableInfo {
                 tableName = table.value();
             }
             comment = table.comment();
+        }
+        ListQueryFields lqf = clazz.getAnnotation(ListQueryFields.class);
+        if(null != lqf) {
+            listQueryFields = Stream.of(lqf.value()).collect(Collectors.toList());
         }
         //属性名 用于排除 重名的 父类中的属性
         Set<String> fieldNames = new HashSet<>();
