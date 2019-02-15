@@ -36,7 +36,6 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     private Class<T> clazz;
     private RowMapper<T> rowMapper;
 
-
     public BaseDaoImpl() {
         init();
     }
@@ -317,9 +316,8 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
      * 查询时默认指定的列
      * @return 查询时默认指定的列
      */
-    @Override
-    public List<String> fields() {
-        return null;
+    private List<String> fields() {
+        return TableUtil.tableInfo(clazz).getListQueryFields();
     }
 
     private Object fieldValue(T t,String fieldName){
