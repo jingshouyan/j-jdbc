@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.swing.tree.RowMapper;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.IntStream;
 
 /**
  * @author jingshouyan
@@ -45,11 +46,13 @@ public class Log4Sql {
             }
             Object result = joinPoint.proceed();
             long end = System.currentTimeMillis();
-            long fetch = 0;
-            if (result instanceof List) {
-                fetch = ((List) result).size();
+            int fetch = 0;
+            if (result instanceof Collection) {
+                fetch = ((Collection) result).size();
             } else if(result instanceof Number) {
-                fetch = ((Number) result).longValue();
+                fetch = ((Number) result).intValue();
+            } else if(result instanceof int[]) {
+                fetch = IntStream.of((int[])result).sum();
             }
             log.debug("sql execution end. use time : {}ms, fetch : {}, result: {}", (end - start), fetch, result);
             return result;
