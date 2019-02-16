@@ -71,24 +71,27 @@ public class DefaultKeyGenerator implements KeyGenerator{
      * @return 返回@{@link Long}类型的Id
      */
     @Override
-    public synchronized long generateKey(String type) {
-        long currentMillis = currentTimeMillis();
-        Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
-        //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
-        if (lastTime == currentMillis) {
-            if (firstSequenceThisMillis == (sequence = ++sequence & SEQUENCE_MASK)) {
-                currentMillis = waitUntilNextTime(currentMillis);
+    public long generateKey(String type) {
+        synchronized (type.intern()) {
+            long currentMillis = currentTimeMillis();
+            Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
+            //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
+            if (lastTime == currentMillis) {
+                if (firstSequenceThisMillis == (sequence = ++sequence & SEQUENCE_MASK)) {
+                    currentMillis = waitUntilNextTime(currentMillis);
+                    firstSequenceThisMillis = sequence;
+                }
+            } else {
+                sequence = ++sequence & SEQUENCE_MASK;
                 firstSequenceThisMillis = sequence;
             }
-        } else {
-            sequence = ++sequence & SEQUENCE_MASK;
-            firstSequenceThisMillis = sequence;
+            lastTime = currentMillis;
+            if (log.isDebugEnabled()) {
+                log.debug("{}-{}-{}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
+            }
+            return ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
         }
-        lastTime = currentMillis;
-        if (log.isDebugEnabled()) {
-            log.debug("{}-{}-{}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
-        }
-        return ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
+
     }
 
     private long waitUntilNextTime(final long lastTime) {
