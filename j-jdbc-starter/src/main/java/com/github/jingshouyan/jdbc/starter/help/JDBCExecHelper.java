@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * #date 2019/1/31 12:21
  */
 @Component
-public class ExecHelper {
+public class JDBCExecHelper {
     private final int cpuNum = Runtime.getRuntime().availableProcessors();
     private final ExecutorService EXEC = new ThreadPoolExecutor(cpuNum * 4,
             cpuNum * 8, 30L, TimeUnit.SECONDS, new LinkedBlockingDeque<>(1024),
