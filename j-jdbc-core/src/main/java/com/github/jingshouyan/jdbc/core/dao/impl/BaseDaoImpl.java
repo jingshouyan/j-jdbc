@@ -1,9 +1,9 @@
 package com.github.jingshouyan.jdbc.core.dao.impl;
 
-import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
 import com.github.jingshouyan.jdbc.core.event.DmlEventBus;
@@ -169,7 +169,12 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public int batchInsert(@NonNull Collection<T> list) {
+    public int batchInsert(@NonNull List<T> list) {
+        return insert(list);
+    }
+
+//    @Override
+    private int batchInsert2(@NonNull List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         SqlPrepared sqlPrepared = null;
         List<Map<String, Object>> values = Lists.newArrayList();
@@ -205,7 +210,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public int batchUpdate(Collection<T> list){
+    public int batchUpdate(List<T> list){
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         SqlPrepared sqlPrepared = null;
         List<Map<String, Object>> values = Lists.newArrayList();
