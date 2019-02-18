@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +56,7 @@ public class DbTest {
 
     @Test
     public void batchInsert(){
-        Collection<UserDO> users = new HashSet<>();
+        List<UserDO> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             UserDO userBean = new UserDO();
             userBean.setName("张三");
