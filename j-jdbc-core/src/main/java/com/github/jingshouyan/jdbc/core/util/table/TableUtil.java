@@ -1,9 +1,9 @@
 package com.github.jingshouyan.jdbc.core.util.table;
 
-import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.keygen.KeyGeneratorProvider;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
