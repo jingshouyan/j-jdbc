@@ -17,10 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class DbKeyGenerator implements KeyGenerator {
 
-    private static final long STEP = 1000L;
-
-    private static final long INIT_ID = 10000L;
-
     private static final Map<String, AtomicLong> MAP = Maps.newConcurrentMap();
 
     @Autowired
