@@ -5,7 +5,6 @@ import com.github.jingshouyan.jdbc.comm.annotaion.Index;
 import com.github.jingshouyan.jdbc.comm.annotaion.ListQueryFields;
 import com.github.jingshouyan.jdbc.comm.annotaion.Table;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
