@@ -1,7 +1,7 @@
 package com.github.jingshouyan.jdbc.starter.keygen;
 
 import com.github.jingshouyan.jdbc.core.keygen.KeyGenerator;
-import com.github.jingshouyan.jdbc.starter.help.ExecHelper;
+import com.github.jingshouyan.jdbc.starter.help.JDBCExecHelper;
 import com.github.jingshouyan.jdbc.starter.help.IdHelper;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class DbKeyGenerator implements KeyGenerator {
     @Autowired
     private IdHelper idHelper;
     @Autowired
-    private ExecHelper execHelper;
+    private JDBCExecHelper execHelper;
 
     @Override
     public long generateKey(String type) {
