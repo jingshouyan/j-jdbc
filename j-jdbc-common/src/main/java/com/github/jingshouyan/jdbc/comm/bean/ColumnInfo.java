@@ -4,7 +4,6 @@ import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.annotaion.Column;
 import com.github.jingshouyan.jdbc.comm.annotaion.Key;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

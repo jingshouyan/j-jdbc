@@ -3,10 +3,7 @@ package com.jingshouyan.dao.impl;
 import com.github.jingshouyan.jdbc.core.dao.impl.BaseDaoImpl;
 import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
 
 /**
  * @author jingshouyan

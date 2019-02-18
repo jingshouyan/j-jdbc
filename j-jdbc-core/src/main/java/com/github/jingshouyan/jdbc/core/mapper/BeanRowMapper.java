@@ -5,8 +5,8 @@ import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
-import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
+import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -17,7 +17,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.lang.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

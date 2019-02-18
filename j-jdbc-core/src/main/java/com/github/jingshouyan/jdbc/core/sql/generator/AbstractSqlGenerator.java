@@ -6,7 +6,6 @@ import com.github.jingshouyan.jdbc.comm.bean.OrderBy;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.Collection;

@@ -1,7 +1,5 @@
 package com.github.jingshouyan.jdbc.comm;
 
-import java.util.Optional;
-
 /**
  * @author jingshouyan
  * 11/22/18 4:52 PM

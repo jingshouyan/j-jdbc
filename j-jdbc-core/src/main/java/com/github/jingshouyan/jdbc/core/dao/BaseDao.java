@@ -130,7 +130,7 @@ public interface BaseDao<T extends BaseDO> {
      * @param list 数据集合
      * @return 影响行数
      */
-    int batchInsert(Collection<T> list);
+    int batchInsert(List<T> list);
 
     /**
      * 基于主键的数据更新,null字段不更新,必须有主键且不能为空
@@ -148,7 +148,7 @@ public interface BaseDao<T extends BaseDO> {
      * @param list 数据集合
      * @return 影响行数
      */
-    int batchUpdate(Collection<T> list);
+    int batchUpdate(List<T> list);
 
 
 
