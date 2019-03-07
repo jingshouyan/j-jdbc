@@ -3,7 +3,6 @@ package com.jingshouyan.bean;
 import com.github.jingshouyan.jdbc.comm.annotaion.Foreign;
 import com.github.jingshouyan.jdbc.comm.annotaion.Key;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
-import com.jingshouyan.bean.UserDO;
 import lombok.Data;
 
 import java.util.ArrayList;

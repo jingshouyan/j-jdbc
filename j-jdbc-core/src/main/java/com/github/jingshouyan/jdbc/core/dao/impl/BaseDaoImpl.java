@@ -3,7 +3,6 @@ package com.github.jingshouyan.jdbc.core.dao.impl;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
-import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
