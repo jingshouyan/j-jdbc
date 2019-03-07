@@ -3,6 +3,7 @@ package com.github.jingshouyan.jdbc.core.dao.impl;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
+import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
@@ -26,6 +27,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -296,14 +298,11 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         for(String columnName : md.getColumnNames()){
             cn.add(columnName.toLowerCase());
         }
-        Map<String,ColumnInfo> map = TableUtil.tableInfo(clazz)
-                .getLowerCaseColumnMap();
-        List<ColumnInfo> columnInfos = Lists.newArrayList();
-        for (String key : map.keySet()){
-            if(!cn.contains(key)){
-                columnInfos.add(map.get(key));
-            }
-        }
+
+        List<ColumnInfo> columnInfos = TableUtil.tableInfo(clazz).getColumns().stream()
+                .filter(c -> !c.isForeign())
+                .filter(c -> !cn.contains(c.getColumnName().toLowerCase()))
+                .collect(Collectors.toList());
 
         if(columnInfos.isEmpty()) {
             return 0;

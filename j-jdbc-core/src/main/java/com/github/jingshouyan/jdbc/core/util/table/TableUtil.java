@@ -47,13 +47,15 @@ public class TableUtil {
     public static Map<String,Object> valueMap(@NonNull Object bean) {
         Map<String, Object> map = Maps.newHashMap();
         TableInfo beanTable = tableInfo(bean.getClass());
-        for (String fieldName : beanTable.getFieldNameMap().keySet()) {
-            Object value = fieldValue(bean,fieldName);
-            if(null == value){
-                continue;
-            }
-            map.put(fieldName, value);
-        }
+        beanTable.getColumns().stream()
+                .filter(c -> !c.isForeign())
+                .forEach(c -> {
+                    String fieldName = c.getFieldName();
+                    Object value = fieldValue(bean,fieldName);
+                    if(null != value){
+                        map.put(fieldName, value);
+                    }
+                });
         return map;
     }
 
