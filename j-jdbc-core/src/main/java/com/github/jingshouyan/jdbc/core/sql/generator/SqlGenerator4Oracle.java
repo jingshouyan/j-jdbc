@@ -57,6 +57,9 @@ public class SqlGenerator4Oracle<T> extends AbstractSqlGenerator<T> implements S
         sql.append(" (");
         TableInfo tableInfo = TableUtil.tableInfo(clazz);
         for (ColumnInfo column : tableInfo.getColumns()) {
+            if(column.isForeign()){
+                continue;
+            }
             sql.append(columnString(column));
             sql.append(" ,");
         }

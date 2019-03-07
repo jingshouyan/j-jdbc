@@ -50,6 +50,9 @@ public class SqlGenerator4Gbase<T> extends AbstractSqlGenerator<T> {
         sql.append(" (");
         TableInfo beanTable = TableUtil.tableInfo(clazz);
         for (ColumnInfo column : beanTable.getColumns()) {
+            if(column.isForeign()){
+                continue;
+            }
             sql.append(columnString(column));
             sql.append(" ,");
         }
