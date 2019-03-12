@@ -51,10 +51,7 @@ public class TableInfo {
             }
             comment = table.comment();
         }
-        ListQueryFields lqf = clazz.getAnnotation(ListQueryFields.class);
-        if(null != lqf) {
-            listQueryFields = Stream.of(lqf.value()).collect(Collectors.toList());
-        }
+
         //属性名 用于排除 重名的 父类中的属性
         Set<String> fieldNames = new HashSet<>();
         for (Class c = clazz; Object.class != c; c = c.getSuperclass()) {
@@ -87,6 +84,11 @@ public class TableInfo {
                         })
                         .collect(Collectors.toList())
                 ).collect(Collectors.toList());
+
+        ListQueryFields lqf = clazz.getAnnotation(ListQueryFields.class);
+        if(null != lqf) {
+            listQueryFields = Stream.of(lqf.value()).collect(Collectors.toList());
+        }
     }
 
     /**
