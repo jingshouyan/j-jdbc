@@ -25,7 +25,7 @@ public class TableInfo {
 
     private String tableName;
 
-    private String comment = "";
+    private String comment;
 
     private ColumnInfo key;
 
