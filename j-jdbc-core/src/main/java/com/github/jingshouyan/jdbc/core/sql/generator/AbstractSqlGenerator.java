@@ -2,7 +2,9 @@ package com.github.jingshouyan.jdbc.core.sql.generator;
 
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
+import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.bean.OrderBy;
+import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.base.Preconditions;
@@ -206,12 +208,18 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
             for (Condition compare : compares) {
                 //添加 条件值 校验
                 String key = compare.getField();
-                Preconditions.checkArgument(isField(key),
+                ColumnInfo columnInfo = columnInfo(key);
+                Preconditions.checkNotNull(columnInfo,
                         String.format("[%s] dos not contains field [%s]", clazz, key));
-                String column = columnName(key);
+                String column = columnName(columnInfo);
                 if(null != compare.getEq()) {
+                    Object eq = compare.getEq();
+                    if(columnInfo.isEncrypt() &&
+                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                        eq = EncryptionProvider.encrypt(eq.toString(),columnInfo.getEncryptKey());
+                    }
                     sql.append(String.format(" AND %s = :%s__eq ", column, key));
-                    params.put(key + "__eq", compare.getEq());
+                    params.put(key + "__eq", eq);
                 }
                 if (null != compare.getLike()) {
                     sql.append(String.format(" AND %s LIKE :%s__like ", column, key));
@@ -245,12 +253,26 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                     }
                 }
                 if (null != compare.getIn()) {
+                    Collection<?> in = compare.getIn();
+                    if(columnInfo.isEncrypt() &&
+                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                        in = in.stream()
+                                .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
+                                .collect(Collectors.toList());
+                    }
                     sql.append(String.format(" AND %s IN (:%s__in) ", column, key));
-                    params.put(key + "__in", compare.getIn());
+                    params.put(key + "__in", in);
                 }
                 if (null != compare.getNotIn()) {
+                    Collection<?> notIn = compare.getNotIn();
+                    if(columnInfo.isEncrypt() &&
+                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                        notIn = notIn.stream()
+                                .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
+                                .collect(Collectors.toList());
+                    }
                     sql.append(String.format(" AND %s NOT IN (:%s__notIn) ", column, key));
-                    params.put(key + "__notIn", compare.getNotIn());
+                    params.put(key + "__notIn", notIn);
                 }
             }
         }
@@ -281,11 +303,11 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.tableInfo(clazz).getComment();
     }
 
-    protected String columnName(String fieldName) {
+    private String columnName(String fieldName) {
         return q()+TableUtil.columnName(clazz, fieldName)+q();
     }
 
-    protected String columnName(ColumnInfo columnInfo) {
+    private String columnName(ColumnInfo columnInfo) {
         return q() + columnInfo.getColumnName() + q();
     }
 
@@ -293,9 +315,10 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.valueMap(bean);
     }
 
-    private boolean isField(String fieldName) {
-        return TableUtil.tableInfo(clazz).getFieldNameMap().containsKey(fieldName);
+    private ColumnInfo columnInfo(String fieldName){
+        return TableUtil.tableInfo(clazz).getFieldNameMap().get(fieldName);
     }
+
 
     protected boolean isEmpty(Object obj) {
         return TableUtil.isEmpty(obj);
