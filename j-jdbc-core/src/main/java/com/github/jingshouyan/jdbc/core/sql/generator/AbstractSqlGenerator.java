@@ -303,11 +303,11 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.tableInfo(clazz).getComment();
     }
 
-    private String columnName(String fieldName) {
+    protected String columnName(String fieldName) {
         return q()+TableUtil.columnName(clazz, fieldName)+q();
     }
 
-    private String columnName(ColumnInfo columnInfo) {
+    protected String columnName(ColumnInfo columnInfo) {
         return q() + columnInfo.getColumnName() + q();
     }
 
