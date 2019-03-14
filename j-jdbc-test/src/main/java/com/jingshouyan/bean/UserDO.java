@@ -39,6 +39,8 @@ public class UserDO extends BaseDO {
     //设置数据库字段名,默认为属性名
     @Column(value = "NICK_NAME_TT4")
     private String nickname;
+    @Column(value = "ENCRYPT_TEST",encryptType = EncryptType.FIXED,encryptKey = "abcdeeee1123")
+    private String encryptTest;
 
 
     /**

@@ -34,6 +34,7 @@ public class DbTest {
         userBean.setAge(30);
         userBean.setTags(Lists.newArrayList("a","b"));
         userBean.setNickname("alkaksdjflk");
+        userBean.setEncryptTest("士大夫");
         userDao.insert(userBean);
 
         log.debug(userBean.toString());
@@ -45,7 +46,8 @@ public class DbTest {
     public void query(){
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age").gt(20).lte(89)
-                .field("nickname").like("%张三%")
+//                .field("nickname").like("%张三%")
+                .field("encryptTest").in(Lists.newArrayList("士大夫1","士大夫2"))
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
@@ -61,6 +63,7 @@ public class DbTest {
             userBean.setAge(30);
             userBean.setTags(Lists.newArrayList("a","b"));
             userBean.setNickname("alkaksdjflk");
+            userBean.setEncryptTest("士大夫"+i);
             users.add(userBean);
         }
         userDao.batchInsert(users);
