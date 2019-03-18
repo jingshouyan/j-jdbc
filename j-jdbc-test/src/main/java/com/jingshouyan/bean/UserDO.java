@@ -42,6 +42,8 @@ public class UserDO extends BaseDO {
     @Column(value = "ENCRYPT_TEST",encryptType = EncryptType.FIXED,encryptKey = "abcdeeee1123")
     private String encryptTest;
 
+    private String key;
+
 
     /**
      * 当使用string类型主键时,主键前缀
