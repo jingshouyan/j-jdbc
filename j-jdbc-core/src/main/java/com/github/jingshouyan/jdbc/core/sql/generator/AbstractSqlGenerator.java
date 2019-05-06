@@ -214,8 +214,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 String column = columnName(columnInfo);
                 if(null != compare.getEq()) {
                     Object eq = compare.getEq();
-                    if(columnInfo.isEncrypt() &&
-                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
                         eq = EncryptionProvider.encrypt(eq.toString(),columnInfo.getEncryptKey());
                     }
                     sql.append(String.format(" AND %s = :%s__eq ", column, key));
@@ -254,8 +253,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 }
                 if (null != compare.getIn()) {
                     Collection<?> in = compare.getIn();
-                    if(columnInfo.isEncrypt() &&
-                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
                         in = in.stream()
                                 .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());
@@ -265,8 +263,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 }
                 if (null != compare.getNotIn()) {
                     Collection<?> notIn = compare.getNotIn();
-                    if(columnInfo.isEncrypt() &&
-                            columnInfo.getEncryptType() == EncryptType.FIXED){
+                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
                         notIn = notIn.stream()
                                 .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());
