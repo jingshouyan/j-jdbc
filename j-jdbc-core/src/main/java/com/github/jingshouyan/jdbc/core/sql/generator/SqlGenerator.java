@@ -18,6 +18,7 @@ public interface SqlGenerator<T> {
     /**
      * 条件查询语句生成
      * @param conditions 条件
+     * @param fields 查询的列
      * @return sql语句和参数
      */
     SqlPrepared query(List<Condition> conditions, Collection<String> fields);
@@ -26,6 +27,7 @@ public interface SqlGenerator<T> {
      * 带分页的条件查询语句生成
      * @param conditions 条件
      * @param page 分页信息
+     * @param fields 查询的列
      * @return sql语句和参数
      */
     SqlPrepared queryLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
@@ -77,5 +79,10 @@ public interface SqlGenerator<T> {
      */
     SqlPrepared selectNull();
 
+    /**
+     *  添加列
+     * @param columnInfo 列信息
+     * @return SqlPrepared
+     */
     SqlPrepared addColumn(ColumnInfo columnInfo);
 }

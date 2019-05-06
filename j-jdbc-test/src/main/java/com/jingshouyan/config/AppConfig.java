@@ -16,10 +16,10 @@ import javax.sql.DataSource;
 public class AppConfig {
 
 
-    public static final String url="jdbc:mysql://127.0.0.1:3306/DB_TEST?useUnicode=true&characterEncoding=utf8&useSSL=false";
-    public static final String username="root";
-    public static final String password="abcd1234";
-    public static final String driver="com.mysql.jdbc.Driver";
+    public static final String URL ="jdbc:mysql://127.0.0.1:3306/DB_TEST?useUnicode=true&characterEncoding=utf8&useSSL=false";
+    public static final String USERNAME ="root";
+    public static final String PASSWORD ="abcd1234";
+    public static final String DRIVER ="com.mysql.jdbc.Driver";
 
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
@@ -33,10 +33,10 @@ public class AppConfig {
 
     private DataSource initDataSource(){
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(url);
-        config.setDriverClassName(driver);
-        config.setUsername(username);
-        config.setPassword(password);
+        config.setJdbcUrl(URL);
+        config.setDriverClassName(DRIVER);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
         config.setMaximumPoolSize(20);
         config.setMinimumIdle(5);
         config.addDataSourceProperty("cachePrepStmts", "true");

@@ -10,9 +10,10 @@ import lombok.SneakyThrows;
 
 public class Hex implements Encryption {
 
-    public static final String CHARSET = "utf-8";
+    private static final String CHARSET = "utf-8";
     private static final char[] DIGITS_LOWER = { '0', '1', '2', '3', '4', '5',
             '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    private static final int HEX_ONE = 0x01;
 
     @Override
     @SneakyThrows
@@ -44,7 +45,7 @@ public class Hex implements Encryption {
     }
     private static byte[] decodeHex(char[] data) {
         int len = data.length;
-        if ((len & 0x01) != 0) {
+        if ((len & HEX_ONE) != 0) {
             throw new RuntimeException("Odd number of characters.");
         }
         byte[] out = new byte[len >> 1];

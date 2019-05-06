@@ -174,7 +174,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         return insert(list);
     }
 
-//    @Override
+
     private int batchInsert2(@NonNull List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         SqlPrepared sqlPrepared = null;

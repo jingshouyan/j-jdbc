@@ -15,10 +15,10 @@ import java.security.SecureRandom;
  * #date 2019/1/17 16:58
  */
 
-public class AES implements Encryption{
+public class Aes implements Encryption{
 
     public static final String CHARSET = "utf-8";
-    public static final String CIPHER_ALGORITHM = "AES";
+    public static final String CIPHER_ALGORITHM = "Aes";
     public static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
     /**
      * 加密
@@ -27,6 +27,7 @@ public class AES implements Encryption{
      * @param password 加密密码
      * @return 加密后字符串
      */
+    @Override
     @SneakyThrows
     public String encrypt(String content, String password) {
         KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
@@ -53,6 +54,7 @@ public class AES implements Encryption{
      * @param password 解密密钥
      * @return 解密后字符串
      */
+    @Override
     @SneakyThrows
     public String decrypt(String content, String password) {
         byte[] buf = base64Decode(content);
