@@ -1,6 +1,6 @@
 package com.github.jingshouyan.jdbc.core.encryption;
 
-import com.github.jingshouyan.jdbc.core.encryption.aes.AES;
+import com.github.jingshouyan.jdbc.core.encryption.aes.Aes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ import lombok.Setter;
 public class EncryptionProvider{
 
     @Getter@Setter
-    private static Encryption encryption = new AES();
+    private static Encryption encryption = new Aes();
 
     public static String encrypt(String content, String password) {
         return encryption.encrypt(content,password);

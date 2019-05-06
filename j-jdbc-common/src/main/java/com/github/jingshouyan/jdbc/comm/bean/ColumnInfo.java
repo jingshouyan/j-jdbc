@@ -5,9 +5,8 @@ import com.github.jingshouyan.jdbc.comm.annotaion.Column;
 import com.github.jingshouyan.jdbc.comm.annotaion.Foreign;
 import com.github.jingshouyan.jdbc.comm.annotaion.Key;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
  * @author jingshouyan
  * 11/22/18 5:11 PM
  */
-@Getter@Setter@ToString
+@Data@EqualsAndHashCode
 public class ColumnInfo {
     private Field field;
     private String fieldName;

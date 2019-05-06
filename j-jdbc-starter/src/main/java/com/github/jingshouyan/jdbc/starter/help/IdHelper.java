@@ -25,7 +25,7 @@ public class IdHelper {
     @Autowired
     private IdDao idDao;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class)
     public long get(String idType) {
         long id = INIT_ID;
         Optional<IdDO> idBeanOptional = idDao.find(idType);
@@ -43,7 +43,7 @@ public class IdHelper {
         return id;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Throwable.class)
     public void update(String idType, long old) {
         IdDO idBean = new IdDO();
         idBean.setIdType(idType);
