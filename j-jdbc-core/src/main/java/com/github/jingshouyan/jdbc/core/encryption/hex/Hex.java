@@ -23,10 +23,11 @@ public class Hex implements Encryption {
     }
 
     @Override
+    @SneakyThrows
     public String decrypt(String content, String password) {
         char[] chars = content.toCharArray();
         byte[] bytes = decodeHex(chars);
-        return new String(bytes);
+        return new String(bytes,CHARSET);
     }
 
 

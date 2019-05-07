@@ -19,6 +19,6 @@ public class SqlGeneratorFactoryUtil {
     public static final SqlGeneratorFactory KING_BASE = SqlGenerator4Kingbase::new;
 
     @Getter@Setter
-    public static SqlGeneratorFactory sqlGeneratorFactory = MYSQL;
+    private static SqlGeneratorFactory sqlGeneratorFactory = MYSQL;
 
 }

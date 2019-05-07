@@ -79,9 +79,11 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         int i = 0;
         Map<Integer, String> keyMap = Maps.newHashMap();
         Map<String, Object> param = Maps.newHashMap();
-        for (String key : valueMap.keySet()) {
+        for (Map.Entry<String,Object> entry : valueMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
             // 空值不插入
-            if (isEmpty(valueMap.get(key))) {
+            if (isEmpty(value)) {
                 continue;
             }
             //拼装keys字符串
@@ -131,8 +133,9 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         sql.append("UPDATE ");
         sql.append(tableName());
         sql.append(" SET ");
-        for (String key : beanMap.keySet()) {
-            Object value = beanMap.get(key);
+        for (Map.Entry<String,Object> entry : beanMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
             // 空 不更新
             if (isEmpty(value)) {
                 continue;
