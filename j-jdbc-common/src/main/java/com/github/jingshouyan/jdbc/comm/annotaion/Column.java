@@ -41,11 +41,6 @@ public @interface Column {
     String encryptKey() default "";
 
     /**
-     * @return 是否创建索引
-     */
-    boolean index() default false;
-
-    /**
      * @return 默认值
      */
     String defaultData() default "";

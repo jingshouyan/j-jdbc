@@ -1,10 +1,7 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
-import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
-import com.github.jingshouyan.jdbc.comm.bean.Condition;
-import com.github.jingshouyan.jdbc.comm.bean.Page;
-import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
+import com.github.jingshouyan.jdbc.comm.bean.*;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import lombok.NonNull;
@@ -66,16 +63,15 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             sql.append(key.getColumnName());
             sql.append("`)");
         }
-        for (ColumnInfo column : tableInfo.getColumns()) {
-            if (column.isIndex()) {
+        for (IndexInfo indexInfo : tableInfo.getIndices()) {
+            if(indexInfo.isUnique()){
+                sql.append(", UNIQUE (");
+            } else {
                 sql.append(", KEY (");
-                sql.append(columnName(column));
-                sql.append(")");
             }
-        }
-        for (List<ColumnInfo> cIndex : tableInfo.getIndices()) {
-            sql.append(", KEY (");
-            String index = cIndex.stream().map(this::columnName).collect(Collectors.joining(","));
+            String index = indexInfo.getColumnInfos().stream()
+                    .map(this::columnName)
+                    .collect(Collectors.joining(","));
             sql.append(index);
             sql.append(")");
         }

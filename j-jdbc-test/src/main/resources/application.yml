@@ -1,2 +1,18 @@
 j-jdbc:
   tableInit: 3
+
+db:
+  host: 127.0.0.1
+  port: 3306
+  schema: DB_TEST
+  username: root
+  password: abcd1234
+
+spring:
+  application:
+    name: j-jdbc-test
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: ${db.username}
+    password: ${db.password}

@@ -32,7 +32,6 @@ public class ColumnInfo {
     private String encryptKey;
     private boolean key;
     private boolean autoGen;
-    private boolean index;
     private String defaultData;
     private String comment;
     private int order;
@@ -78,7 +77,6 @@ public class ColumnInfo {
             encryptKey = "";
             key = false;
             autoGen = false;
-            index = false;
             comment = "";
             order = Constant.COLUMN_ORDER_DEFAULT;
             Column column = field.getAnnotation(Column.class);
@@ -94,7 +92,6 @@ public class ColumnInfo {
                 json = column.json();
                 encryptType = column.encryptType();
                 encryptKey = column.encryptKey();
-                index = column.index();
                 if(!"".equals(column.defaultData())){
                     defaultData = column.defaultData();
                 }
