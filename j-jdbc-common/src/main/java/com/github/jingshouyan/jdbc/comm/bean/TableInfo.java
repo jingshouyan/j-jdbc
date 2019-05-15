@@ -35,7 +35,7 @@ public class TableInfo {
 
     private Map<String, ColumnInfo> lowerCaseColumnMap = new HashMap<>();
 
-    private List<List<ColumnInfo>> indices;
+    private List<IndexInfo> indices = new ArrayList<>();
 
     private List<String> listQueryFields;
 
@@ -52,17 +52,17 @@ public class TableInfo {
             comment = table.comment();
         }
 
-        //属性名 用于排除 重名的 父类中的属性
+        // 属性名 用于排除 重名的 父类中的属性
         Set<String> fieldNames = new HashSet<>();
         for (Class c = clazz; Object.class != c; c = c.getSuperclass()) {
             Field[] fields = c.getDeclaredFields();
             for (Field field : fields) {
                 int mod = field.getModifiers();
-                //静态属性
+                // 静态属性
                 if (Modifier.isStatic(mod)) {
                     continue;
                 }
-                //排除添加 @Ignore 的属性
+                // 排除添加 @Ignore 的属性
                 if (field.isAnnotationPresent(Ignore.class)) {
                     continue;
                 }
@@ -70,20 +70,38 @@ public class TableInfo {
                     fieldNames.add(field.getName());
                     ColumnInfo beanColumn = new ColumnInfo(field);
                     addColumnInfo(beanColumn);
+                    // field 中添加的 @Index 处理
+                    Index index = field.getAnnotation(Index.class);
+                    if(index != null) {
+                        IndexInfo indexInfo = new IndexInfo();
+                        indexInfo.getColumnInfos().add(beanColumn);
+                        indexInfo.setUnique(index.unique());
+                        indices.add(indexInfo);
+                    }
                 }
+
             }
         }
         getColumns().sort(Comparator.comparing(ColumnInfo::getOrder));
-        indices = Arrays.stream(clazz.getAnnotationsByType(Index.class))
+
+        // class 上添加的 @Index 处理
+        List<IndexInfo> clazzIndexInfo = Arrays.stream(clazz.getAnnotationsByType(Index.class))
                 .map(
-                        index -> Arrays.stream(index.value())
-                        .map(fieldName -> {
-                            ColumnInfo columnInfo = fieldNameMap.get(fieldName);
-                            assert columnInfo != null;
-                            return columnInfo;
-                        })
-                        .collect(Collectors.toList())
+                        index -> {
+                            IndexInfo indexInfo = new IndexInfo();
+                            List<ColumnInfo> columnInfos = Arrays.stream(index.value())
+                                    .map(fieldName -> {
+                                        ColumnInfo columnInfo = fieldNameMap.get(fieldName);
+                                        assert columnInfo != null;
+                                        return columnInfo;
+                                    })
+                                    .collect(Collectors.toList());
+                            indexInfo.setColumnInfos(columnInfos);
+                            indexInfo.setUnique(index.unique());
+                            return indexInfo;
+                        }
                 ).collect(Collectors.toList());
+        indices.addAll(clazzIndexInfo);
 
         ListQueryFields lqf = clazz.getAnnotation(ListQueryFields.class);
         if(null != lqf) {

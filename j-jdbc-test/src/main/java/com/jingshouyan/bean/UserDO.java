@@ -9,23 +9,21 @@ import lombok.ToString;
 
 import java.util.List;
 
-
-@SuppressWarnings("AlibabaCommentsMustBeJavadocFormat")
+/**
+ * @author jingshouyan
+ * 11/29/18 5:20 PM
+ */
 @Getter@Setter@ToString
 /**
  * 表注解,指定表明,不加默认为类名
  */
 
 @Table(value = "DEMO_USER",comment = "用户表")
-/**
- * @Index({"age","nickname"})
- * @Index({"id","name"})
- */
-/**
- * @author jingshouyan
- * 11/29/18 5:20 PM
- */
-@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
+
+@Index(value = {"age","nickname"},unique = true)
+@Index({"id","name"})
+
+//@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
 public class UserDO extends BaseDO {
 
     /**
@@ -41,11 +39,12 @@ public class UserDO extends BaseDO {
      * 使用加密后,无法作为查询条件,因为数据库中存放的是密文
      */
     @Column(encryptType = EncryptType.FLIED,encryptKey = "id")
+    @Index(unique = true)
     private String name;
     /**
      * 列类型使用包装类型,因为在更新操作时 null 值不更新
      */
-
+    @Index
     private Integer age;
     /**
      *列注解,选择加密方式为固定值abcd
