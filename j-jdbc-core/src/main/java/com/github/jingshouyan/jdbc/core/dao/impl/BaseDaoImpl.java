@@ -203,7 +203,9 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         String key = key();
         Object value = fieldValue(t, key);
         Preconditions.checkNotNull(value, "The @Key field must not null");
-        List<Condition> conditions = ConditionUtil.newInstance().field(key).eq(value).conditions();
+        List<Condition> conditions = ConditionUtil.newInstance()
+                .field(key).eq(value)
+                .conditions();
         int fetch = update(t, conditions);
         //添加更新事件
         DmlEventBus.onUpdate(t);
@@ -309,7 +311,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
         for (ColumnInfo columnInfo : columnInfos) {
             SqlPrepared sqlPrepared1 = sqlGenerator().addColumn(columnInfo);
-            return template.update(sqlPrepared1.getSql(), sqlPrepared1.getParams());
+            template.update(sqlPrepared1.getSql(), sqlPrepared1.getParams());
         }
 
         return columnInfos.size();

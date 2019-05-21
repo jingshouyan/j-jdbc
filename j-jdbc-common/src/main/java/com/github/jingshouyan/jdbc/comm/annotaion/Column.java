@@ -19,6 +19,17 @@ public @interface Column {
     String value() default "";
 
     /**
+     * @return 是否为不可变字段,更新时不会更新该字段.
+     *
+     */
+    boolean immutable() default false;
+
+    /**
+     * @return id更新时作为条件,主要用作sharding路由.
+     */
+    boolean router() default false;
+
+    /**
      * @return 字段长度
      */
     int length() default Constant.COLUMN_LENGTH_DEFAULT;
