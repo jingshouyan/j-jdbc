@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -63,6 +64,24 @@ public class UserDO extends BaseDO {
 
     private String key;
 
+    @Decimal(precision = 22,scale = 6)
+    private BigDecimal acc1;
+
+    private BigDecimal acc2;
+
+    @Decimal(precision = 22,scale = 6)
+    private BigDecimal acc3;
+
+    private BigDecimal acc4;
+
+    @Decimal(precision = 22,scale = 6)
+    private BigDecimal acc5;
+
+    private BigDecimal acc6;
+    @Decimal(precision = 22,scale = 6)
+    private BigDecimal acc7;
+
+    private BigDecimal acc8;
 
     /**
      * 当使用string类型主键时,主键前缀

@@ -1,11 +1,13 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
+import com.github.jingshouyan.jdbc.comm.annotaion.Decimal;
 import com.github.jingshouyan.jdbc.comm.bean.*;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import lombok.NonNull;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,6 +122,9 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             case "double":
                 str = "DOUBLE";
                 break;
+            case "bigdecimal":
+                str = decimalStr(column.getField());
+                break;
             default:
                 if (column.getColumnLength() < Constant.VARCHAR_MAX_LENGTH) {
                     str = "VARCHAR(" + column.getColumnLength() + ")";
@@ -137,6 +142,14 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             str += " COMMENT '" + column.getComment() +"'";
         }
         return str;
+    }
+
+    private String decimalStr(Field field) {
+        Decimal decimal = field.getAnnotation(Decimal.class);
+        if(decimal!=null){
+            return String.format("DECIMAL(%d,%d)",decimal.precision(),decimal.scale());
+        }
+        return "DECIMAL(20,4)";
     }
 
 }
