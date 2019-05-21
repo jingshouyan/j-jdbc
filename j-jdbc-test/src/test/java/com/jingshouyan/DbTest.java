@@ -2,6 +2,7 @@ package com.jingshouyan;
 
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
+import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.collect.Lists;
 import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,8 @@ public class DbTest {
         userBean.setTags(Lists.newArrayList("a","b"));
         userBean.setNickname("alkaksdjflk");
         userBean.setEncryptTest("士大夫");
+        userBean.setAcc1(new BigDecimal("12.5744334"));
+        userBean.setAcc2(new BigDecimal("1112.578867"));
         userDao.insert(userBean);
 
         log.debug(userBean.toString());
@@ -46,12 +50,13 @@ public class DbTest {
     public void query(){
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age").gt(20).lte(89)
-                .field("nickname").eq("1' or '2'='2 ")
+//                .field("nickname").eq("1' or '2'='2 ")
                 .field("encryptTest").notIn(Lists.newArrayList("士大夫1","士大夫2"))
 
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
+        System.out.println(JsonUtil.toJsonString(userBeans));
 
     }
 
