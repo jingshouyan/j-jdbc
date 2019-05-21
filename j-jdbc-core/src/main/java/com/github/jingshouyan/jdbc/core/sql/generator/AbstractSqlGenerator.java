@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
 import com.github.jingshouyan.jdbc.comm.bean.*;
+import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * sql 生成器抽象类
+ *
  * @author jingshouyan
  * @date 2018/4/14 17:25
  */
@@ -31,12 +33,13 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     /**
      * @return 表名 ,列名包裹字符串
      */
-    protected String q(){
+    protected String q() {
         return "";
     }
 
     /**
      * 批量插入时value的分隔符
+     *
      * @return 分隔符
      */
     protected char valueSeparate() {
@@ -46,13 +49,12 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     @Override
     public SqlPrepared query(List<Condition> compares, Collection<String> fields) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT "+ columns(fields) +" FROM " + tableName();
+        String sql = "SELECT " + columns(fields) + " FROM " + tableName();
         SqlPrepared whereSql = where(compares);
         sqlPrepared.setSql(sql + whereSql.getSql());
         sqlPrepared.setParams(whereSql.getParams());
         return sqlPrepared;
     }
-
 
 
     @Override
@@ -77,7 +79,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         int i = 0;
         Map<Integer, String> keyMap = Maps.newHashMap();
         Map<String, Object> param = Maps.newHashMap();
-        for (Map.Entry<String,Object> entry : valueMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             // 空值不插入
@@ -123,15 +125,52 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     @Override
-    public SqlPrepared update(T bean, List<Condition> compares) {
+    public SqlPrepared update(T bean) {
+        long start = 0;
+        long end = System.nanoTime();
+        Map<String, Object> beanMap = valueMap(bean);
+        start = end;
+        end = System.nanoTime();
+        System.out.println("1..."+(end-start));
+        Object id = beanMap.get(key());
+        Preconditions.checkNotNull(id, "The @Key field must not null");
+        ConditionUtil conditionUtil = ConditionUtil.newInstance()
+                .field(key()).eq(id);
+        start = end;
+        end = System.nanoTime();
+        System.out.println("2..."+(end-start));
+        for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            ColumnInfo columnInfo = columnInfo(key);
+            if(columnInfo!=null && columnInfo.isRouter()) {
+                conditionUtil.field(key).eq(value);
+            }
+        }
+        start = end;
+        end = System.nanoTime();
+        System.out.println("3..."+(end-start));
+        List<Condition> conditions = conditionUtil.conditions();
+        start = end;
+        end = System.nanoTime();
+        System.out.println("4..."+(end-start));
+        return update(beanMap,conditions);
+    }
+
+    @Override
+    public SqlPrepared update(T bean,List<Condition> conditions) {
+        Map<String, Object> beanMap = valueMap(bean);
+        return update(beanMap,conditions);
+    }
+
+    private SqlPrepared update(Map<String, Object> beanMap, List<Condition> conditions) {
         SqlPrepared sqlPrepared = new SqlPrepared();
         StringBuilder sql = new StringBuilder();
-        Map<String, Object> beanMap = valueMap(bean);
         Map<String, Object> param = Maps.newHashMap();
         sql.append("UPDATE ");
         sql.append(tableName());
         sql.append(" SET ");
-        for (Map.Entry<String,Object> entry : beanMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             // 空 不更新
@@ -140,7 +179,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
             }
             // 不可变字段 不更新
             ColumnInfo columnInfo = columnInfo(key);
-            if(columnInfo.isImmutable()) {
+            if (columnInfo.isImmutable()) {
                 continue;
             }
             String column = columnName(key);
@@ -151,7 +190,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         Preconditions.checkArgument(!param.isEmpty(), "nothing to update");
         //移除set 最后一个逗号 ,
         sql.deleteCharAt(sql.length() - 1);
-        SqlPrepared where = where(compares);
+        SqlPrepared where = where(conditions);
         sql.append(where.getSql());
         param.putAll(where.getParams());
         sqlPrepared.setSql(sql.toString());
@@ -171,7 +210,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     @Override
-    public SqlPrepared selectNull(){
+    public SqlPrepared selectNull() {
         SqlPrepared sqlPrepared = new SqlPrepared();
         String sql = "SELECT * FROM " + tableName() + " WHERE 1 = 2";
         sqlPrepared.setSql(sql);
@@ -200,7 +239,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return sb.toString();
     }
 
-    protected SqlPrepared where(List<Condition> compares){
+    protected SqlPrepared where(List<Condition> compares) {
         SqlPrepared sqlPrepared = new SqlPrepared();
         StringBuilder sql = new StringBuilder();
         Map<String, Object> params = Maps.newHashMap();
@@ -214,10 +253,10 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 Preconditions.checkNotNull(columnInfo,
                         String.format("[%s] dos not contains field [%s]", clazz, key));
                 String column = columnName(columnInfo);
-                if(null != compare.getEq()) {
+                if (null != compare.getEq()) {
                     Object eq = compare.getEq();
-                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
-                        eq = EncryptionProvider.encrypt(eq.toString(),columnInfo.getEncryptKey());
+                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                        eq = EncryptionProvider.encrypt(eq.toString(), columnInfo.getEncryptKey());
                     }
                     sql.append(String.format(" AND %s = :%s__eq ", column, key));
                     params.put(key + "__eq", eq);
@@ -255,9 +294,9 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 }
                 if (null != compare.getIn()) {
                     Collection<?> in = compare.getIn();
-                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
+                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
                         in = in.stream()
-                                .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
+                                .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());
                     }
                     sql.append(String.format(" AND %s IN (:%s__in) ", column, key));
@@ -265,9 +304,9 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 }
                 if (null != compare.getNotIn()) {
                     Collection<?> notIn = compare.getNotIn();
-                    if(columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED){
+                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
                         notIn = notIn.stream()
-                                .map(i->EncryptionProvider.encrypt(String.valueOf(i),columnInfo.getEncryptKey()))
+                                .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());
                     }
                     sql.append(String.format(" AND %s NOT IN (:%s__notIn) ", column, key));
@@ -280,8 +319,8 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return sqlPrepared;
     }
 
-    protected String columns(Collection<String> fields){
-        if(fields == null || fields.isEmpty()){
+    protected String columns(Collection<String> fields) {
+        if (fields == null || fields.isEmpty()) {
             return " * ";
         }
         return fields.stream()
@@ -298,7 +337,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return q() + tableInfo.getTableName() + q();
     }
 
-    protected String tableComment(){
+    protected String tableComment() {
         return tableInfo.getComment();
     }
 
@@ -314,7 +353,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.valueMap(bean);
     }
 
-    private ColumnInfo columnInfo(String fieldName){
+    private ColumnInfo columnInfo(String fieldName) {
         return tableInfo.getFieldNameMap().get(fieldName);
     }
 

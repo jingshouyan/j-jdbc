@@ -57,7 +57,6 @@ public class DbTest {
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
         System.out.println(JsonUtil.toJsonString(userBeans));
-
     }
 
     @Test
@@ -66,7 +65,7 @@ public class DbTest {
         for (int i = 0; i < 10; i++) {
             UserDO userBean = new UserDO();
             userBean.setName("张三");
-            userBean.setAge(30);
+            userBean.setAge(30+i);
             userBean.setTags(Lists.newArrayList("a","b"));
             userBean.setNickname("alkaksdjflk");
             userBean.setEncryptTest("士大夫"+i);
@@ -75,6 +74,11 @@ public class DbTest {
         userDao.batchInsert(users);
     }
 
+    @Test
+    public void batchUpdate() {
+        List<UserDO> users = userDao.query(null);
+        userDao.batchUpdate(users);
+    }
 
     @Test
     public void exist(){
