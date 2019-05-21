@@ -200,13 +200,9 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public int update(T t) {
-        String key = key();
-        Object value = fieldValue(t, key);
-        Preconditions.checkNotNull(value, "The @Key field must not null");
-        List<Condition> conditions = ConditionUtil.newInstance()
-                .field(key).eq(value)
-                .conditions();
-        int fetch = update(t, conditions);
+        t.forUpdate();
+        SqlPrepared sqlPrepared = sqlGenerator().update(t);
+        int fetch = template.update(sqlPrepared.getSql(),sqlPrepared.getParams());
         //添加更新事件
         DmlEventBus.onUpdate(t);
         return fetch;
@@ -215,19 +211,16 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     @Override
     public int batchUpdate(List<T> list){
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
-        SqlPrepared sqlPrepared = null;
-        List<Map<String, Object>> values = Lists.newArrayList();
-        Map[] v = new Map[list.size()];
-        for (T t : list) {
-            String key = key();
-            Object value = fieldValue(t,key);
-            Preconditions.checkNotNull(value, "The @Key field must not null");
-            List<Condition> conditions = ConditionUtil.newInstance().field(key).eq(value).conditions();
-            sqlPrepared = sqlGenerator().update(t,conditions);
-            values.add(sqlPrepared.getParams());
+        String sql = null;
+        Map<String, Object>[] v = new Map[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            T t = list.get(i);
+            t.forUpdate();
+            SqlPrepared sqlPrepared = sqlGenerator().update(t);
+            sql = sqlPrepared.getSql();
+            v[i] = sqlPrepared.getParams();
         }
-        v = values.toArray(v);
-        int[] fetches = template.batchUpdate(sqlPrepared.getSql(), v);
+        int[] fetches = template.batchUpdate(sql, v);
         int fetch = IntStream.of(fetches).sum();
         for (T t : list) {
             //添加更新事件
@@ -323,10 +316,6 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
      */
     private List<String> fields() {
         return TableUtil.tableInfo(clazz).getListQueryFields();
-    }
-
-    private Object fieldValue(T t,String fieldName){
-        return TableUtil.fieldValue(t,fieldName);
     }
 
 

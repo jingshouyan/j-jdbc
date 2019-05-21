@@ -48,6 +48,13 @@ public interface SqlGenerator<T> {
 
     /**
      * 数据更新语句生成
+     * @param bean 更新对象
+     * @return sql语句和参数
+     */
+    SqlPrepared update(T bean);
+
+    /**
+     * 数据更新语句生成
      * @param bean 需要更新的属性
      * @param conditions 条件
      * @return sql语句和参数
