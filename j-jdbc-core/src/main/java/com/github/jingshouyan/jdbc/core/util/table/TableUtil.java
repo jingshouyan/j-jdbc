@@ -51,7 +51,7 @@ public class TableUtil {
                 .filter(c -> !c.isForeign())
                 .forEach(c -> {
                     String fieldName = c.getFieldName();
-                    Object value = fieldValue(bean,fieldName);
+                    Object value = fieldValue(bean,c);
                     if(null != value){
                         map.put(fieldName, value);
                     }
@@ -62,12 +62,7 @@ public class TableUtil {
 
 
     @SneakyThrows
-    public static Object fieldValue(Object bean,String fieldName){
-        TableInfo beanTable = tableInfo(bean.getClass());
-        ColumnInfo columnInfo = beanTable.getFieldNameMap().get(fieldName);
-        Preconditions.checkNotNull(columnInfo,
-                        String.format("[%s] dos not contains field [%s]", bean.getClass().toString(), fieldName)
-        );
+    public static Object fieldValue(Object bean,ColumnInfo columnInfo){
         Field field = columnInfo.getField();
         if (!field.isAccessible()) {
             field.setAccessible(true);
@@ -84,7 +79,9 @@ public class TableUtil {
             if(columnInfo.getEncryptType()==EncryptType.FIXED){
                 password = columnInfo.getEncryptKey();
             } else if(columnInfo.getEncryptType()==EncryptType.FLIED){
-                Object v = fieldValue(bean,columnInfo.getEncryptKey());
+                TableInfo beanTable = tableInfo(bean.getClass());
+                ColumnInfo encryt = beanTable.getFieldNameMap().get(columnInfo.getEncryptKey());
+                Object v = fieldValue(bean,encryt);
                 if(v != null){
                     password = String.valueOf(v);
                 }
@@ -101,7 +98,7 @@ public class TableUtil {
         if(null == columnInfo || !columnInfo.isAutoGen()){
             return;
         }
-        Object value = fieldValue(bean,columnInfo.getFieldName());
+        Object value = fieldValue(bean,columnInfo);
         if(isEmpty(value)){
             Class<?> c = columnInfo.getField().getType();
             long l = KeyGeneratorProvider

@@ -126,19 +126,11 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
     @Override
     public SqlPrepared update(T bean) {
-        long start = 0;
-        long end = System.nanoTime();
         Map<String, Object> beanMap = valueMap(bean);
-        start = end;
-        end = System.nanoTime();
-        System.out.println("1..."+(end-start));
         Object id = beanMap.get(key());
         Preconditions.checkNotNull(id, "The @Key field must not null");
         ConditionUtil conditionUtil = ConditionUtil.newInstance()
                 .field(key()).eq(id);
-        start = end;
-        end = System.nanoTime();
-        System.out.println("2..."+(end-start));
         for (Map.Entry<String, Object> entry : beanMap.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
@@ -147,13 +139,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 conditionUtil.field(key).eq(value);
             }
         }
-        start = end;
-        end = System.nanoTime();
-        System.out.println("3..."+(end-start));
         List<Condition> conditions = conditionUtil.conditions();
-        start = end;
-        end = System.nanoTime();
-        System.out.println("4..."+(end-start));
         return update(beanMap,conditions);
     }
 
