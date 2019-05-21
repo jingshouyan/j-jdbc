@@ -1,9 +1,6 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
-import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
-import com.github.jingshouyan.jdbc.comm.bean.Condition;
-import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
-import com.github.jingshouyan.jdbc.comm.bean.OrderBy;
+import com.github.jingshouyan.jdbc.comm.bean.*;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
@@ -23,15 +20,16 @@ import java.util.stream.Collectors;
 public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
     protected Class<T> clazz;
+    protected TableInfo tableInfo;
 
 
     public AbstractSqlGenerator(Class<T> clazz) {
         this.clazz = clazz;
+        this.tableInfo = TableUtil.tableInfo(clazz);
     }
 
     /**
-     * 列名引号
-     * @return
+     * @return 表名 ,列名包裹字符串
      */
     protected String q(){
         return "";
@@ -140,8 +138,9 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
             if (isEmpty(value)) {
                 continue;
             }
-            //主键不更新
-            if (key.equals(key())) {
+            // 不可变字段 不更新
+            ColumnInfo columnInfo = columnInfo(key);
+            if(columnInfo.isImmutable()) {
                 continue;
             }
             String column = columnName(key);
@@ -292,19 +291,19 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
 
     protected String key() {
-        return TableUtil.keyFieldName(clazz);
+        return tableInfo.getKey().getFieldName();
     }
 
     protected String tableName() {
-        return q() + TableUtil.tableInfo(clazz).getTableName() + q();
+        return q() + tableInfo.getTableName() + q();
     }
 
     protected String tableComment(){
-        return TableUtil.tableInfo(clazz).getComment();
+        return tableInfo.getComment();
     }
 
     protected String columnName(String fieldName) {
-        return q()+TableUtil.columnName(clazz, fieldName)+q();
+        return columnName(columnInfo(fieldName));
     }
 
     protected String columnName(ColumnInfo columnInfo) {
@@ -316,7 +315,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     private ColumnInfo columnInfo(String fieldName){
-        return TableUtil.tableInfo(clazz).getFieldNameMap().get(fieldName);
+        return tableInfo.getFieldNameMap().get(fieldName);
     }
 
 

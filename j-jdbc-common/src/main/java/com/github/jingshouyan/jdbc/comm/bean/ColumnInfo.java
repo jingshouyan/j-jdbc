@@ -25,6 +25,8 @@ public class ColumnInfo {
     private Field field;
     private String fieldName;
     private String columnName;
+    private boolean immutable;
+    private boolean router;
     private int columnLength;
     private boolean json;
     private boolean encrypt;
@@ -70,6 +72,8 @@ public class ColumnInfo {
             info.setFields(list);
             foreignInfo = info;
         } else {
+            immutable = false;
+            router = false;
             columnLength = Constant.COLUMN_LENGTH_DEFAULT;
             json = false;
             encrypt = false;
@@ -81,6 +85,12 @@ public class ColumnInfo {
             order = Constant.COLUMN_ORDER_DEFAULT;
             Column column = field.getAnnotation(Column.class);
             if (null != column) {
+                immutable = column.immutable();
+                router = column.router();
+                if(router) {
+                    // 路由列也不可变
+                    immutable = true;
+                }
                 if(!StringUtil.isNullOrEmpty(column.value())){
                     columnName = column.value();
                 }
@@ -102,6 +112,8 @@ public class ColumnInfo {
             Key k = field.getAnnotation(Key.class);
             if (null != k) {
                 key = true;
+                //主键 一定是不可变字段
+                immutable = true;
                 autoGen = k.generatorIfNotSet();
             }
         }
