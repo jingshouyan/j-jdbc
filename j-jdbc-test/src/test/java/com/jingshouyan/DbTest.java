@@ -30,11 +30,11 @@ public class DbTest {
     private UserDao userDao;
 
     @Test
-    public void insert(){
+    public void insert() {
         UserDO userBean = new UserDO();
         userBean.setName("张三");
         userBean.setAge(30);
-        userBean.setTags(Lists.newArrayList("a","b"));
+        userBean.setTags(Lists.newArrayList("a", "b"));
         userBean.setNickname("alkaksdjflk");
         userBean.setEncryptTest("士大夫");
         userBean.setAcc1(new BigDecimal("12.5744334"));
@@ -47,11 +47,11 @@ public class DbTest {
     }
 
     @Test
-    public void query(){
+    public void query() {
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age").gt(20).lte(89)
 //                .field("nickname").eq("1' or '2'='2 ")
-                .field("encryptTest").notIn(Lists.newArrayList("士大夫1","士大夫2"))
+                .field("encryptTest").notIn(Lists.newArrayList("士大夫1", "士大夫2"))
 
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
@@ -60,15 +60,15 @@ public class DbTest {
     }
 
     @Test
-    public void batchInsert(){
+    public void batchInsert() {
         List<UserDO> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             UserDO userBean = new UserDO();
             userBean.setName("张三");
-            userBean.setAge(30+i);
-            userBean.setTags(Lists.newArrayList("a","b"));
+            userBean.setAge(30 + i);
+            userBean.setTags(Lists.newArrayList("a", "b"));
             userBean.setNickname("alkaksdjflk");
-            userBean.setEncryptTest("士大夫"+i);
+            userBean.setEncryptTest("士大夫" + i);
             users.add(userBean);
         }
         userDao.batchInsert(users);
@@ -81,7 +81,7 @@ public class DbTest {
     }
 
     @Test
-    public void exist(){
+    public void exist() {
         boolean b = userDao.existTable();
         System.out.println(b);
     }
