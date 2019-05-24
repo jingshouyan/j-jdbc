@@ -45,8 +45,9 @@ public class TableUtil {
 
     @SneakyThrows
     public static Map<String,Object> valueMap(@NonNull Object bean) {
-        Map<String, Object> map = Maps.newHashMap();
         TableInfo beanTable = tableInfo(bean.getClass());
+        int columnSize = beanTable.getColumns().size();
+        Map<String, Object> map = Maps.newLinkedHashMapWithExpectedSize(columnSize);
         beanTable.getColumns().stream()
                 .filter(c -> !c.isForeign())
                 .forEach(c -> {

@@ -39,7 +39,7 @@ public class UserDO extends BaseDO {
      * 列注解,选择加密方式为属性id的值为key
      * 使用加密后,无法作为查询条件,因为数据库中存放的是密文
      */
-//    @Column(encryptType = EncryptType.FLIED,encryptKey = "id")
+    @Column(encryptType = EncryptType.FLIED,encryptKey = "id")
     @Index(unique = true)
     private String name;
     /**
@@ -59,7 +59,7 @@ public class UserDO extends BaseDO {
      */
     @Column(value = "NICK_NAME_TT4")
     private String nickname;
-//    @Column(value = "ENCRYPT_TEST",encryptType = EncryptType.FIXED,encryptKey = "abcdeeee1123")
+    @Column(value = "ENCRYPT_TEST",encryptType = EncryptType.FIXED,encryptKey = "abcdeeee1123")
     private String encryptTest;
 
     private String key;
