@@ -65,7 +65,7 @@ public class DbTest {
         for (int i = 0; i < 10; i++) {
             UserDO userBean = new UserDO();
             userBean.setName("张三");
-            userBean.setAge(30 + i);
+            userBean.setAge(302 + i);
             userBean.setTags(Lists.newArrayList("a", "b"));
             userBean.setNickname("alkaksdjflk");
             userBean.setEncryptTest("士大夫" + i);
