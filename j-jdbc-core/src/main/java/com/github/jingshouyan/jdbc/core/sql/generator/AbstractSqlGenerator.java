@@ -307,7 +307,10 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
     protected String columns(Collection<String> fields) {
         if (fields == null || fields.isEmpty()) {
-            return " * ";
+            return tableInfo.getColumns().stream()
+                    .filter(c -> !c.isForeign())
+                    .map(this::columnName)
+                    .collect(Collectors.joining(","));
         }
         return fields.stream()
                 .map(this::columnName)
