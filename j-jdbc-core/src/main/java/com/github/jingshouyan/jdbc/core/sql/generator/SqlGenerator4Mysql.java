@@ -125,6 +125,16 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             case "bigdecimal":
                 str = decimalStr(column.getField());
                 break;
+            case "localTime":
+            case "localtime":
+                str = "TIME";
+                break;
+            case "date":
+            case "timestamp":
+            case "localdate":
+            case "localdatetime":
+                str = "DATETIME";
+                break;
             default:
                 if (column.getColumnLength() < Constant.VARCHAR_MAX_LENGTH) {
                     str = "VARCHAR(" + column.getColumnLength() + ")";
