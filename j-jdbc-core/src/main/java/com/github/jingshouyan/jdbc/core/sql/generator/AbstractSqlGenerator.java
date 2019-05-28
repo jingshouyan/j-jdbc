@@ -60,7 +60,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     @Override
     public SqlPrepared count(List<Condition> compares) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT COUNT(*) C FROM " + tableName();
+        String sql = "SELECT COUNT(*) AS C FROM " + tableName();
         SqlPrepared whereSql = where(compares);
         sqlPrepared.setSql(sql + whereSql.getSql());
         sqlPrepared.setParams(whereSql.getParams());
