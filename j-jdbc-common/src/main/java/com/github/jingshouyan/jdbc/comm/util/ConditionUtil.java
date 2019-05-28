@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.comm.util;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
+import com.github.jingshouyan.jdbc.comm.bean.Between;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import java.util.List;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConditionUtil {
+
+    private static final String DELETE_FIELD_NAME = "deletedAt";
 
     public static ConditionUtil newInstance(){
         return new ConditionUtil();
@@ -75,11 +78,17 @@ public class ConditionUtil {
         return this;
     }
 
+    public ConditionUtil between(Object start,Object end) {
+        last.setBetween(new Between(start,end));
+        return this;
+    }
+
+
     public ConditionUtil noDeleted(){
-        return field("deletedAt").eq(Constant.NO_DELETE);
+        return field(DELETE_FIELD_NAME).eq(Constant.NO_DELETE);
     }
 
     public ConditionUtil deleted(){
-        return field("deletedAt").ne(Constant.NO_DELETE);
+        return field(DELETE_FIELD_NAME).ne(Constant.NO_DELETE);
     }
 }

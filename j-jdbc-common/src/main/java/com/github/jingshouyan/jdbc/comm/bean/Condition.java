@@ -65,6 +65,11 @@ public class Condition {
      */
     private Boolean empty;
 
+    /**
+     * between
+     */
+    private Between between;
+
     public Condition(){}
 
     public Condition(String field, Object eq){
