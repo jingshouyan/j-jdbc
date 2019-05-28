@@ -298,6 +298,12 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                     sql.append(String.format(" AND %s NOT IN (:%s__notIn) ", column, key));
                     params.put(key + "__notIn", notIn);
                 }
+                if(null != compare.getBetween()) {
+                    Between between = compare.getBetween();
+                    sql.append(String.format(" AND %s BETWEEN :%s__between_start AND :%s__between_end ", column, key, key));
+                    params.put(key + "__between_start", between.getStart());
+                    params.put(key + "__between_end", between.getEnd());
+                }
             }
         }
         sqlPrepared.setParams(params);

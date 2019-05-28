@@ -11,8 +11,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,7 +49,8 @@ public class TableUtil {
     public static Map<String,Object> valueMap(@NonNull Object bean) {
         TableInfo beanTable = tableInfo(bean.getClass());
         int columnSize = beanTable.getColumns().size();
-        Map<String, Object> map = Maps.newLinkedHashMapWithExpectedSize(columnSize);
+        int capacity = capacity(columnSize);
+        Map<String, Object> map = new LinkedHashMap<>(capacity);
         beanTable.getColumns().stream()
                 .filter(c -> !c.isForeign())
                 .forEach(c -> {
@@ -120,5 +123,19 @@ public class TableUtil {
 
     public static boolean isEmpty(Object obj){
         return null == obj;
+    }
+
+
+
+    private static final int MIN_EXPECTED_SIZE = 3;
+    private static final int MAX_POWER_OF_TWO = 1 << (Integer.SIZE - 2);
+    private static int capacity(int expectedSize) {
+        if (expectedSize < MIN_EXPECTED_SIZE) {
+            return expectedSize + 1;
+        }
+        if (expectedSize < MAX_POWER_OF_TWO) {
+            return (int) ((float) expectedSize / 0.75F + 1.0F);
+        }
+        return Integer.MAX_VALUE;
     }
 }
