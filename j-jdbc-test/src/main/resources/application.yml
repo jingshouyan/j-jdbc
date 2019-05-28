@@ -11,8 +11,29 @@ db:
 spring:
   application:
     name: j-jdbc-test
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: ${db.username}
-    password: ${db.password}
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
+#    username: ${db.username}
+#    password: ${db.password}
+
+  shardingsphere:
+    datasource:
+      names: ds0
+      ds0: #!!com.zaxxer.hikari.HikariDataSource
+        type: com.zaxxer.hikari.HikariDataSource
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbcUrl: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: ${db.username}
+        password: ${db.password}
+    sharding:
+      tables:
+        DEMO_USER:
+          actual-data-nodes: ds0.DEMO_USER$->{0..4}
+          table-strategy:
+            inline:
+              sharding-column: age
+              algorithm-expression: DEMO_USER$->{age % 5}
+    props:
+      sql:
+        show: true
