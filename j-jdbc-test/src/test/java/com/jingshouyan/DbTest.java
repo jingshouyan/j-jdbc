@@ -33,7 +33,7 @@ public class DbTest {
     public void insert() {
         UserDO userBean = new UserDO();
         userBean.setName("张三");
-        userBean.setAge(30);
+        userBean.setAge(32);
         userBean.setTags(Lists.newArrayList("a", "b"));
         userBean.setNickname("alkaksdjflk");
         userBean.setEncryptTest("士大夫");
@@ -49,7 +49,10 @@ public class DbTest {
     @Test
     public void query() {
         List<Condition> conditions = ConditionUtil.newInstance()
-                .field("age").gt(20).lte(89)
+                .field("age")
+//                .eq(25)
+                .between(22,25)
+//                .gt(20).lte(22)
 //                .field("nickname").eq("1' or '2'='2 ")
                 .field("encryptTest").notIn(Lists.newArrayList("士大夫1", "士大夫2"))
 
