@@ -3,6 +3,9 @@ package com.github.jingshouyan.jdbc.core.util.json;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.TypeBindings;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Type;
@@ -19,6 +22,9 @@ public class JsonUtil {
 
     private static final ObjectMapper OBJECT_MAPPER = Optional.<ObjectMapper>empty().orElseGet(()->{
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE,false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE,false);

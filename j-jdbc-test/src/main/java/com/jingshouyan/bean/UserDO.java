@@ -1,5 +1,6 @@
 package com.jingshouyan.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.jingshouyan.jdbc.comm.annotaion.*;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
@@ -8,6 +9,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -21,7 +27,7 @@ import java.util.List;
 
 @Table(value = "DEMO_USER",comment = "用户表")
 
-@Index(value = {"age","nickname"},unique = true)
+//@Index(value = {"age","nickname"},unique = true)
 @Index({"id","name"})
 
 //@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
@@ -82,6 +88,14 @@ public class UserDO extends BaseDO {
     private BigDecimal acc7;
 
     private BigDecimal acc8;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate localDate;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime localDateTime;
+//    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime localTime;
+
 
     /**
      * 当使用string类型主键时,主键前缀

@@ -14,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class DbTest {
     public void insert() {
         UserDO userBean = new UserDO();
         userBean.setName("张三");
-        userBean.setAge(32);
+        userBean.setAge(2333);
         userBean.setTags(Lists.newArrayList("a", "b"));
         userBean.setNickname("alkaksdjflk");
         userBean.setEncryptTest("士大夫");
@@ -51,7 +54,7 @@ public class DbTest {
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age")
 //                .eq(25)
-                .between(22,25)
+//                .between(22,25)
 //                .gt(20).lte(22)
 //                .field("nickname").eq("1' or '2'='2 ")
                 .field("encryptTest").notIn(Lists.newArrayList("士大夫1", "士大夫2"))
@@ -59,9 +62,12 @@ public class DbTest {
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
-        System.out.println(JsonUtil.toJsonString(userBeans));
+        String json  = JsonUtil.toJsonString(userBeans);
+        System.out.println(json);
         int count = userDao.count(conditions);
         System.out.println(count);
+        userBeans = JsonUtil.toList(json,UserDO.class);
+        System.out.println(userBeans);
     }
 
     @Test
@@ -74,6 +80,9 @@ public class DbTest {
             userBean.setTags(Lists.newArrayList("a", "b"));
             userBean.setNickname("alkaksdjflk");
             userBean.setEncryptTest("士大夫" + i);
+            userBean.setLocalDate(LocalDate.now());
+            userBean.setLocalDateTime(LocalDateTime.now());
+            userBean.setLocalTime(LocalTime.now());
             users.add(userBean);
         }
         userDao.batchInsert(users);
@@ -83,6 +92,13 @@ public class DbTest {
     public void batchUpdate() {
         List<UserDO> users = userDao.query(null);
         userDao.batchUpdate(users);
+    }
+
+    @Test
+    public void updateAll() {
+        UserDO userDO = new UserDO();
+        userDO.setAge(22);
+        userDao.update(userDO,null);
     }
 
     @Test
