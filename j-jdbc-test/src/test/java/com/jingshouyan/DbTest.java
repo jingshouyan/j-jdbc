@@ -57,6 +57,8 @@ public class DbTest {
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
         System.out.println(JsonUtil.toJsonString(userBeans));
+        int count = userDao.count(conditions);
+        System.out.println(count);
     }
 
     @Test

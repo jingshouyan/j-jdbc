@@ -143,7 +143,8 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     @Override
     public int count(List<Condition> conditions) {
         SqlPrepared sqlPrepared = sqlGenerator().count(conditions);
-        return template.queryForObject(sqlPrepared.getSql(), sqlPrepared.getParams(), Integer.class);
+        Integer count = template.queryForObject(sqlPrepared.getSql(), sqlPrepared.getParams(), Integer.class);
+        return Objects.nonNull(count) ? count : 0;
     }
 
 
