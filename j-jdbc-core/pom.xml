@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>j-jdbc-core</artifactId>
-
+    <name>j-jdbc-core</name>
     <dependencies>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
