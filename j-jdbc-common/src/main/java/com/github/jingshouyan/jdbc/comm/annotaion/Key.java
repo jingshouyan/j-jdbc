@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 主键
  * @author jingshouyan
- * @date 2018/4/14 17:25
+ * #date 2018/4/14 17:25
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

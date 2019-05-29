@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>j-jdbc-parent</artifactId>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>j-jdbc-parent</name>
 
