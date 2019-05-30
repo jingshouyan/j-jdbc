@@ -15,9 +15,11 @@ import java.util.Optional;
 public interface BaseDao<T extends BaseDO> {
     /**
      * 获取 T 的类型
+     *
      * @return
      */
     Class<T> getClazz();
+
     /**
      * 根据主键查询数据
      *
@@ -25,10 +27,11 @@ public interface BaseDao<T extends BaseDO> {
      * @return optional 记录
      */
     Optional<T> find(Object id);
+
     /**
      * 根据主键查询数据
      *
-     * @param id 主键
+     * @param id     主键
      * @param fields 查询的属性
      * @return optional 记录
      */
@@ -41,10 +44,11 @@ public interface BaseDao<T extends BaseDO> {
      * @return 数据列表
      */
     List<T> findByIds(Collection<?> ids);
+
     /**
      * 根据主键列表查询数据
      *
-     * @param ids 主键列表
+     * @param ids    主键列表
      * @param fields 查询的属性
      * @return 数据列表
      */
@@ -57,11 +61,12 @@ public interface BaseDao<T extends BaseDO> {
      * @return 结果集
      */
     List<T> query(List<Condition> conditions);
+
     /**
      * 条件查询
      *
      * @param conditions 条件
-     * @param fields 查询的属性
+     * @param fields     查询的属性
      * @return 结果集
      */
     List<T> queryField(List<Condition> conditions, Collection<String> fields);
@@ -70,36 +75,37 @@ public interface BaseDao<T extends BaseDO> {
      * 条件查询（取一页数据）
      *
      * @param conditions 条件
-     * @param page     页
+     * @param page       页
      * @return 结果集
      */
     List<T> queryLimit(List<Condition> conditions, Page<T> page);
+
     /**
      * 条件查询（取一页数据）
      *
      * @param conditions 条件
-     * @param page     页
-     * @param fields 查询的属性
+     * @param page       页
+     * @param fields     查询的属性
      * @return 结果集
      */
     List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
 
+    /**
+     * 条件分页查询
+     *
+     * @param conditions 条件
+     * @param page       页
+     * @return 页信息及数据
+     */
+    Page<T> queryPage(List<Condition> conditions, Page<T> page);
 
     /**
      * 条件分页查询
      *
      * @param conditions 条件
-     * @param page     页
-     * @return 页信息及数据
-     */
-    Page<T> queryPage(List<Condition> conditions, Page<T> page);
-    /**
-     * 条件分页查询
-     *
-     * @param conditions 条件
-     * @param page     页信息
-     * @param fields 查询的属性
+     * @param page       页信息
+     * @param fields     查询的属性
      * @return 页信息及数据
      */
     Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields);
@@ -151,11 +157,10 @@ public interface BaseDao<T extends BaseDO> {
     int batchUpdate(List<T> list);
 
 
-
     /**
      * 根据条件更新数据,主键不会被更新
      *
-     * @param t        数据值存放位置（忽略主键）
+     * @param t          数据值存放位置（忽略主键）
      * @param conditions 条件
      * @return 影响行数
      */
@@ -207,7 +212,8 @@ public interface BaseDao<T extends BaseDO> {
     boolean existTable();
 
     /**
-     *  更新表
+     * 更新表
+     *
      * @return 添加的行数
      */
     int updateTable();

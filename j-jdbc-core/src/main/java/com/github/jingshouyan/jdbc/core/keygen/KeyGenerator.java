@@ -8,6 +8,7 @@ public interface KeyGenerator {
 
     /**
      * generate key
+     *
      * @param type key type
      * @return generate key
      */

@@ -70,9 +70,10 @@ public class Condition {
      */
     private Between between;
 
-    public Condition(){}
+    public Condition() {
+    }
 
-    public Condition(String field, Object eq){
+    public Condition(String field, Object eq) {
         this.field = field;
         this.eq = eq;
     }

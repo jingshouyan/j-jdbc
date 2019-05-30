@@ -7,7 +7,8 @@ import lombok.Data;
  * @author jingshouyan
  * #date 2019/5/28 16:46
  */
-@Data@AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class Between {
     /**
      * 开始

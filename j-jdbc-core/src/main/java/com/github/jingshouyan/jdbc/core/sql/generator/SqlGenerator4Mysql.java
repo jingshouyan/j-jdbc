@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 
 /**
  * mysql
+ *
  * @author jingshouyan
- * @date 2018/4/14 17:25
+ * #date 2018/4/14 17:25
  */
 public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
@@ -25,14 +26,14 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     }
 
     @Override
-    protected String q(){
+    protected String q() {
         return "`";
     }
 
     @Override
     public SqlPrepared queryLimit(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT "+ columns(fields) +" FROM " + tableName();
+        String sql = "SELECT " + columns(fields) + " FROM " + tableName();
         SqlPrepared whereSql = where(conditions);
         sql += whereSql.getSql();
         sql += orderBy(page.getOrderBies());
@@ -52,7 +53,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         sql.append(" (");
         TableInfo tableInfo = TableUtil.tableInfo(clazz);
         for (ColumnInfo column : tableInfo.getColumns()) {
-            if(column.isForeign()){
+            if (column.isForeign()) {
                 continue;
             }
             sql.append(columnString(column));
@@ -66,7 +67,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             sql.append("`)");
         }
         for (IndexInfo indexInfo : tableInfo.getIndices()) {
-            if(indexInfo.isUnique()){
+            if (indexInfo.isUnique()) {
                 sql.append(", UNIQUE (");
             } else {
                 sql.append(", KEY (");
@@ -77,7 +78,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             sql.append(index);
             sql.append(")");
         }
-        sql.append(")  COMMENT='"+ tableComment()+"';");
+        sql.append(")  COMMENT='" + tableComment() + "';");
         sqlPrepared.setSql(sql.toString());
         return sqlPrepared;
     }
@@ -93,7 +94,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     @Override
     public SqlPrepared addColumn(ColumnInfo columnInfo) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "ALTER TABLE " + tableName() + " ADD "+ columnString(columnInfo) + ";";
+        String sql = "ALTER TABLE " + tableName() + " ADD " + columnString(columnInfo) + ";";
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
@@ -144,20 +145,20 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
                 break;
         }
 
-        str =  columnName(column) + " " + str;
-        if(null != column.getDefaultData()){
-            str += " DEFAULT '"+column.getDefaultData()+"'";
+        str = columnName(column) + " " + str;
+        if (null != column.getDefaultData()) {
+            str += " DEFAULT '" + column.getDefaultData() + "'";
         }
-        if(null != column.getComment()){
-            str += " COMMENT '" + column.getComment() +"'";
+        if (null != column.getComment()) {
+            str += " COMMENT '" + column.getComment() + "'";
         }
         return str;
     }
 
     private String decimalStr(Field field) {
         Decimal decimal = field.getAnnotation(Decimal.class);
-        if(decimal!=null){
-            return String.format("DECIMAL(%d,%d)",decimal.precision(),decimal.scale());
+        if (decimal != null) {
+            return String.format("DECIMAL(%d,%d)", decimal.precision(), decimal.scale());
         }
         return "DECIMAL(20,4)";
     }

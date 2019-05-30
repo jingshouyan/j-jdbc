@@ -17,10 +17,10 @@ public class ForeignDO extends BaseDO {
     @Key
     String id;
     String userId;
-    @Foreign(thisKey = "userId",thatKey = "id")
+    @Foreign(thisKey = "userId", thatKey = "id")
     List<UserDO> users;
-    @Foreign(thisKey = "userId",thatKey = "id")
+    @Foreign(thisKey = "userId", thatKey = "id")
     ArrayList<UserDO> u2;
-    @Foreign(thisKey = "userId",thatKey = "id")
-    UserDO u ;
+    @Foreign(thisKey = "userId", thatKey = "id")
+    UserDO u;
 }

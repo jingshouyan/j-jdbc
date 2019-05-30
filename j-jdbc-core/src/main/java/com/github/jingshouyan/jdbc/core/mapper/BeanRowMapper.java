@@ -27,16 +27,17 @@ import java.util.Map;
  * @author jingshouyan
  * 11/27/18 3:24 PM
  */
-public class BeanRowMapper<T> implements RowMapper<T>,Constant {
+public class BeanRowMapper<T> implements RowMapper<T>, Constant {
     private TableInfo tableInfo;
     private ConversionService conversionService = DefaultConversionService.getSharedInstance();
     @Getter
     private Class<T> mappedClass;
-    public BeanRowMapper(Class<T> mappedClass){
+
+    public BeanRowMapper(Class<T> mappedClass) {
         init(mappedClass);
     }
 
-    private void init(Class<T> mappedClass){
+    private void init(Class<T> mappedClass) {
         this.mappedClass = mappedClass;
         this.tableInfo = TableUtil.tableInfo(mappedClass);
     }
@@ -44,13 +45,13 @@ public class BeanRowMapper<T> implements RowMapper<T>,Constant {
 
     @Override
     public T mapRow(ResultSet rs, int i) throws SQLException {
-        assert this.mappedClass != null :"Mapped class was not specified";
+        assert this.mappedClass != null : "Mapped class was not specified";
         T mappedObject = BeanUtils.instantiateClass(this.mappedClass);
         BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(mappedObject);
         initBeanWrapper(bw);
         ResultSetMetaData rsmd = rs.getMetaData();
         int columnCount = rsmd.getColumnCount();
-        Map<ColumnInfo,Integer> map = Maps.newHashMap();
+        Map<ColumnInfo, Integer> map = Maps.newHashMap();
         for (int j = 1; j <= columnCount; j++) {
             String column = JdbcUtils.lookupColumnName(rsmd, j).toLowerCase();
             ColumnInfo columnInfo = tableInfo.getLowerCaseColumnMap().get(column);
@@ -58,57 +59,57 @@ public class BeanRowMapper<T> implements RowMapper<T>,Constant {
             if (columnInfo == null) {
                 continue;
             }
-            map.put(columnInfo,j);
+            map.put(columnInfo, j);
         }
-        for (ColumnInfo columnInfo: map.keySet()){
-            Object dbValue = dbValue(map,rs,columnInfo);
-            if(dbValue != null){
+        for (ColumnInfo columnInfo : map.keySet()) {
+            Object dbValue = dbValue(map, rs, columnInfo);
+            if (dbValue != null) {
                 bw.setPropertyValue(columnInfo.getFieldName(), dbValue);
             }
         }
         return mappedObject;
     }
 
-    private Object dbValue(Map<ColumnInfo,Integer> map,ResultSet rs,ColumnInfo columnInfo) throws SQLException{
-        Object value ;
+    private Object dbValue(Map<ColumnInfo, Integer> map, ResultSet rs, ColumnInfo columnInfo) throws SQLException {
+        Object value;
         Integer index = map.get(columnInfo);
-        if(null == index){
+        if (null == index) {
             return null;
         }
         Class<?> clazz = columnInfo.getField().getType();
-        if(columnInfo.isJson() || columnInfo.isEncrypt()){
+        if (columnInfo.isJson() || columnInfo.isEncrypt()) {
             clazz = String.class;
         }
         value = JdbcUtils.getResultSetValue(rs, index, clazz);
-        if(null == value){
+        if (null == value) {
             return null;
         }
-        if(columnInfo.isEncrypt()){
+        if (columnInfo.isEncrypt()) {
             String password = null;
-            if(columnInfo.getEncryptType() == EncryptType.FIXED){
+            if (columnInfo.getEncryptType() == EncryptType.FIXED) {
                 password = columnInfo.getEncryptKey();
-            } else if(columnInfo.getEncryptType() == EncryptType.FLIED){
+            } else if (columnInfo.getEncryptType() == EncryptType.FLIED) {
                 String fieldName = columnInfo.getEncryptKey();
                 ColumnInfo pwdColumn = tableInfo.getFieldNameMap().get(fieldName);
-                Object pwd = dbValue(map,rs,pwdColumn);
-                if(pwd != null){
+                Object pwd = dbValue(map, rs, pwdColumn);
+                if (pwd != null) {
                     password = String.valueOf(pwd);
                 }
             }
-            Preconditions.checkNotNull(password,"encryptType/decrypt password is null");
-            value = EncryptionProvider.decrypt(value.toString(),password);
+            Preconditions.checkNotNull(password, "encryptType/decrypt password is null");
+            value = EncryptionProvider.decrypt(value.toString(), password);
         }
-        if(columnInfo.isJson()){
+        if (columnInfo.isJson()) {
             try {
-                value = JsonUtil.toBean(value.toString(),columnInfo.getField().getGenericType());
-            }catch (Exception e){
+                value = JsonUtil.toBean(value.toString(), columnInfo.getField().getGenericType());
+            } catch (Exception e) {
                 throw new SQLException(e);
             }
         }
         return value;
     }
 
-    private void initBeanWrapper(BeanWrapper beanWrapper){
+    private void initBeanWrapper(BeanWrapper beanWrapper) {
         beanWrapper.setConversionService(this.conversionService);
     }
 

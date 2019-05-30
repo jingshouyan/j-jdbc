@@ -12,7 +12,7 @@ import java.util.Date;
  * 11/29/18 10:49 AM
  */
 @Slf4j
-public class DefaultKeyGenerator implements KeyGenerator{
+public class DefaultKeyGenerator implements KeyGenerator {
     public static final long EPOCH;
 
     private static final long SEQUENCE_BITS = 12L;
@@ -29,7 +29,7 @@ public class DefaultKeyGenerator implements KeyGenerator{
 
     private static final DefaultKeyGenerator INSTANCE = new DefaultKeyGenerator();
 
-    public static DefaultKeyGenerator getInstance(){
+    public static DefaultKeyGenerator getInstance() {
         return INSTANCE;
     }
 
@@ -67,6 +67,7 @@ public class DefaultKeyGenerator implements KeyGenerator{
 
     /**
      * 生成Id.
+     *
      * @param type key type
      * @return 返回@{@link Long}类型的Id
      */

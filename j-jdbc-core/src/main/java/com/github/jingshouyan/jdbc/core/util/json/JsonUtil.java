@@ -20,15 +20,15 @@ import java.util.regex.Pattern;
  */
 public class JsonUtil {
 
-    private static final ObjectMapper OBJECT_MAPPER = Optional.<ObjectMapper>empty().orElseGet(()->{
+    private static final ObjectMapper OBJECT_MAPPER = Optional.<ObjectMapper>empty().orElseGet(() -> {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new ParameterNamesModule())
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE,false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE,false);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return objectMapper;
     });
@@ -36,6 +36,7 @@ public class JsonUtil {
 
     /**
      * java bean json 序列化
+     *
      * @param value java bean
      * @return json 字符串
      */
@@ -48,102 +49,110 @@ public class JsonUtil {
 
     /**
      * json 转 java bean
-     * @param json json 字符串
+     *
+     * @param json  json 字符串
      * @param clazz java 类型
-     * @param <T> java 类型
+     * @param <T>   java 类型
      * @return java bean
      */
     @SneakyThrows
-    public static <T> T toBean(String json, Class<T> clazz){
-        return OBJECT_MAPPER.readValue(json,clazz);
+    public static <T> T toBean(String json, Class<T> clazz) {
+        return OBJECT_MAPPER.readValue(json, clazz);
     }
 
     /**
      * json 转 java bean
-     * @param json json字符串
-     * @param clazz java 类型
+     *
+     * @param json    json字符串
+     * @param clazz   java 类型
      * @param classes java 类型中的泛型
-     * @param <T> java 类型
+     * @param <T>     java 类型
      * @return java bean
      */
     @SneakyThrows
-    public static <T> T toBean(String json, Class<T> clazz, Class<?>... classes){
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(clazz,classes);
-        return OBJECT_MAPPER.readValue(json,javaType);
+    public static <T> T toBean(String json, Class<T> clazz, Class<?>... classes) {
+        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(clazz, classes);
+        return OBJECT_MAPPER.readValue(json, javaType);
     }
+
     /**
      * json 转 java bean
+     *
      * @param json json字符串
      * @param type java 类型
-     * @param <T> java 类型
+     * @param <T>  java 类型
      * @return java bean
      */
     @SneakyThrows
-    public static <T> T toBean(String json, Type type){
+    public static <T> T toBean(String json, Type type) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructType(type);
-        return OBJECT_MAPPER.readValue(json,javaType);
+        return OBJECT_MAPPER.readValue(json, javaType);
     }
 
     public static JavaType getJavaType(Type type, TypeBindings typeBindings) {
-        return OBJECT_MAPPER.getTypeFactory().constructType(type,typeBindings);
+        return OBJECT_MAPPER.getTypeFactory().constructType(type, typeBindings);
     }
 
     /**
      * json 转 list
-     * @param json json 字符串
+     *
+     * @param json  json 字符串
      * @param clazz java 类型
-     * @param <T> java 类型
+     * @param <T>   java 类型
      * @return java bean list
      */
     @SneakyThrows
-    public static <T> List<T> toList(String json, Class<T> clazz){
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(ArrayList.class,clazz);
-        return OBJECT_MAPPER.readValue(json,javaType);
+    public static <T> List<T> toList(String json, Class<T> clazz) {
+        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(ArrayList.class, clazz);
+        return OBJECT_MAPPER.readValue(json, javaType);
     }
 
     /**
      * json 字符串 转 json node
+     *
      * @param json json 字符串
      * @return json node
      */
     @SneakyThrows
-    public static JsonNode readTree(String json){
+    public static JsonNode readTree(String json) {
         return OBJECT_MAPPER.readTree(json);
     }
 
     /**
      * java bean 转 json node
+     *
      * @param obj java bean
      * @return json node
      */
-    public static JsonNode valueToTree(Object obj){
+    public static JsonNode valueToTree(Object obj) {
         return OBJECT_MAPPER.valueToTree(obj);
     }
 
     /**
      * 获取 json 中 key 的值
+     *
      * @param json FastJSON 对象
-     * @param key 含层级的key 例：cs.[0]?.b.name
-     *            ?. 表示当前层级为null则返回null
-     *            . 当前层级为null会抛出NPE
+     * @param key  含层级的key 例：cs.[0]?.b.name
+     *             ?. 表示当前层级为null则返回null
+     *             . 当前层级为null会抛出NPE
      * @return json 中的值
      */
-    public static JsonNode get(JsonNode json, String key){
+    public static JsonNode get(JsonNode json, String key) {
         String pattern = "^\\[\\d]$";
         String[] keys = key.split("\\.");
         JsonNode obj = json;
         for (int i = 0; i < keys.length; i++) {
             String str = keys[i];
-            if(str.endsWith("?")){
-                str = str.substring(0,str.length()-1);
-                if(null == obj){
+            if (str.endsWith("?")) {
+                str = str.substring(0, str.length() - 1);
+                if (null == obj) {
                     return null;
                 }
             }
-            if(Pattern.matches(pattern,str)){
-                int index = Integer.parseInt(str.substring(1,str.length()-1));
+            if (Pattern.matches(pattern, str)) {
+                int index = Integer.parseInt(str.substring(1, str.length() - 1));
                 obj = obj.get(index);
-            }else {
+            } else {
                 obj = obj.get(str);
             }
         }

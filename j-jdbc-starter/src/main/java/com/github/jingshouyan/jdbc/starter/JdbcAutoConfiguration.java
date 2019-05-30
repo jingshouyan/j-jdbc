@@ -44,10 +44,10 @@ public class JdbcAutoConfiguration implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        Map<String,BaseDao> map = ctx.getBeansOfType(BaseDao.class);
-        for (BaseDao dao: map.values()) {
-            try{
-                switch (properties.getTableInit()){
+        Map<String, BaseDao> map = ctx.getBeansOfType(BaseDao.class);
+        for (BaseDao dao : map.values()) {
+            try {
+                switch (properties.getTableInit()) {
                     case CREATE_TABLE:
                         createTable(dao);
                         break;
@@ -60,8 +60,8 @@ public class JdbcAutoConfiguration implements ApplicationRunner {
                     default:
                 }
 
-            }catch (Exception e){
-                log.error("init table error",e);
+            } catch (Exception e) {
+                log.error("init table error", e);
             }
         }
 
@@ -69,23 +69,23 @@ public class JdbcAutoConfiguration implements ApplicationRunner {
         KeyGeneratorProvider.setKeyGenerator(dbKeyGenerator);
     }
 
-    private void createTable(BaseDao dao){
-        if(!dao.existTable()) {
+    private void createTable(BaseDao dao) {
+        if (!dao.existTable()) {
             dao.createTable();
         }
     }
 
-    private void dropCreateTable(BaseDao dao){
-        if(dao.existTable()){
+    private void dropCreateTable(BaseDao dao) {
+        if (dao.existTable()) {
             dao.dropTable();
         }
         dao.createTable();
     }
 
-    private void updateTable(BaseDao dao){
-        if(dao.existTable()){
+    private void updateTable(BaseDao dao) {
+        if (dao.existTable()) {
             dao.updateTable();
-        }else {
+        } else {
             dao.createTable();
         }
 

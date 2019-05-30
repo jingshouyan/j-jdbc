@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * sql 生成器抽象类
  *
  * @author jingshouyan
- * @date 2018/4/14 17:25
+ * #date 2018/4/14 17:25
  */
 public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
@@ -135,18 +135,18 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
             String key = entry.getKey();
             Object value = entry.getValue();
             ColumnInfo columnInfo = columnInfo(key);
-            if(columnInfo!=null && columnInfo.isRouter()) {
+            if (columnInfo != null && columnInfo.isRouter()) {
                 conditionUtil.field(key).eq(value);
             }
         }
         List<Condition> conditions = conditionUtil.conditions();
-        return update(beanMap,conditions);
+        return update(beanMap, conditions);
     }
 
     @Override
-    public SqlPrepared update(T bean,List<Condition> conditions) {
+    public SqlPrepared update(T bean, List<Condition> conditions) {
         Map<String, Object> beanMap = valueMap(bean);
-        return update(beanMap,conditions);
+        return update(beanMap, conditions);
     }
 
     private SqlPrepared update(Map<String, Object> beanMap, List<Condition> conditions) {
@@ -298,7 +298,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                     sql.append(String.format(" AND %s NOT IN (:%s__notIn) ", column, key));
                     params.put(key + "__notIn", notIn);
                 }
-                if(null != compare.getBetween()) {
+                if (null != compare.getBetween()) {
                     Between between = compare.getBetween();
                     sql.append(String.format(" AND %s BETWEEN :%s__between_start AND :%s__between_end ", column, key, key));
                     params.put(key + "__between_start", between.getStart());

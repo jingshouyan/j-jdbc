@@ -16,7 +16,7 @@ public class TableInfoTest {
         TableInfo tableInfo = TableUtil.tableInfo(UserDO.class);
         System.out.println(tableInfo);
         SqlGenerator4Mysql<UserDO> gen = new SqlGenerator4Mysql<>(UserDO.class);
-        SqlPrepared sql  = gen.createTableSql();
+        SqlPrepared sql = gen.createTableSql();
         System.out.println(sql.getSql());
     }
 }

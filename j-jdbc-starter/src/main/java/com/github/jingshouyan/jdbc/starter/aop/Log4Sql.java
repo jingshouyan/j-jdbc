@@ -31,7 +31,7 @@ public class Log4Sql {
 
     @Around("aspect()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        if(!jdbcProperties.isShowSql()){
+        if (!jdbcProperties.isShowSql()) {
             return joinPoint.proceed();
         }
         long start = System.currentTimeMillis();
@@ -39,7 +39,7 @@ public class Log4Sql {
             Object[] args = joinPoint.getArgs();
             log.debug("sql execution starting");
             for (int i = 0; i < args.length; i++) {
-                if(args[i] instanceof RowMapper){
+                if (args[i] instanceof RowMapper) {
                     continue;
                 }
                 log.debug("arg.{}===>{}", i, args[i]);
@@ -49,10 +49,10 @@ public class Log4Sql {
             int fetch = 0;
             if (result instanceof Collection) {
                 fetch = ((Collection) result).size();
-            } else if(result instanceof Number) {
+            } else if (result instanceof Number) {
                 fetch = ((Number) result).intValue();
-            } else if(result instanceof int[]) {
-                fetch = IntStream.of((int[])result).sum();
+            } else if (result instanceof int[]) {
+                fetch = IntStream.of((int[]) result).sum();
             }
             log.debug("sql execution end. use time : {}ms, fetch : {}, result: {}", (end - start), fetch, result);
             return result;

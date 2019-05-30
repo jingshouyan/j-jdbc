@@ -22,7 +22,6 @@ public class JdbcExecHelper {
     );
 
 
-
     public void exec(Runnable runnable) {
         EXEC.execute(runnable);
     }

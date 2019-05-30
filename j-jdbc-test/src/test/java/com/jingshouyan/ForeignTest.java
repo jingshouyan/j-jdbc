@@ -34,19 +34,20 @@ public class ForeignTest {
     private ForeignDao foreignDao;
 
     @Test
-    public void insert(){
+    public void insert() {
         ForeignDO foreignDO = new ForeignDO();
-        foreignDO.setId("123");
+//        foreignDO.setId("123");
         foreignDO.setUserId("1111");
         foreignDO.setUsers(Lists.newArrayList());
         foreignDO.setU2(new ArrayList<UserDO>());
         foreignDO.setU(new UserDO());
         foreignDao.insert(foreignDO);
     }
+
     @Test
-    public void batchInsert(){
+    public void batchInsert() {
         List<ForeignDO> foreignDOS = Lists.newArrayList();
-        for(int i = 0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             ForeignDO foreignDO = new ForeignDO();
             foreignDO.setUserId("1111");
             foreignDO.setUsers(Lists.newArrayList());

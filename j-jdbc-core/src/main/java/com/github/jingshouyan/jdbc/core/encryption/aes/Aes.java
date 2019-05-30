@@ -15,11 +15,12 @@ import java.security.SecureRandom;
  * #date 2019/1/17 16:58
  */
 
-public class Aes implements Encryption{
+public class Aes implements Encryption {
 
     public static final String CHARSET = "utf-8";
     public static final String CIPHER_ALGORITHM = "Aes";
     public static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+
     /**
      * 加密
      *
@@ -33,7 +34,7 @@ public class Aes implements Encryption{
         KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
         SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         random.setSeed(password.getBytes(CHARSET));
-        kgen.init(128,random);
+        kgen.init(128, random);
         SecretKey secretKey = kgen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
         SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
@@ -61,7 +62,7 @@ public class Aes implements Encryption{
         KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
         SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         random.setSeed(password.getBytes(CHARSET));
-        kgen.init(128,random);
+        kgen.init(128, random);
         SecretKey secretKey = kgen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
         SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);

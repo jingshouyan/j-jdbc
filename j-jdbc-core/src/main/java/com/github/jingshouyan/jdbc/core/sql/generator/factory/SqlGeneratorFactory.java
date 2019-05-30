@@ -10,8 +10,9 @@ public interface SqlGeneratorFactory {
 
     /**
      * 获取 sql 生成器
+     *
      * @param clazz 类型
-     * @param <T> T
+     * @param <T>   T
      * @return sql 生成器
      */
     <T> SqlGenerator<T> sqlGenerator(Class<T> clazz);

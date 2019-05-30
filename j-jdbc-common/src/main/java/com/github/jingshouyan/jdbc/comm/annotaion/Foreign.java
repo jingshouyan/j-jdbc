@@ -7,6 +7,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface Foreign {
     String thisKey();
+
     String thatKey();
+
     String[] value() default {};
 }

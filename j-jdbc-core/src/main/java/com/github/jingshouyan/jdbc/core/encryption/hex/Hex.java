@@ -11,8 +11,8 @@ import lombok.SneakyThrows;
 public class Hex implements Encryption {
 
     private static final String CHARSET = "utf-8";
-    private static final char[] DIGITS_LOWER = { '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    private static final char[] DIGITS_LOWER = {'0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     private static final int HEX_ONE = 0x01;
 
     @Override
@@ -27,7 +27,7 @@ public class Hex implements Encryption {
     public String decrypt(String content, String password) {
         char[] chars = content.toCharArray();
         byte[] bytes = decodeHex(chars);
-        return new String(bytes,CHARSET);
+        return new String(bytes, CHARSET);
     }
 
 
@@ -44,6 +44,7 @@ public class Hex implements Encryption {
     private static String encodeHexStr(byte[] data) {
         return new String(encodeHex(data));
     }
+
     private static byte[] decodeHex(char[] data) {
         int len = data.length;
         if ((len & HEX_ONE) != 0) {
@@ -60,6 +61,7 @@ public class Hex implements Encryption {
         }
         return out;
     }
+
     private static int toDigit(char ch, int index) {
         int digit = Character.digit(ch, 16);
         if (digit == -1) {
@@ -72,9 +74,9 @@ public class Hex implements Encryption {
     public static void main(String[] args) {
         Hex hex = new Hex();
         String a = "张三,呵呵哒!dflkjj";
-        String b = hex.encrypt(a,"");
+        String b = hex.encrypt(a, "");
         System.out.println(b);
-        String c = hex.decrypt(b,"");
+        String c = hex.decrypt(b, "");
         System.out.println(c);
     }
 

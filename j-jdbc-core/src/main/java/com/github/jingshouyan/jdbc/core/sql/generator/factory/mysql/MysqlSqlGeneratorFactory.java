@@ -13,10 +13,10 @@ import java.util.Map;
  */
 
 public class MysqlSqlGeneratorFactory implements SqlGeneratorFactory {
-    private static final Map<Class<?>,SqlGenerator<?>> GENERATOR_CACHE = Maps.newConcurrentMap();
+    private static final Map<Class<?>, SqlGenerator<?>> GENERATOR_CACHE = Maps.newConcurrentMap();
 
     @Override
     public <T> SqlGenerator<T> sqlGenerator(Class<T> clazz) {
-        return ( SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz, SqlGenerator4Mysql::new);
+        return (SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz, SqlGenerator4Mysql::new);
     }
 }
