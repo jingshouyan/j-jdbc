@@ -10,37 +10,42 @@ import java.util.List;
 
 /**
  * sql 生成器
+ *
  * @author jingshouyan
- * @date 2018/4/14 17:25
+ * #date 2018/4/14 17:25
  */
 public interface SqlGenerator<T> {
 
     /**
      * 条件查询语句生成
+     *
      * @param conditions 条件
-     * @param fields 查询的列
+     * @param fields     查询的列
      * @return sql语句和参数
      */
     SqlPrepared query(List<Condition> conditions, Collection<String> fields);
 
     /**
      * 带分页的条件查询语句生成
+     *
      * @param conditions 条件
-     * @param page 分页信息
-     * @param fields 查询的列
+     * @param page       分页信息
+     * @param fields     查询的列
      * @return sql语句和参数
      */
     SqlPrepared queryLimit(List<Condition> conditions, Page<T> page, Collection<String> fields);
 
     /**
-     *  条件查询计数语句生成
+     * 条件查询计数语句生成
+     *
      * @param conditions 条件
      * @return sql语句和参数
      */
     SqlPrepared count(List<Condition> conditions);
 
     /**
-     *  数据插入语句生成
+     * 数据插入语句生成
+     *
      * @param beans 需要插入的对象
      * @return sql语句和参数
      */
@@ -48,6 +53,7 @@ public interface SqlGenerator<T> {
 
     /**
      * 数据更新语句生成
+     *
      * @param bean 更新对象
      * @return sql语句和参数
      */
@@ -55,7 +61,8 @@ public interface SqlGenerator<T> {
 
     /**
      * 数据更新语句生成
-     * @param bean 需要更新的属性
+     *
+     * @param bean       需要更新的属性
      * @param conditions 条件
      * @return sql语句和参数
      */
@@ -63,6 +70,7 @@ public interface SqlGenerator<T> {
 
     /**
      * 条件删除语句生成
+     *
      * @param conditions 条件
      * @return sql语句和参数
      */
@@ -70,24 +78,28 @@ public interface SqlGenerator<T> {
 
     /**
      * 建表语句生成
+     *
      * @return sql语句和参数
      */
     SqlPrepared createTableSql();
 
     /**
-     *  删表语句生成
+     * 删表语句生成
+     *
      * @return sql语句和参数
      */
     SqlPrepared dropTableSql();
 
     /**
-     *  查询空行
+     * 查询空行
+     *
      * @return SqlPrepared
      */
     SqlPrepared selectNull();
 
     /**
-     *  添加列
+     * 添加列
+     *
      * @param columnInfo 列信息
      * @return SqlPrepared
      */

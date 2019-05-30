@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jingshouyan
@@ -62,11 +63,11 @@ public class DbTest {
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
-        String json  = JsonUtil.toJsonString(userBeans);
+        String json = JsonUtil.toJsonString(userBeans);
         System.out.println(json);
         int count = userDao.count(conditions);
         System.out.println(count);
-        userBeans = JsonUtil.toList(json,UserDO.class);
+        userBeans = JsonUtil.toList(json, UserDO.class);
         System.out.println(userBeans);
     }
 
@@ -91,6 +92,12 @@ public class DbTest {
     @Test
     public void batchUpdate() {
         List<UserDO> users = userDao.query(null);
+        users = users.stream().map(user -> {
+            UserDO u = new UserDO();
+            u.setId(user.getId());
+            u.setName(user.getName() + "abc");
+            return u;
+        }).collect(Collectors.toList());
         userDao.batchUpdate(users);
     }
 
@@ -98,7 +105,7 @@ public class DbTest {
     public void updateAll() {
         UserDO userDO = new UserDO();
         userDO.setAge(22);
-        userDao.update(userDO,null);
+        userDao.update(userDO, null);
     }
 
     @Test

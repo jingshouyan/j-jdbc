@@ -30,8 +30,8 @@ public class DbKeyGenerator implements KeyGenerator {
                 new AtomicLong(idHelper.get(idType))
         );
         long result = longAdder.incrementAndGet();
-        if(result % IdHelper.STEP == 0){
-            execHelper.exec(()->idHelper.update(type, result));
+        if (result % IdHelper.STEP == 0) {
+            execHelper.exec(() -> idHelper.update(type, result));
         }
         return result;
     }

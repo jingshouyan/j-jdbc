@@ -19,7 +19,9 @@ import java.util.stream.Stream;
  * @author jingshouyan
  * 11/22/18 5:27 PM
  */
-@Getter@Setter@ToString
+@Getter
+@Setter
+@ToString
 public class TableInfo {
     private Class<?> clazz;
 
@@ -40,13 +42,13 @@ public class TableInfo {
     private List<String> listQueryFields;
 
 
-    public TableInfo(Class<?> clazz){
+    public TableInfo(Class<?> clazz) {
         this.clazz = clazz;
         tableName = clazz.getSimpleName();
         comment = "";
         Table table = clazz.getAnnotation(Table.class);
-        if(null != table){
-            if(!StringUtil.isNullOrEmpty(table.value())){
+        if (null != table) {
+            if (!StringUtil.isNullOrEmpty(table.value())) {
                 tableName = table.value();
             }
             comment = table.comment();
@@ -72,7 +74,7 @@ public class TableInfo {
                     addColumnInfo(beanColumn);
                     // field 中添加的 @Index 处理
                     Index index = field.getAnnotation(Index.class);
-                    if(index != null) {
+                    if (index != null) {
                         IndexInfo indexInfo = new IndexInfo();
                         indexInfo.getColumnInfos().add(beanColumn);
                         indexInfo.setUnique(index.unique());
@@ -104,7 +106,7 @@ public class TableInfo {
         indices.addAll(clazzIndexInfo);
 
         ListQueryFields lqf = clazz.getAnnotation(ListQueryFields.class);
-        if(null != lqf) {
+        if (null != lqf) {
             listQueryFields = Stream.of(lqf.value()).collect(Collectors.toList());
         }
     }

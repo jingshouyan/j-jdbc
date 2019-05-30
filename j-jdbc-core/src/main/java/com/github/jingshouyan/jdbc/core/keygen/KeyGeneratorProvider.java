@@ -10,6 +10,7 @@ import lombok.Setter;
 public class KeyGeneratorProvider {
     public static final KeyGenerator DEFAULT = new DefaultKeyGenerator();
 
-    @Getter@Setter
+    @Getter
+    @Setter
     private static KeyGenerator keyGenerator = DEFAULT;
 }

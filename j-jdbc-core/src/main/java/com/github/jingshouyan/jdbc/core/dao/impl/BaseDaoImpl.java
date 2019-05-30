@@ -41,7 +41,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         init();
     }
 
-    private SqlGenerator<T> sqlGenerator(){
+    private SqlGenerator<T> sqlGenerator() {
         return SqlGeneratorFactoryUtil.getSqlGeneratorFactory().sqlGenerator(clazz);
     }
 
@@ -59,13 +59,13 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     protected NamedParameterJdbcTemplate template;
 
     @Override
-    public Class<T> getClazz(){
+    public Class<T> getClazz() {
         return clazz;
     }
 
     @Override
     public Optional<T> find(Object id) {
-        Preconditions.checkNotNull(id,"id is null");
+        Preconditions.checkNotNull(id, "id is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).eq(id).conditions();
         List<T> ts = queryField(conditions, null);
         return ts.stream().findFirst();
@@ -73,7 +73,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public Optional<T> findField(Object id, Collection<String> fields) {
-        Preconditions.checkNotNull(id,"id is null");
+        Preconditions.checkNotNull(id, "id is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).eq(id).conditions();
         List<T> ts = queryField(conditions, fields);
         return ts.stream().findFirst();
@@ -101,7 +101,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         int count = count(conditions);
         page.totalCount(count);
-        List<T> ts = queryFieldLimit(conditions,page,fields);
+        List<T> ts = queryFieldLimit(conditions, page, fields);
         page.setList(ts);
         return page;
     }
@@ -112,20 +112,20 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public List<T> queryField(List<Condition> conditions, Collection<String> fields){
+    public List<T> queryField(List<Condition> conditions, Collection<String> fields) {
         SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
         return ts;
     }
 
     @Override
-    public List<T> queryLimit(List<Condition> conditions,Page<T> page) {
+    public List<T> queryLimit(List<Condition> conditions, Page<T> page) {
         return queryFieldLimit(conditions, page, fields());
     }
 
     @Override
     public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields) {
-        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page,fields);
+        SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page, fields);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
         return ts;
     }
@@ -135,7 +135,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     public int update(T t, List<Condition> conditions) {
         t.forUpdate();
         SqlPrepared sqlPrepared = sqlGenerator().update(t, conditions);
-        int fetch =  template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
         return fetch;
     }
 
@@ -203,14 +203,14 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     public int update(T t) {
         t.forUpdate();
         SqlPrepared sqlPrepared = sqlGenerator().update(t);
-        int fetch = template.update(sqlPrepared.getSql(),sqlPrepared.getParams());
+        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
         //添加更新事件
         DmlEventBus.onUpdate(t);
         return fetch;
     }
 
     @Override
-    public int batchUpdate(List<T> list){
+    public int batchUpdate(List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         String sql = null;
         Map<String, Object>[] v = new Map[list.size()];
@@ -235,12 +235,12 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
         Preconditions.checkNotNull(ids, "ids is null");
         List<Condition> conditions = ConditionUtil.newInstance().field(key()).in(ids).conditions();
         List<T> list = Lists.newArrayList();
-        if(DmlEventBus.isDeleteOn()){
+        if (DmlEventBus.isDeleteOn()) {
             list = findByIds(ids);
         }
         int fetch = delete4Batch(conditions);
         //添加删除事件
-        if(DmlEventBus.isDeleteOn()){
+        if (DmlEventBus.isDeleteOn()) {
             list.forEach(DmlEventBus::onDelete);
         }
         return fetch;
@@ -259,8 +259,6 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
 
-
-
     @Override
     public int createTable() {
         SqlPrepared sqlPrepared = sqlGenerator().createTableSql();
@@ -274,23 +272,23 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
     }
 
     @Override
-    public boolean existTable(){
+    public boolean existTable() {
         try {
             SqlPrepared sqlPrepared = sqlGenerator().selectNull();
-            template.queryForRowSet(sqlPrepared.getSql(),sqlPrepared.getParams());
+            template.queryForRowSet(sqlPrepared.getSql(), sqlPrepared.getParams());
             return true;
-        }catch (BadSqlGrammarException e){
+        } catch (BadSqlGrammarException e) {
         }
         return false;
     }
 
     @Override
-    public int updateTable(){
+    public int updateTable() {
         SqlPrepared sqlPrepared = sqlGenerator().selectNull();
-        SqlRowSet rowSet = template.queryForRowSet(sqlPrepared.getSql(),sqlPrepared.getParams());
+        SqlRowSet rowSet = template.queryForRowSet(sqlPrepared.getSql(), sqlPrepared.getParams());
         SqlRowSetMetaData md = rowSet.getMetaData();
         Set<String> cn = Sets.newHashSet();
-        for(String columnName : md.getColumnNames()){
+        for (String columnName : md.getColumnNames()) {
             cn.add(columnName.toLowerCase());
         }
 
@@ -299,7 +297,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
                 .filter(c -> !cn.contains(c.getColumnName().toLowerCase()))
                 .collect(Collectors.toList());
 
-        if(columnInfos.isEmpty()) {
+        if (columnInfos.isEmpty()) {
             return 0;
         }
 
@@ -313,6 +311,7 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     /**
      * 查询时默认指定的列
+     *
      * @return 查询时默认指定的列
      */
     private List<String> fields() {

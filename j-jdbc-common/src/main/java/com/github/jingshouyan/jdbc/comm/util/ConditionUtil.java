@@ -19,76 +19,86 @@ public class ConditionUtil {
 
     private static final String DELETE_FIELD_NAME = "deletedAt";
 
-    public static ConditionUtil newInstance(){
+    public static ConditionUtil newInstance() {
         return new ConditionUtil();
     }
 
     private List<Condition> conditions = new ArrayList<>();
 
-    public List<Condition> conditions(){
+    public List<Condition> conditions() {
         return conditions;
     }
 
     private Condition last;
 
-    public ConditionUtil field(String field){
+    public ConditionUtil field(String field) {
         last = new Condition();
         conditions.add(last);
         last.setField(field);
         return this;
     }
-    public ConditionUtil like(String like){
+
+    public ConditionUtil like(String like) {
         last.setLike(like);
         return this;
     }
-    public ConditionUtil gt(Object gt){
+
+    public ConditionUtil gt(Object gt) {
         last.setGt(gt);
         return this;
     }
-    public ConditionUtil lt(Object lt){
+
+    public ConditionUtil lt(Object lt) {
         last.setLt(lt);
         return this;
     }
-    public ConditionUtil gte(Object gte){
+
+    public ConditionUtil gte(Object gte) {
         last.setGte(gte);
         return this;
     }
-    public ConditionUtil lte(Object lte){
+
+    public ConditionUtil lte(Object lte) {
         last.setLte(lte);
         return this;
     }
-    public ConditionUtil eq(Object eq){
+
+    public ConditionUtil eq(Object eq) {
         last.setEq(eq);
         return this;
     }
-    public ConditionUtil ne(Object ne){
+
+    public ConditionUtil ne(Object ne) {
         last.setNe(ne);
         return this;
     }
-    public ConditionUtil in(Collection<?> in){
+
+    public ConditionUtil in(Collection<?> in) {
         last.setIn(in);
         return this;
     }
-    public ConditionUtil notIn(Collection<?> notIn){
+
+    public ConditionUtil notIn(Collection<?> notIn) {
         last.setNotIn(notIn);
         return this;
     }
-    public ConditionUtil empty(boolean empty){
+
+    public ConditionUtil empty(boolean empty) {
         last.setEmpty(empty);
         return this;
     }
 
-    public ConditionUtil between(Object start,Object end) {
-        last.setBetween(new Between(start,end));
+    public ConditionUtil between(Object start, Object end) {
+        last.setBetween(new Between(start, end));
         return this;
     }
 
 
-    public ConditionUtil noDeleted(){
+    public ConditionUtil noDeleted() {
         return field(DELETE_FIELD_NAME).eq(Constant.NO_DELETE);
     }
 
-    public ConditionUtil deleted(){
+    public ConditionUtil deleted() {
         return field(DELETE_FIELD_NAME).ne(Constant.NO_DELETE);
     }
 }

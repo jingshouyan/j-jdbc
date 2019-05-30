@@ -19,13 +19,12 @@ public @interface Column {
     String value() default "";
 
     /**
-     * @return 是否为不可变字段,更新时不会更新该字段.
-     *
+     * @return 是否为不可变字段, 更新时不会更新该字段.
      */
     boolean immutable() default false;
 
     /**
-     * @return id更新时作为条件,主要用作sharding路由.
+     * @return id更新时作为条件, 主要用作sharding路由.
      */
     boolean router() default false;
 
@@ -46,8 +45,6 @@ public @interface Column {
 
     /**
      * @return 加密密钥
-     * 1.fixed:abc 以 abc为密钥进行加密
-     * 2.flied:id  以 bean 属性 id 的值为密钥进行加密
      */
     String encryptKey() default "";
 

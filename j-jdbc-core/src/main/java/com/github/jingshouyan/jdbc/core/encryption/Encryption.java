@@ -1,4 +1,5 @@
 package com.github.jingshouyan.jdbc.core.encryption;
+
 /**
  * @author jingshouyan
  * #date 2019/1/17 16:58
@@ -13,6 +14,7 @@ public interface Encryption {
      * @return 加密后字符串
      */
     String encrypt(String content, String password);
+
     /**
      * 解密
      *

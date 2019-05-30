@@ -20,7 +20,8 @@ import java.util.stream.Stream;
  * @author jingshouyan
  * 11/22/18 5:11 PM
  */
-@Data@EqualsAndHashCode
+@Data
+@EqualsAndHashCode
 public class ColumnInfo {
     private Field field;
     private String fieldName;
@@ -42,25 +43,25 @@ public class ColumnInfo {
     private ForeignInfo foreignInfo;
 
 
-    public ColumnInfo(Field field){
+    public ColumnInfo(Field field) {
         // 默认值
         this.field = field;
         fieldName = field.getName();
         columnName = field.getName();
         Foreign f = field.getAnnotation(Foreign.class);
-        if(f!=null){
+        if (f != null) {
             foreign = true;
             ForeignInfo info = new ForeignInfo();
             Class<?> type = field.getType();
-            if(Collection.class.isAssignableFrom(type)){
+            if (Collection.class.isAssignableFrom(type)) {
                 info.setCollection(true);
-                if(Set.class.isAssignableFrom(type) || List.class.isAssignableFrom(type)){
+                if (Set.class.isAssignableFrom(type) || List.class.isAssignableFrom(type)) {
                     info.setCollectionType(type);
                 } else {
                     String message = "field: [" + field.getName() + "] must be set|list";
                     throw new IllegalArgumentException(message);
                 }
-                ParameterizedType type1 = (ParameterizedType)field.getGenericType();
+                ParameterizedType type1 = (ParameterizedType) field.getGenericType();
                 info.setForeignType((Class<?>) type1.getActualTypeArguments()[0]);
             } else {
                 info.setCollection(false);
@@ -87,14 +88,14 @@ public class ColumnInfo {
             if (null != column) {
                 immutable = column.immutable();
                 router = column.router();
-                if(router) {
+                if (router) {
                     // 路由列也不可变
                     immutable = true;
                 }
-                if(!StringUtil.isNullOrEmpty(column.value())){
+                if (!StringUtil.isNullOrEmpty(column.value())) {
                     columnName = column.value();
                 }
-                if(column.encryptType()!=EncryptType.NONE){
+                if (column.encryptType() != EncryptType.NONE) {
                     encrypt = true;
                     encryptType = column.encryptType();
                 }
@@ -102,7 +103,7 @@ public class ColumnInfo {
                 json = column.json();
                 encryptType = column.encryptType();
                 encryptKey = column.encryptKey();
-                if(!"".equals(column.defaultData())){
+                if (!"".equals(column.defaultData())) {
                     defaultData = column.defaultData();
                 }
                 comment = column.comment();

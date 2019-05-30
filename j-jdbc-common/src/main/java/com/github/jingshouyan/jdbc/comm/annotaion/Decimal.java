@@ -11,5 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface Decimal {
     int precision();
+
     int scale();
 }
