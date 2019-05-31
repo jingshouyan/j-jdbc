@@ -21,9 +21,11 @@ public interface SqlGenerator<T> {
      *
      * @param conditions 条件
      * @param fields     查询的列
+     * @param distinct   是否为 distinct 查询
      * @return sql语句和参数
      */
-    SqlPrepared query(List<Condition> conditions, Collection<String> fields);
+    SqlPrepared query(List<Condition> conditions, Collection<String> fields, boolean distinct);
+
 
     /**
      * 带分页的条件查询语句生成

@@ -113,7 +113,14 @@ public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
 
     @Override
     public List<T> queryField(List<Condition> conditions, Collection<String> fields) {
-        SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields);
+        SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields, false);
+        List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
+        return ts;
+    }
+
+    @Override
+    public List<T> queryDistinct(List<Condition> conditions, Collection<String> fields) {
+        SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields, true);
         List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
         return ts;
     }
