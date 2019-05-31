@@ -38,11 +38,13 @@ public class DbTest {
         UserDO userBean = new UserDO();
         userBean.setName("张三");
         userBean.setAge(2333);
+        userBean.setKey("adf-key");
         userBean.setTags(Lists.newArrayList("a", "b"));
         userBean.setNickname("alkaksdjflk");
         userBean.setEncryptTest("士大夫");
         userBean.setAcc1(new BigDecimal("12.5744334"));
         userBean.setAcc2(new BigDecimal("1112.578867"));
+        userBean.setLocalDate(LocalDate.now());
         userDao.insert(userBean);
 
         log.debug(userBean.toString());
@@ -69,6 +71,12 @@ public class DbTest {
         System.out.println(count);
         userBeans = JsonUtil.toList(json, UserDO.class);
         System.out.println(userBeans);
+    }
+
+    @Test
+    public void queryDistinct() {
+        List<UserDO> users = userDao.queryDistinct(null,Lists.newArrayList("age"));
+        System.out.println(users);
     }
 
     @Test
@@ -105,6 +113,7 @@ public class DbTest {
     public void updateAll() {
         UserDO userDO = new UserDO();
         userDO.setAge(22);
+        userDO.setKey("key-test");
         userDao.update(userDO, null);
     }
 

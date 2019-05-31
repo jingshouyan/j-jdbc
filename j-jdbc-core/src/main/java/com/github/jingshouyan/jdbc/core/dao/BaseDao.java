@@ -70,6 +70,14 @@ public interface BaseDao<T extends BaseDO> {
      * @return 结果集
      */
     List<T> queryField(List<Condition> conditions, Collection<String> fields);
+    /**
+     * distinct 查询
+     *
+     * @param conditions 条件
+     * @param fields     查询的属性
+     * @return 结果集
+     */
+    List<T> queryDistinct(List<Condition> conditions, Collection<String> fields);
 
     /**
      * 条件查询（取一页数据）

@@ -47,14 +47,23 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     @Override
-    public SqlPrepared query(List<Condition> compares, Collection<String> fields) {
+    public SqlPrepared query(List<Condition> compares, Collection<String> fields, boolean distinct) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "SELECT " + columns(fields) + " FROM " + tableName();
+        StringBuilder sql = new StringBuilder();
         SqlPrepared whereSql = where(compares);
-        sqlPrepared.setSql(sql + whereSql.getSql());
+        sql.append("SELECT ");
+        if(distinct) {
+            sql.append("DISTINCT ");
+        }
+        sql.append(columns(fields))
+                .append(" FROM ")
+                .append(tableName())
+                .append(whereSql.getSql());
+        sqlPrepared.setSql(sql.toString());
         sqlPrepared.setParams(whereSql.getParams());
         return sqlPrepared;
     }
+
 
 
     @Override
