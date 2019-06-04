@@ -17,23 +17,47 @@ spring:
 #    username: ${db.username}
 #    password: ${db.password}
 
-  shardingsphere:
+# shardingsphere 4.0.0-RC1
+#  shardingsphere:
+#    datasource:
+#      names: ds0
+#      ds0:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        jdbcUrl: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
+#        username: ${db.username}
+#        password: ${db.password}
+#    sharding:
+#      tables:
+#        DEMO_USER:
+#          actual-data-nodes: ds0.DEMO_USER$->{0..4}
+#          table-strategy:
+#            inline:
+#              sharding-column: age
+#              algorithm-expression: DEMO_USER$->{age % 5}
+#    props:
+#      sql:
+#        show: true
+
+# shading-JDBC 3.1.0
+sharding:
+  jdbc:
     datasource:
       names: ds0
       ds0:
         type: com.zaxxer.hikari.HikariDataSource
-#        driverClassName: com.mysql.cj.jdbc.Driver
         jdbcUrl: jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: ${db.username}
         password: ${db.password}
-    sharding:
-      tables:
-        DEMO_USER:
-          actual-data-nodes: ds0.DEMO_USER$->{0..4}
-          table-strategy:
-            inline:
-              sharding-column: age
-              algorithm-expression: DEMO_USER$->{age % 5}
-    props:
-      sql:
-        show: true
+    config:
+      sharding:
+        tables:
+          DEMO_USER:
+            actualDataNodes: ds0.DEMO_USER$->{0..4}
+            tableStrategy:
+              inline:
+                shardingColumn: age
+                algorithmExpression: DEMO_USER$->{age % 5}
+      props:
+        sql:
+          show: true
+
