@@ -26,9 +26,9 @@ import java.util.List;
 
 @Table(value = "DEMO_USER", comment = "用户表")
 
-//@Index(value = {"age","nickname"},unique = true)
+@Index(value = {"age","nickname"},unique = true)
 @Index({"id", "name"})
-
+@ListQueryFields({"name","age"})
 //@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
 public class UserDO extends BaseDO {
 
@@ -44,7 +44,7 @@ public class UserDO extends BaseDO {
      * 列注解,选择加密方式为属性id的值为key
      * 使用加密后,无法作为查询条件,因为数据库中存放的是密文
      */
-    @Column(encryptType = EncryptType.FLIED, encryptKey = "id")
+    @Column(encryptType = EncryptType.FLIED, encryptKey = "id",immutable = true,router = true)
     @Index(unique = true)
     private String name;
     /**

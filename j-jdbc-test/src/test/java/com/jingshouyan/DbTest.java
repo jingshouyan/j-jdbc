@@ -60,7 +60,7 @@ public class DbTest {
 //                .between(22,25)
 //                .gt(20).lte(22)
 //                .field("nickname").eq("1' or '2'='2 ")
-                .field("encryptTest").notIn(Lists.newArrayList("士大夫1", "士大夫2"))
+//                .field("encryptTest").notIn(Lists.newArrayList("士大夫1", "士大夫2"))
 
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
@@ -75,7 +75,7 @@ public class DbTest {
 
     @Test
     public void queryDistinct() {
-        List<UserDO> users = userDao.queryDistinct(null,Lists.newArrayList("age"));
+        List<UserDO> users = userDao.queryDistinct(null,Lists.newArrayList("tags"));
         System.out.println(users);
     }
 
@@ -113,7 +113,7 @@ public class DbTest {
     public void updateAll() {
         UserDO userDO = new UserDO();
         userDO.setAge(22);
-        userDO.setKey("key-test");
+        userDO.setKey("key-test ");
         userDao.update(userDO, null);
     }
 
