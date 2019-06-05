@@ -277,8 +277,12 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                     params.put(key + "__lte", compare.getLte());
                 }
                 if (null != compare.getNe()) {
+                    Object neq = compare.getEq();
+                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                        neq = EncryptionProvider.encrypt(neq.toString(), columnInfo.getEncryptKey());
+                    }
                     sql.append(String.format(" AND %s <> :%s__ne ", column, key));
-                    params.put(key + "__ne", compare.getNe());
+                    params.put(key + "__ne", neq);
                 }
                 if (null != compare.getEmpty()) {
                     if (compare.getEmpty()) {
