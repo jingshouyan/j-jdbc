@@ -14,7 +14,7 @@
     <name>j-jdbc-core</name>
     <dependencies>
         <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
+            <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>

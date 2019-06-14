@@ -68,7 +68,6 @@ public abstract class BaseDO implements Serializable {
         createdAt = null;
         updatedAt = now;
         deletedAt = Constant.NO_DELETE;
-        ;
     }
 
 
