@@ -277,7 +277,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                     params.put(key + "__lte", compare.getLte());
                 }
                 if (null != compare.getNe()) {
-                    Object neq = compare.getEq();
+                    Object neq = compare.getNe();
                     if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
                         neq = EncryptionProvider.encrypt(neq.toString(), columnInfo.getEncryptKey());
                     }
