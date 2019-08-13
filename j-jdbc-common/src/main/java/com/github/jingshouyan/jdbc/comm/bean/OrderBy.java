@@ -2,6 +2,7 @@ package com.github.jingshouyan.jdbc.comm.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -12,6 +13,7 @@ import lombok.ToString;
  */
 @ToString
 @AllArgsConstructor()
+@NoArgsConstructor
 public class OrderBy {
     @Getter
     private String key;
