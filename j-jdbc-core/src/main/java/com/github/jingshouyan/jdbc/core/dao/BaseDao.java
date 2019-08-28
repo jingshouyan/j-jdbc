@@ -38,7 +38,7 @@ public interface BaseDao<T extends BaseDO> {
     Optional<T> findField(Object id, Collection<String> fields);
 
     /**
-     * 根据主键列表查询数据
+     * 根据主键列表查询数据,受 @ListQueryFields 影响
      *
      * @param ids 主键列表
      * @return 数据列表
@@ -55,7 +55,7 @@ public interface BaseDao<T extends BaseDO> {
     List<T> findByIdsField(Collection<?> ids, Collection<String> fields);
 
     /**
-     * 条件查询
+     * 条件查询,受 @ListQueryFields 影响
      *
      * @param conditions 条件
      * @return 结果集
@@ -80,7 +80,7 @@ public interface BaseDao<T extends BaseDO> {
     List<T> queryDistinct(List<Condition> conditions, Collection<String> fields);
 
     /**
-     * 条件查询（取一页数据）
+     * 条件查询（取一页数据）,受 @ListQueryFields 影响
      *
      * @param conditions 条件
      * @param page       页
@@ -100,7 +100,7 @@ public interface BaseDao<T extends BaseDO> {
 
 
     /**
-     * 条件分页查询
+     * 条件分页查询,受 @ListQueryFields 影响
      *
      * @param conditions 条件
      * @param page       页
