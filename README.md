@@ -109,6 +109,22 @@ List<Condition> conditions = ConditionUtil.newInstance()
 List<UserDO> userBeans = userDao.query(conditions);
 ```
 
+### 常用类&注解
+
+#### 数据库映射对象基类 
+
+[BaseDO](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/entity/BaseDO.java)
+#### 表映射注解 (annotation拼写错误)
+[@Table](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/annotaion/Table.java)
+#### 列映射注解
+[@Column](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/annotaion/Column.java)
+#### 主键注解
+[@Key](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/annotaion/Key.java)
+#### 索引注解
+[@Index](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/annotaion/Index.java)
+#### 多条查询时,只查询部分列
+[@ListQueryFields](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/annotaion/ListQueryFields.java)
+
 ### 其他配置
 1. 数据加密可以使用 
 [EncryptionProvider](j-jdbc-core/src/main/java/com/github/jingshouyan/jdbc/core/encryption/EncryptionProvider.java) 
