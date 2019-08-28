@@ -3,7 +3,7 @@ package com.github.jingshouyan.jdbc.comm.annotaion;
 import java.lang.annotation.*;
 
 /**
- * 主键
+ * 主键,一个类只能有一个
  *
  * @author jingshouyan
  * #date 2018/4/14 17:25

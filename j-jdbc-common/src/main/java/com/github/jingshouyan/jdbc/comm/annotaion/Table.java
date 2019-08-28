@@ -13,12 +13,12 @@ import java.lang.annotation.*;
 @Documented
 public @interface Table {
     /**
-     * @return 表名
+     * @return 数据库中映射的表名,为空或不添加此注解则为类名
      */
     String value() default "";
 
     /**
-     * @return 备注
+     * @return 备注,用于建表sql 表备注
      */
     String comment() default "";
 }
