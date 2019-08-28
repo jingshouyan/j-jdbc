@@ -100,7 +100,7 @@ public class UserDaoImpl extends BaseDaoImpl<UserDO> implements UserDao {
 ### 使用 Dao
 参见 [BaseDao](j-jdbc-core/src/main/java/com/github/jingshouyan/jdbc/core/dao/BaseDao.java)
 
-List/<Condition/> 可以由 [ConditionUtil](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/util/ConditionUtil.java) 快速创建
+List\<Condition\> 可以由 [ConditionUtil](j-jdbc-common/src/main/java/com/github/jingshouyan/jdbc/comm/util/ConditionUtil.java) 快速创建
 ```java
 List<Condition> conditions = ConditionUtil.newInstance()
         .field("age").gt(20).lte(89)
