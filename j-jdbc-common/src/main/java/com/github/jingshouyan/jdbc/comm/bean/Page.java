@@ -16,16 +16,16 @@ import java.util.List;
 public class Page<T> {
     private int page = Constant.PAGE_DEFAULT;
     private int pageSize = Constant.PAGE_SIZE_DEFAULT;
-    private int totalPage;
-    private int totalCount;
+    private long totalPage;
+    private long totalCount;
     private List<T> list;
 
     private List<OrderBy> orderBies = new ArrayList<>();
 
 
-    public void totalCount(int totalCount) {
-        int tp = totalCount / pageSize;
-        int y = totalCount % pageSize;
+    public void totalCount(long totalCount) {
+        long tp = totalCount / pageSize;
+        long y = totalCount % pageSize;
         if (0 != y) {
             tp++;
         }
