@@ -30,7 +30,7 @@ public @interface Column {
 
     /**
      * @return 字段长度,建表sql用.
-     * 主要用于String类型,如果长度设置<VARCHAR_MAX_LENGTH(5000),则使用varchar,否则为text
+     * 主要用于String类型,如果长度设置小于VARCHAR_MAX_LENGTH(5000),则使用varchar,否则为text
      */
     int length() default Constant.COLUMN_LENGTH_DEFAULT;
 
