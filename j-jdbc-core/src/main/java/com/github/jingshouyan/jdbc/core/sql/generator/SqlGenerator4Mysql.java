@@ -137,7 +137,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
                 str = "DATETIME";
                 break;
             default:
-                if(column.isJson() && !column.isEncrypt()){
+                if (column.isJson() && !column.isEncrypt()) {
                     str = "JSON";
                     break;
                 }

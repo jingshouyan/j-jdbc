@@ -2,7 +2,7 @@ package com.github.jingshouyan.jdbc.core.dao;
 
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
-import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @author jingshouyan
  * 11/27/18 3:21 PM
  */
-public interface BaseDao<T extends BaseDO> {
+public interface BaseDao<T extends Record> {
     /**
      * 获取 T 的类型
      *
@@ -70,6 +70,7 @@ public interface BaseDao<T extends BaseDO> {
      * @return 结果集
      */
     List<T> queryField(List<Condition> conditions, Collection<String> fields);
+
     /**
      * distinct 查询
      *

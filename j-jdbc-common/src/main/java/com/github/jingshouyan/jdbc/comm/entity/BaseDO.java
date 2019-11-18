@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public abstract class BaseDO implements Serializable {
+public abstract class BaseDO implements Serializable, Record {
 
     @Column(order = 1001, comment = "创建时间")
     private Long createdAt;
@@ -43,6 +43,7 @@ public abstract class BaseDO implements Serializable {
     }
 
 
+    @Override
     public void forCreate() {
         long now = System.currentTimeMillis();
         createdAt = now;
@@ -50,12 +51,14 @@ public abstract class BaseDO implements Serializable {
         deletedAt = Constant.NO_DELETE;
     }
 
+    @Override
     public void forUpdate() {
         long now = System.currentTimeMillis();
         createdAt = null;
         updatedAt = now;
     }
 
+    @Override
     public void forDelete() {
         long now = System.currentTimeMillis();
         createdAt = null;
@@ -63,6 +66,7 @@ public abstract class BaseDO implements Serializable {
         deletedAt = now;
     }
 
+    @Override
     public void forUndelete() {
         long now = System.currentTimeMillis();
         createdAt = null;

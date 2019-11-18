@@ -3,6 +3,7 @@ package com.jingshouyan.bean;
 import com.github.jingshouyan.jdbc.comm.annotaion.*;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,11 +27,11 @@ import java.util.List;
 
 @Table(value = "DEMO_USER", comment = "用户表")
 
-@Index(value = {"age","nickname"},unique = true)
+@Index(value = {"age", "nickname"}, unique = true)
 @Index({"id", "name"})
-@ListQueryFields({"name","age"})
+//@ListQueryFields({"name", "age"})
 //@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
-public class UserDO extends BaseDO {
+public class UserDO implements Record {
 
     /**
      * 主键注解,主键只能是Long/String,且只能有一个,若没有主键 find/findByIds 方法不能使用
@@ -44,7 +45,7 @@ public class UserDO extends BaseDO {
      * 列注解,选择加密方式为属性id的值为key
      * 使用加密后,无法作为查询条件,因为数据库中存放的是密文
      */
-    @Column(encryptType = EncryptType.FLIED, encryptKey = "id",immutable = true,router = true)
+    @Column(encryptType = EncryptType.FLIED, encryptKey = "id", immutable = true, router = true)
     @Index(unique = true)
     private String name;
     /**
@@ -101,7 +102,6 @@ public class UserDO extends BaseDO {
      *
      * @return 主键前缀
      */
-    @Override
     public String idPrefix() {
         return "U";
     }
@@ -111,7 +111,6 @@ public class UserDO extends BaseDO {
      *
      * @return 主键后缀
      */
-    @Override
     public String idSuffix() {
         return "@abc";
     }
