@@ -3,7 +3,7 @@ package com.github.jingshouyan.jdbc.core.dao.impl;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
-import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
 import com.github.jingshouyan.jdbc.core.event.DmlEventBus;
@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
  * @author jingshouyan
  * 11/27/18 3:22 PM
  */
-public abstract class BaseDaoImpl<T extends BaseDO> implements BaseDao<T> {
+public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     private Class<T> clazz;
     private RowMapper<T> rowMapper;
 

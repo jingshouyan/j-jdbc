@@ -52,7 +52,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         StringBuilder sql = new StringBuilder();
         SqlPrepared whereSql = where(compares);
         sql.append("SELECT ");
-        if(distinct) {
+        if (distinct) {
             sql.append("DISTINCT ");
         }
         sql.append(columns(fields))
@@ -63,7 +63,6 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         sqlPrepared.setParams(whereSql.getParams());
         return sqlPrepared;
     }
-
 
 
     @Override

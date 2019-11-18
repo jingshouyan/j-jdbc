@@ -75,7 +75,7 @@ public class DbTest {
 
     @Test
     public void queryDistinct() {
-        List<UserDO> users = userDao.queryDistinct(null,Lists.newArrayList("tags"));
+        List<UserDO> users = userDao.queryDistinct(null, Lists.newArrayList("tags"));
         System.out.println(users);
     }
 
@@ -104,6 +104,7 @@ public class DbTest {
             UserDO u = new UserDO();
             u.setId(user.getId());
             u.setName(user.getName() + "abc");
+            u.setAge(333);
             return u;
         }).collect(Collectors.toList());
         userDao.batchUpdate(users);
