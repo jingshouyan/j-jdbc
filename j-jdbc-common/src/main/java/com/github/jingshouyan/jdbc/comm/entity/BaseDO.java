@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
+ * 数据库对象基类
  * @author jingshouyan
  * 11/22/18 5:04 PM
  */

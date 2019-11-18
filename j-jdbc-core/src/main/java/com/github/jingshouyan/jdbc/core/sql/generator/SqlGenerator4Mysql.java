@@ -37,7 +37,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         SqlPrepared whereSql = where(conditions);
         sql += whereSql.getSql();
         sql += orderBy(page.getOrderBies());
-        int offset = (page.getPage() - 1) * page.getPageSize();
+        long offset = (page.getPage() - 1) * page.getPageSize();
         sql += " LIMIT " + offset + "," + page.getPageSize();
         sqlPrepared.setSql(sql);
         sqlPrepared.setParams(whereSql.getParams());

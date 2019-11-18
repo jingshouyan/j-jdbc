@@ -67,7 +67,7 @@ public class DbTest {
         userBeans.forEach(System.out::println);
         String json = JsonUtil.toJsonString(userBeans);
         System.out.println(json);
-        int count = userDao.count(conditions);
+        long count = userDao.count(conditions);
         System.out.println(count);
         userBeans = JsonUtil.toList(json, UserDO.class);
         System.out.println(userBeans);
