@@ -1,4 +1,4 @@
-package com.github.jingshouyan.jdbc.comm.annotaion;
+package com.github.jingshouyan.jdbc.comm.annotation;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;

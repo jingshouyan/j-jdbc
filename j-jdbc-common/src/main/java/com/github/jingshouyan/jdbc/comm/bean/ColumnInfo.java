@@ -1,9 +1,9 @@
 package com.github.jingshouyan.jdbc.comm.bean;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
-import com.github.jingshouyan.jdbc.comm.annotaion.Column;
-import com.github.jingshouyan.jdbc.comm.annotaion.Foreign;
-import com.github.jingshouyan.jdbc.comm.annotaion.Key;
+import com.github.jingshouyan.jdbc.comm.annotation.Column;
+import com.github.jingshouyan.jdbc.comm.annotation.Foreign;
+import com.github.jingshouyan.jdbc.comm.annotation.Key;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

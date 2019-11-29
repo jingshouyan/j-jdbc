@@ -1,7 +1,7 @@
 package com.jingshouyan.bean;
 
-import com.github.jingshouyan.jdbc.comm.annotaion.Foreign;
-import com.github.jingshouyan.jdbc.comm.annotaion.Key;
+import com.github.jingshouyan.jdbc.comm.annotation.Foreign;
+import com.github.jingshouyan.jdbc.comm.annotation.Key;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import lombok.Data;
 

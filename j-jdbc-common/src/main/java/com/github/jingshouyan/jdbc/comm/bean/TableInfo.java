@@ -1,9 +1,9 @@
 package com.github.jingshouyan.jdbc.comm.bean;
 
-import com.github.jingshouyan.jdbc.comm.annotaion.Ignore;
-import com.github.jingshouyan.jdbc.comm.annotaion.Index;
-import com.github.jingshouyan.jdbc.comm.annotaion.ListQueryFields;
-import com.github.jingshouyan.jdbc.comm.annotaion.Table;
+import com.github.jingshouyan.jdbc.comm.annotation.Ignore;
+import com.github.jingshouyan.jdbc.comm.annotation.Index;
+import com.github.jingshouyan.jdbc.comm.annotation.ListQueryFields;
+import com.github.jingshouyan.jdbc.comm.annotation.Table;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.github.jingshouyan.jdbc.comm.annotaion;
+package com.github.jingshouyan.jdbc.comm.annotation;
 
 
 import java.lang.annotation.*;
