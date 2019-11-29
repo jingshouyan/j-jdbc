@@ -1,8 +1,8 @@
 package com.github.jingshouyan.jdbc.starter.entity;
 
-import com.github.jingshouyan.jdbc.comm.annotaion.Column;
-import com.github.jingshouyan.jdbc.comm.annotaion.Key;
-import com.github.jingshouyan.jdbc.comm.annotaion.Table;
+import com.github.jingshouyan.jdbc.comm.annotation.Column;
+import com.github.jingshouyan.jdbc.comm.annotation.Key;
+import com.github.jingshouyan.jdbc.comm.annotation.Table;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import lombok.Getter;
 import lombok.Setter;
