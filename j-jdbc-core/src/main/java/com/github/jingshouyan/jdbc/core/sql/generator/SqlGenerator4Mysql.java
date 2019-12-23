@@ -101,51 +101,46 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
 
     protected String columnString(@NonNull ColumnInfo column) {
         String str;
-        Class clazz = column.getField().getType();
-        switch (clazz.getSimpleName().toLowerCase()) {
-            case "byte":
+        switch (column.getDataType()) {
+            case TINYINT:
                 str = "TINYINT";
                 break;
-            case "short":
+            case SMALLINT:
                 str = "SMALLINT";
                 break;
-            case "int":
-            case "integer":
+            case INT:
                 str = "INT";
                 break;
-            case "long":
+            case BIGINT:
                 str = "BIGINT";
                 break;
-            case "boolean":
-                str = "TINYINT";
-                break;
-            case "float":
-            case "double":
+            case DOUBLE:
                 str = "DOUBLE";
                 break;
-            case "bigdecimal":
-                str = decimalStr(column.getField());
+            case DECIMAL:
+                str = "DECIMAL(" + column.getColumnLength() + "," + column.getScale() + ")";
                 break;
-            case "localTime":
-            case "localtime":
+            case TIME:
                 str = "TIME";
                 break;
-            case "date":
-            case "timestamp":
-            case "localdate":
-            case "localdatetime":
+            case DATETIME:
                 str = "DATETIME";
                 break;
+            case JSON:
+                str = "JSON";
+                break;
+            case TEXT:
+                str = "TEXT";
+                break;
+            case MEDIUMTEXT:
+                str = "MEDIUMTEXT";
+                break;
+            case LONGTEXT:
+                str = "LONGTEXT";
+                break;
+            case VARCHAR:
             default:
-                if (column.isJson() && !column.isEncrypt()) {
-                    str = "JSON";
-                    break;
-                }
-                if (column.getColumnLength() < Constant.VARCHAR_MAX_LENGTH) {
-                    str = "VARCHAR(" + column.getColumnLength() + ")";
-                } else {
-                    str = "TEXT";
-                }
+                str = "VARCHAR(" + column.getColumnLength() + ")";
                 break;
         }
 
@@ -159,12 +154,5 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         return str;
     }
 
-    private String decimalStr(Field field) {
-        Decimal decimal = field.getAnnotation(Decimal.class);
-        if (decimal != null) {
-            return String.format("DECIMAL(%d,%d)", decimal.precision(), decimal.scale());
-        }
-        return "DECIMAL(20,4)";
-    }
 
 }

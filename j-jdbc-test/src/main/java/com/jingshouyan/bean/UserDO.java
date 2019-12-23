@@ -1,6 +1,7 @@
 package com.jingshouyan.bean;
 
 import com.github.jingshouyan.jdbc.comm.annotation.*;
+import com.github.jingshouyan.jdbc.comm.bean.DataType;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.entity.Record;
 import lombok.Getter;
@@ -38,7 +39,7 @@ public class UserDO implements Record {
      * 列注解,设置列长度
      */
     @Key(generatorIfNotSet = true)
-    @Column(length = 50, comment = "主键")
+    @Column( comment = "主键")
     private String id;
     /**
      * 列注解,选择加密方式为属性id的值为key
@@ -95,6 +96,8 @@ public class UserDO implements Record {
     //    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime localTime;
 
+    @Column(dataType = DataType.LONGTEXT)
+    private String text;
 
     /**
      * 当使用string类型主键时,主键前缀
