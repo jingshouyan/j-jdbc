@@ -39,7 +39,7 @@ public class UserDO implements Record {
      * 列注解,设置列长度
      */
     @Key(generatorIfNotSet = true)
-    @Column( comment = "主键")
+    @Column(comment = "主键")
     private String id;
     /**
      * 列注解,选择加密方式为属性id的值为key

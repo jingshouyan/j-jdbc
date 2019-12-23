@@ -1,13 +1,10 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
-import com.github.jingshouyan.jdbc.comm.Constant;
-import com.github.jingshouyan.jdbc.comm.annotation.Decimal;
 import com.github.jingshouyan.jdbc.comm.bean.*;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import lombok.NonNull;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;

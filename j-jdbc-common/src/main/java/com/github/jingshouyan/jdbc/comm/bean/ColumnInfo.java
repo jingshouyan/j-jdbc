@@ -153,8 +153,8 @@ public class ColumnInfo {
         // 字段长度&小数位
         switch (dataType) {
             case VARCHAR:
-                if (columnLength == Constant.COLUMN_LENGTH_DEFAULT){
-                    if(key) {
+                if (columnLength == Constant.COLUMN_LENGTH_DEFAULT) {
+                    if (key) {
                         columnLength = Constant.VARCHAR_KEY_DEFAULT_LENGTH;
                     } else {
                         columnLength = Constant.VARCHAR_DEFAULT_LENGTH;
@@ -163,7 +163,7 @@ public class ColumnInfo {
                 break;
             case DECIMAL:
                 Decimal decimal = field.getAnnotation(Decimal.class);
-                if(decimal == null) {
+                if (decimal == null) {
                     columnLength = Constant.DECIMAL_PRECISION_DEFAULT;
                     scale = Constant.DECIMAL_SCALE_DEFAULT;
                 } else {

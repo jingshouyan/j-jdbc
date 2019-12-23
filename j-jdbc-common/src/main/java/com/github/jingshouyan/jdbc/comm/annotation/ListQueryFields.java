@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 查询多行数据时,默认查询的字段
+ *
  * @author jingshouyan
  * 05/21/19 11:02 AM
  */
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface ListQueryFields {
     /**
-     * @return 查询多行数据时,默认查询的字段
+     * @return 查询多行数据时, 默认查询的字段
      */
     String[] value();
 }
