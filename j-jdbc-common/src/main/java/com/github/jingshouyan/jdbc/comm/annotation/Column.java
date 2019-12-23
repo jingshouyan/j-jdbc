@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.comm.annotation;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
+import com.github.jingshouyan.jdbc.comm.bean.DataType;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 
 import java.lang.annotation.*;
@@ -67,6 +68,11 @@ public @interface Column {
      * @return 备注
      */
     String comment() default "";
+
+    /**
+     * @return 数据库类型
+     */
+    DataType dataType() default DataType.TYPE_INFERENCE;
 
     /**
      * @return 列排序
