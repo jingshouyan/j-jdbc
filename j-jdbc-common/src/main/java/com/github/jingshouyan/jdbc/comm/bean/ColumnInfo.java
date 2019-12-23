@@ -5,7 +5,6 @@ import com.github.jingshouyan.jdbc.comm.annotation.Column;
 import com.github.jingshouyan.jdbc.comm.annotation.Decimal;
 import com.github.jingshouyan.jdbc.comm.annotation.Key;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
