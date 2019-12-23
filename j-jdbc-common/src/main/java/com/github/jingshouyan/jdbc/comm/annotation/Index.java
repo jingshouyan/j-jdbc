@@ -8,6 +8,7 @@ import java.lang.annotation.*;
  * 可以添加在类上,也可以添加在属性上
  * 在类上需要设置 value,值为属性名列表(不是数据库中字段名),多个属性名表示联合索引
  * 在属性上 value 无意义,等同与在类上添加 value 为属性名
+ *
  * @author jingshouyan
  * 05/21/19 11:02 AM
  */

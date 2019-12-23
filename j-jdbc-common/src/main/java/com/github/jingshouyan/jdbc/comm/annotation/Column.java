@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Column {
     /**
-     * @return 属性数据库中映射的列名,为空或不添加此注解为属性名
+     * @return 属性数据库中映射的列名, 为空或不添加此注解为属性名
      */
     String value() default "";
 
@@ -30,7 +30,7 @@ public @interface Column {
     boolean router() default false;
 
     /**
-     * @return 字段长度,建表sql用.
+     * @return 字段长度, 建表sql用.
      * 主要用于String类型,如果长度设置小于VARCHAR_MAX_LENGTH(5000),则使用varchar,否则为text
      */
     int length() default Constant.COLUMN_LENGTH_DEFAULT;
