@@ -1,6 +1,7 @@
 package com.jingshouyan;
 
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
+import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.collect.Lists;
@@ -71,6 +72,8 @@ public class DbTest {
         System.out.println(count);
         userBeans = JsonUtil.toList(json, UserDO.class);
         System.out.println(userBeans);
+        Page<UserDO> page = userDao.queryPage(conditions,new Page<>());
+        System.out.println(page);
     }
 
     @Test
