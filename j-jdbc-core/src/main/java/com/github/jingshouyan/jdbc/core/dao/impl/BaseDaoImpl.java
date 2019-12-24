@@ -99,7 +99,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
 
     @Override
     public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields) {
-        long count = count(conditions);
+        int count = count(conditions);
         page.totalCount(count);
         List<T> ts = queryFieldLimit(conditions, page, fields);
         page.setList(ts);
@@ -148,9 +148,9 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
 
 
     @Override
-    public long count(List<Condition> conditions) {
+    public int count(List<Condition> conditions) {
         SqlPrepared sqlPrepared = sqlGenerator().count(conditions);
-        Long count = template.queryForObject(sqlPrepared.getSql(), sqlPrepared.getParams(), Long.class);
+        Integer count = template.queryForObject(sqlPrepared.getSql(), sqlPrepared.getParams(), Integer.class);
         return Objects.nonNull(count) ? count : 0;
     }
 

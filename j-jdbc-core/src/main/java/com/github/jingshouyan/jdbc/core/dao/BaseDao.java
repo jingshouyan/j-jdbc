@@ -125,7 +125,7 @@ public interface BaseDao<T extends Record> {
      * @param conditions 条件
      * @return 数量
      */
-    long count(List<Condition> conditions);
+    int count(List<Condition> conditions);
 
     /**
      * 数据插入,值为 null 的不插入
