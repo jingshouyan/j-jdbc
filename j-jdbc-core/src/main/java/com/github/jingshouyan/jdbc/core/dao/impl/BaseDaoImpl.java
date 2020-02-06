@@ -16,6 +16,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,6 +34,7 @@ import java.util.stream.IntStream;
  * @author jingshouyan
  * 11/27/18 3:22 PM
  */
+@Slf4j
 public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     private Class<T> clazz;
     private RowMapper<T> rowMapper;
@@ -309,8 +311,13 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
         }
 
         for (ColumnInfo columnInfo : columnInfos) {
-            SqlPrepared sqlPrepared1 = sqlGenerator().addColumn(columnInfo);
-            template.update(sqlPrepared1.getSql(), sqlPrepared1.getParams());
+            try {
+                SqlPrepared sqlPrepared1 = sqlGenerator().addColumn(columnInfo);
+                template.update(sqlPrepared1.getSql(), sqlPrepared1.getParams());
+            } catch (Exception e) {
+                log.warn("update table error", e);
+            }
+
         }
 
         return columnInfos.size();
