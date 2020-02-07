@@ -5,7 +5,7 @@
     <parent>
         <artifactId>j-jdbc</artifactId>
         <groupId>com.github.jingshouyan</groupId>
-        <version>1.1.8-SNAPSHOT</version>
+        <version>1.1.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
