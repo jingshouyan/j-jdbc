@@ -24,6 +24,10 @@
             <groupId>com.github.jingshouyan</groupId>
             <artifactId>j-jdbc-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.jingshouyan</groupId>
+            <artifactId>j-jdbc-sharding</artifactId>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.apache.shardingsphere</groupId>-->
             <!--<artifactId>sharding-jdbc-spring-boot-starter</artifactId>-->

@@ -3,6 +3,7 @@ package com.jingshouyan.bean;
 import com.github.jingshouyan.jdbc.comm.annotation.*;
 import com.github.jingshouyan.jdbc.comm.bean.DataType;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
+import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
 import com.github.jingshouyan.jdbc.comm.entity.Record;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,7 @@ import java.util.List;
 @Index({"id", "name"})
 //@ListQueryFields({"name", "age"})
 //@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
-public class UserDO implements Record {
+public class UserDO extends BaseDO {
 
     /**
      * 主键注解,主键只能是Long/String,且只能有一个,若没有主键 find/findByIds 方法不能使用
@@ -99,11 +100,16 @@ public class UserDO implements Record {
     @Column(dataType = DataType.LONGTEXT)
     private String text;
 
+    private String new1;
+
+    private String new2;
+
     /**
      * 当使用string类型主键时,主键前缀
      *
      * @return 主键前缀
      */
+    @Override
     public String idPrefix() {
         return "U";
     }
@@ -113,6 +119,7 @@ public class UserDO implements Record {
      *
      * @return 主键后缀
      */
+    @Override
     public String idSuffix() {
         return "@abc";
     }
