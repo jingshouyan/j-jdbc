@@ -12,6 +12,7 @@
         <module>j-jdbc-core</module>
         <module>j-jdbc-common</module>
         <module>j-jdbc-starter</module>
+        <module>j-jdbc-sharding</module>
         <module>j-jdbc-test</module>
     </modules>
 
@@ -45,6 +46,7 @@
         <guava.version>18.0</guava.version>
         <brave.version>5.5.0</brave.version>
         <springboot.version>2.1.2.RELEASE</springboot.version>
+        <shardingsphere.version>4.0.0</shardingsphere.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -63,6 +65,11 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>sharding-jdbc-core</artifactId>
+                <version>${shardingsphere.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>j-jdbc-common</artifactId>
                 <version>${project.version}</version>
@@ -75,6 +82,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>j-jdbc-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>j-jdbc-sharding</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
