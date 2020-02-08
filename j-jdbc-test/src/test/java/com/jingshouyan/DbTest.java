@@ -85,7 +85,7 @@ public class DbTest {
     @Test
     public void batchInsert() {
         List<UserDO> users = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             UserDO userBean = new UserDO();
             userBean.setName("张三");
             userBean.setAge(302 + i);
