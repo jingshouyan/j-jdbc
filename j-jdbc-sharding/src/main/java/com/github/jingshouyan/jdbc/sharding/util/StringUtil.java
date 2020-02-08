@@ -15,32 +15,51 @@ public class StringUtil {
      * @return 连续数字
      */
     public static long getNumber(String str) {
-        boolean isStart = false;
+        boolean findNum = false;
         int start = 0;
         int end = 0;
         for (int i = 0; i < str.length(); i++) {
             boolean isDigit = Character.isDigit(str.charAt(i));
-            if (!isStart && isDigit) {
-                isStart = true;
+            if (!findNum && isDigit) {
+                // 碰到第一个数字
+                findNum = true;
                 start = i;
             }
-            if (isStart && !isDigit) {
+            if (findNum && !isDigit) {
+                // 找到数字后碰到的第一个非数字的位置
                 end = i;
                 break;
             }
         }
-        if (start == end) {
+        // 没找到数字
+        if (!findNum) {
             return -1;
         }
+        // 找到了数字并且未找到数字后的非数字
+        if(end == 0) {
+            end  = str.length();
+        }
+        // 防止数字过长
         if (end - start > NUMBER_MAX_LENGTH) {
             end = start + NUMBER_MAX_LENGTH;
         }
+
         String subStr = str.substring(start, end);
         return Long.parseLong(subStr);
     }
 
-    public static String getShardingSuffix(long value){
-        return String.format("_%02d", value);
+    public static String getShardingSuffix(long index) {
+        return String.format("_%02d", index);
     }
 
+    public static String getActualName(String logicName, long index) {
+        return logicName + getShardingSuffix(index);
+    }
+
+
+    public static void main(String[] args) {
+        long num = getNumber("1243334");
+        System.out.println(num);
+        System.out.println(Long.MAX_VALUE);
+    }
 }
