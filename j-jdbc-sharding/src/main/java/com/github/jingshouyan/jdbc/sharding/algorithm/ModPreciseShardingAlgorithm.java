@@ -16,7 +16,7 @@ public class ModPreciseShardingAlgorithm<T extends Comparable<?>> implements Pre
     public static final long MIN_SHARD = 100L;
 
     private boolean endWith(String str, T value, int sharding) {
-        long va = 0L;
+        long va;
         if(value instanceof Number){
             va = ((Number) value).longValue();
         }else{
