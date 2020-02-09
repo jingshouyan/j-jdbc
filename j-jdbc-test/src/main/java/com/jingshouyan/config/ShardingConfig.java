@@ -29,11 +29,11 @@ import java.util.stream.IntStream;
 @Configuration
 public class ShardingConfig {
 
-    public static final String URL = "jdbc:mysql://127.0.0.1:3306/DB_TEST_%02d?useUnicode=true&characterEncoding=utf8&useSSL=false";
+    public static final String URL = "jdbc:mysql://127.0.0.1:3306/DB_TEST_%02d?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
     public static final String USERNAME = "root";
     public static final String PASSWORD = "abcd1234";
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-    public static final int DS_SHARD = 3;
+    public static final int DS_SHARD = 1;
     public static final int TABLE_SHARD = 10;
     public static final String DS_LOGIC_NAME = "ds";
 
