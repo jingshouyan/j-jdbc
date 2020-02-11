@@ -43,17 +43,74 @@ public class DataSourceUtil {
         switch (info.getType()) {
             case DATA_SOURCE_TYPE_NORMAL:
                 return normalDataSource(info);
-            case DATA_SOURCE_TYPE_MASTER_SLAVE:
-                return masterSlaveDataSource(info);
             case DATA_SOURCE_TYPE_SHARDING:
                 return shardingDataSource(info);
+            case DATA_SOURCE_TYPE_MASTER_SLAVE:
+                return masterSlaveDataSource(info);
+            case DATA_SOURCE_TYPE_SHARDING_MASTER_SLAVE:
+                return shardingMasterSlaveDataSource(info);
             default:
                 throw new IllegalArgumentException("Unsupported dataSource type");
         }
     }
 
     @SneakyThrows
+    private static DataSource shardingMasterSlaveDataSource(DataSourceInfo info) {
+        ShardingRuleConfiguration shardingRuleConfiguration = prepareShardingRuleConfiguration(info);
+        int dsShard = info.getLinkInfos().size();
+        List<MasterSlaveRuleConfiguration> masterSlaveConfigs = Lists.newArrayList();
+        Map<String, DataSource> dataSourceMap = Maps.newHashMap();
+        for (int i = 0; i < dsShard; i++) {
+            DatabaseLinkInfo masterInfo = info.getLinkInfos().get(i);
+            // 数据源逻辑名
+            String dsLogic = StringUtil.getActualName(DS, i);
+            // master
+            String dsMaster = dsLogic + UL + MASTER;
+            DataSource master = datasource(masterInfo);
+            // 加入 map
+            dataSourceMap.put(dsMaster, master);
+
+            List<String> dsSlaves = Lists.newArrayList();
+            List<DatabaseLinkInfo> slaveInfos = masterInfo.getSlaves();
+            int slaveSize = slaveInfos.size();
+            for (int j = 0; j < slaveSize; j++) {
+                DatabaseLinkInfo slaveInfo = slaveInfos.get(j);
+                // slave
+                String dsSlave = StringUtil.getActualName(dsLogic + UL + SLAVE, j);
+                dsSlaves.add(dsSlave);
+                DataSource slave = datasource(slaveInfo);
+                dataSourceMap.put(dsSlave, slave);
+            }
+            MasterSlaveRuleConfiguration config = new MasterSlaveRuleConfiguration(dsLogic, dsMaster, dsSlaves);
+            masterSlaveConfigs.add(config);
+        }
+        shardingRuleConfiguration.setMasterSlaveRuleConfigs(masterSlaveConfigs);
+        Properties props = properties(info);
+        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfiguration, props);
+    }
+
+    @SneakyThrows
     private static DataSource shardingDataSource(DataSourceInfo info) {
+        ShardingRuleConfiguration shardingRuleConfiguration = prepareShardingRuleConfiguration(info);
+        Map<String, DataSource> dataSourceMap = Maps.newHashMap();
+        int dsShard = info.getLinkInfos().size();
+        for (int i = 0; i < dsShard; i++) {
+            DatabaseLinkInfo linkInfo = info.getLinkInfos().get(i);
+            String dsName = StringUtil.getActualName(DS, i);
+            DataSource ds = datasource(linkInfo);
+            dataSourceMap.put(dsName, ds);
+        }
+        Properties props = properties(info);
+        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfiguration, props);
+    }
+
+    /**
+     * 准备 分片规则
+     *
+     * @param info
+     * @return
+     */
+    private static ShardingRuleConfiguration prepareShardingRuleConfiguration(DataSourceInfo info) {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         int dsShard = info.getLinkInfos().size();
         int tableShard = info.getTableShard();
@@ -73,16 +130,7 @@ public class DataSourceUtil {
         }
         String defaultDataSourceName = StringUtil.getActualName(DS, 0);
         shardingRuleConfiguration.setDefaultDataSourceName(defaultDataSourceName);
-
-        Map<String, DataSource> dataSourceMap = Maps.newHashMap();
-        for (int i = 0; i < dsShard; i++) {
-            DatabaseLinkInfo linkInfo = info.getLinkInfos().get(i);
-            String dsName = StringUtil.getActualName(DS, i);
-            DataSource ds = datasource(linkInfo);
-            dataSourceMap.put(dsName, ds);
-        }
-        Properties props = properties(info);
-        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfiguration, props);
+        return shardingRuleConfiguration;
     }
 
     private static String actualNodes(String logicTable, int dsShard, int tableShard) {
