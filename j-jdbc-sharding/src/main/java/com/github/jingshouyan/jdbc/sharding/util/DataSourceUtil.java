@@ -107,8 +107,8 @@ public class DataSourceUtil {
     /**
      * 准备 分片规则
      *
-     * @param info
-     * @return
+     * @param info 连接信息
+     * @return 分片基本配置
      */
     private static ShardingRuleConfiguration prepareShardingRuleConfiguration(DataSourceInfo info) {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
