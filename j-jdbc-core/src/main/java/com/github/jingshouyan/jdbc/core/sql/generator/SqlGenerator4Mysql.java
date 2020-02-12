@@ -75,7 +75,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             sql.append(index);
             sql.append(")");
         }
-        sql.append(")  COMMENT='" + tableComment() + "';");
+        sql.append(")  COMMENT='").append(tableComment()).append("';");
         sqlPrepared.setSql(sql.toString());
         return sqlPrepared;
     }

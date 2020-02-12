@@ -116,15 +116,13 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     @Override
     public List<T> queryField(List<Condition> conditions, Collection<String> fields) {
         SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields, false);
-        List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
-        return ts;
+        return template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
     }
 
     @Override
     public List<T> queryDistinct(List<Condition> conditions, Collection<String> fields) {
         SqlPrepared sqlPrepared = sqlGenerator().query(conditions, fields, true);
-        List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
-        return ts;
+        return template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
     }
 
     @Override
@@ -135,8 +133,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     @Override
     public List<T> queryFieldLimit(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         SqlPrepared sqlPrepared = sqlGenerator().queryLimit(conditions, page, fields);
-        List<T> ts = template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
-        return ts;
+        return template.query(sqlPrepared.getSql(), sqlPrepared.getParams(), rowMapper);
     }
 
 
@@ -144,8 +141,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     public int update(T t, List<Condition> conditions) {
         t.forUpdate();
         SqlPrepared sqlPrepared = sqlGenerator().update(t, conditions);
-        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
-        return fetch;
+        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
     }
 
 
@@ -159,6 +155,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
 
     @Override
     public int insert(T t) {
+        @SuppressWarnings("unchecked")
         List<T> list = Lists.newArrayList(t);
         return insert(list);
     }
@@ -185,28 +182,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
 
-    private int batchInsert2(@NonNull List<T> list) {
-        Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
-        SqlPrepared sqlPrepared = null;
-        List<Map<String, Object>> values = Lists.newArrayList();
-        Map[] v = new Map[list.size()];
-        for (T t : list) {
-            t.forCreate();
-            //如果不设置主键，则使用 keygen 生成主键
-            genKey(t);
-            List<T> ts = Lists.newArrayList(t);
-            sqlPrepared = sqlGenerator().insert(ts);
-            values.add(sqlPrepared.getParams());
-        }
-        v = values.toArray(v);
-        int[] fetches = template.batchUpdate(sqlPrepared.getSql(), v);
-        int fetch = IntStream.of(fetches).sum();
-        for (T t : list) {
-            //添加插入事件
-            DmlEventBus.onCreate(t);
-        }
-        return fetch;
-    }
 
     @Override
     public int update(T t) {
@@ -222,6 +197,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     public int batchUpdate(List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         String sql = null;
+        @SuppressWarnings("unchecked")
         Map<String, Object>[] v = new Map[list.size()];
         for (int i = 0; i < list.size(); i++) {
             T t = list.get(i);
@@ -287,8 +263,8 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
             template.queryForRowSet(sqlPrepared.getSql(), sqlPrepared.getParams());
             return true;
         } catch (BadSqlGrammarException e) {
+            return false;
         }
-        return false;
     }
 
     @Override
