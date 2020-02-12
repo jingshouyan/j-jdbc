@@ -68,7 +68,7 @@ public class ShardingConfig {
             linkInfo.setUsername(USERNAME);
             linkInfo.setPassword(PASSWORD);
             linkInfos.add(linkInfo);
-            linkInfo.setSlaves(Lists.newArrayList(linkInfo,linkInfo));
+            linkInfo.setSlaves(Lists.newArrayList(linkInfo, linkInfo));
 
         }
         return DataSourceUtil.createDataSource(info);
@@ -83,12 +83,12 @@ public class ShardingConfig {
             String key = entry.getKey();
             String value = entry.getValue();
             String actualNodes = actualDataNodes(key);
-            TableRuleConfiguration tableRuleConfiguration = new TableRuleConfiguration(key,actualNodes);
+            TableRuleConfiguration tableRuleConfiguration = new TableRuleConfiguration(key, actualNodes);
             ShardingStrategyConfiguration shardingStrategyConfiguration = new StandardShardingStrategyConfiguration(
                     value, new ModPreciseShardingAlgorithm()
             );
             tableRuleConfiguration.setTableShardingStrategyConfig(shardingStrategyConfiguration);
-            if(DS_SHARD > 1){
+            if (DS_SHARD > 1) {
                 tableRuleConfiguration.setDatabaseShardingStrategyConfig(shardingStrategyConfiguration);
             }
             shardingRuleConfiguration.getTableRuleConfigs().add(tableRuleConfiguration);
@@ -97,8 +97,8 @@ public class ShardingConfig {
         String defaultDataSourceName = dataSourceMap.keySet().stream().findFirst().get();
         shardingRuleConfiguration.setDefaultDataSourceName(defaultDataSourceName);
         Properties props = new Properties();
-        props.setProperty(ShardingPropertiesConstant.SQL_SHOW.getKey(),"true");
-        return ShardingDataSourceFactory.createDataSource(dataSourceMap,shardingRuleConfiguration,props);
+        props.setProperty(ShardingPropertiesConstant.SQL_SHOW.getKey(), "true");
+        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfiguration, props);
     }
 
     private Map<String, String> shardingConfig() {
@@ -111,9 +111,9 @@ public class ShardingConfig {
 
     public String actualDataNodes(String logicTableName) {
         return IntStream.range(0, DS_SHARD)
-                .mapToObj(i -> StringUtil.getActualName(DS_LOGIC_NAME,i))
-                .flatMap(ds -> IntStream.range(0,TABLE_SHARD)
-                        .mapToObj(i -> ds+"."+StringUtil.getActualName(logicTableName,i))
+                .mapToObj(i -> StringUtil.getActualName(DS_LOGIC_NAME, i))
+                .flatMap(ds -> IntStream.range(0, TABLE_SHARD)
+                        .mapToObj(i -> ds + "." + StringUtil.getActualName(logicTableName, i))
                 )
                 .collect(Collectors.joining(","));
     }

@@ -17,12 +17,12 @@ public class ModPreciseShardingAlgorithm<T extends Comparable<?>> implements Pre
 
     private boolean endWith(String str, T value, int sharding) {
         long va;
-        if(value instanceof Number){
+        if (value instanceof Number) {
             va = ((Number) value).longValue();
-        }else{
+        } else {
             String str2 = String.valueOf(value);
             va = StringUtil.getNumber(str2);
-            if(va < MIN_SHARD) {
+            if (va < MIN_SHARD) {
                 va = str2.hashCode();
             }
         }
@@ -32,7 +32,7 @@ public class ModPreciseShardingAlgorithm<T extends Comparable<?>> implements Pre
     }
 
     @Override
-    public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<T> shardingValue){
+    public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<T> shardingValue) {
         for (String each : availableTargetNames) {
             if (endWith(each, shardingValue.getValue(), availableTargetNames.size())) {
                 return each;

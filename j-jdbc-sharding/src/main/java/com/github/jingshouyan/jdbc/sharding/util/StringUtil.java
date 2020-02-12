@@ -36,8 +36,8 @@ public class StringUtil {
             return -1;
         }
         // 找到了数字并且未找到数字后的非数字
-        if(end == 0) {
-            end  = str.length();
+        if (end == 0) {
+            end = str.length();
         }
         // 防止数字过长
         if (end - start > NUMBER_MAX_LENGTH) {

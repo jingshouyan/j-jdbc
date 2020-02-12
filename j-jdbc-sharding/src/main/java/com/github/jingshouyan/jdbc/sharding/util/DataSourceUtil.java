@@ -18,7 +18,6 @@ import org.apache.shardingsphere.shardingjdbc.api.MasterSlaveDataSourceFactory;
 import org.apache.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory;
 
 import javax.sql.DataSource;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
