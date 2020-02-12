@@ -165,7 +165,7 @@ public class DataSourceUtil {
 
     private static Properties properties(DataSourceInfo info) {
         Properties properties = new Properties();
-        properties.setProperty(ShardingPropertiesConstant.SQL_SHOW.getKey(), String.valueOf(info.isShardingSql()));
+        properties.setProperty(ShardingPropertiesConstant.SQL_SHOW.getKey(), String.valueOf(info.isShowLog()));
         return properties;
     }
 
