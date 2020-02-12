@@ -72,7 +72,7 @@ public class DbTest {
         System.out.println(count);
         userBeans = JsonUtil.toList(json, UserDO.class);
         System.out.println(userBeans);
-        Page<UserDO> page = userDao.queryPage(conditions,new Page<>());
+        Page<UserDO> page = userDao.queryPage(conditions, new Page<>());
         System.out.println(page);
     }
 

@@ -16,7 +16,7 @@ public class DataSourceInfo {
 
     private boolean showLog = false;
     private int type = DATA_SOURCE_TYPE_NORMAL;
-    private Map<String,String> routeMap;
+    private Map<String, String> routeMap;
     private int tableShard = 5;
     private List<DatabaseLinkInfo> linkInfos;
 
