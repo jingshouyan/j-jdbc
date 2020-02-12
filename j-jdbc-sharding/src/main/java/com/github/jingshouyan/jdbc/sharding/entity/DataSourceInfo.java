@@ -14,7 +14,7 @@ import static com.github.jingshouyan.jdbc.sharding.Constant.DATA_SOURCE_TYPE_NOR
 @Data
 public class DataSourceInfo {
 
-    private boolean shardingSql = false;
+    private boolean showLog = false;
     private int type = DATA_SOURCE_TYPE_NORMAL;
     private Map<String,String> routeMap;
     private int tableShard = 5;
