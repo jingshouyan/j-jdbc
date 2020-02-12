@@ -1,7 +1,12 @@
 package com.jingshouyan.config;
 
+import com.github.jingshouyan.jdbc.sharding.Constant;
 import com.github.jingshouyan.jdbc.sharding.algorithm.ModPreciseShardingAlgorithm;
+import com.github.jingshouyan.jdbc.sharding.entity.DataSourceInfo;
+import com.github.jingshouyan.jdbc.sharding.entity.DatabaseLinkInfo;
+import com.github.jingshouyan.jdbc.sharding.util.DataSourceUtil;
 import com.github.jingshouyan.jdbc.sharding.util.StringUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -17,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -33,7 +39,8 @@ public class ShardingConfig {
     public static final String USERNAME = "root";
     public static final String PASSWORD = "abcd1234";
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-    public static final int DS_SHARD = 1;
+    public static final int DS_SHARD = 3;
+    public static final int SLAVE = 2;
     public static final int TABLE_SHARD = 10;
     public static final String DS_LOGIC_NAME = "ds";
 
@@ -42,10 +49,34 @@ public class ShardingConfig {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 
-
-    @SneakyThrows
     @Bean
     public DataSource dataSource() {
+        DataSourceInfo info = new DataSourceInfo();
+        info.setShowLog(true);
+        info.setType(Constant.DATA_SOURCE_TYPE_SHARDING_MASTER_SLAVE);
+        Map<String, String> map = Maps.newHashMap();
+        map.put("DEMO_USER", "id");
+        info.setRouteMap(map);
+        info.setTableShard(10);
+        List<DatabaseLinkInfo> linkInfos = Lists.newArrayList();
+        info.setLinkInfos(linkInfos);
+        for (int i = 0; i < DS_SHARD; i++) {
+            DatabaseLinkInfo linkInfo = new DatabaseLinkInfo();
+            linkInfo.setDriver(DRIVER);
+            String url = String.format(URL, i);
+            linkInfo.setUrl(url);
+            linkInfo.setUsername(USERNAME);
+            linkInfo.setPassword(PASSWORD);
+            linkInfos.add(linkInfo);
+            linkInfo.setSlaves(Lists.newArrayList(linkInfo,linkInfo));
+
+        }
+        return DataSourceUtil.createDataSource(info);
+    }
+
+    @SneakyThrows
+//    @Bean
+    public DataSource dataSource2() {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         Map<String, String> shardingConfig = shardingConfig();
         for (Map.Entry<String, String> entry : shardingConfig.entrySet()) {

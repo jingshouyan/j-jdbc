@@ -1,5 +1,5 @@
 j-jdbc:
-  tableInit: 2
+  tableInit: 0
 
 db:
   host: 127.0.0.1
