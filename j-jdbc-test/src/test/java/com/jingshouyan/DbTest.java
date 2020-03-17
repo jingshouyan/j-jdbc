@@ -54,6 +54,16 @@ public class DbTest {
     }
 
     @Test
+    public void queryRangeKey() {
+        List<Condition> conditions = ConditionUtil.newInstance()
+                .field("id")
+                .lt("0")
+                .conditions();
+        List<UserDO> userBeans = userDao.query(conditions);
+
+    }
+
+    @Test
     public void query() {
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("age")

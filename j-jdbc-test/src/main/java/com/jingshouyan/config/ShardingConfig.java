@@ -35,7 +35,12 @@ import java.util.stream.IntStream;
 @Configuration
 public class ShardingConfig {
 
-    public static final String URL = "jdbc:mysql://127.0.0.1:3306/DB_TEST_%02d?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
+    public static final String URL = "jdbc:mysql://127.0.0.1:3306/DB_TEST_NEW_%02d" +
+            "?useUnicode=true" +
+            "&characterEncoding=utf8" +
+            "&createDatabaseIfNotExist=true" +
+            "&useSSL=false" +
+            "&serverTimezone=Asia/Shanghai";
     public static final String USERNAME = "root";
     public static final String PASSWORD = "abcd1234";
     public static final String DRIVER = "com.mysql.jdbc.Driver";
@@ -53,7 +58,7 @@ public class ShardingConfig {
     public DataSource dataSource() {
         DataSourceInfo info = new DataSourceInfo();
         info.setShowLog(true);
-        info.setType(Constant.DATA_SOURCE_TYPE_SHARDING_MASTER_SLAVE);
+        info.setType(Constant.DATA_SOURCE_TYPE_SHARDING);
         Map<String, String> map = Maps.newHashMap();
         map.put("DEMO_USER", "id");
         info.setRouteMap(map);
@@ -68,7 +73,7 @@ public class ShardingConfig {
             linkInfo.setUsername(USERNAME);
             linkInfo.setPassword(PASSWORD);
             linkInfos.add(linkInfo);
-            linkInfo.setSlaves(Lists.newArrayList(linkInfo, linkInfo));
+//            linkInfo.setSlaves(Lists.newArrayList(linkInfo, linkInfo));
 
         }
         return DataSourceUtil.createDataSource(info);
