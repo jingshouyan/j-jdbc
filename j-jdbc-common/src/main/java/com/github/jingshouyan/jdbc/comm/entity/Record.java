@@ -1,6 +1,10 @@
 package com.github.jingshouyan.jdbc.comm.entity;
 
 
+/**
+ * @author jingshouyan
+ * 11/29/18 5:38 PM
+ */
 public interface Record {
     /**
      * 新增
