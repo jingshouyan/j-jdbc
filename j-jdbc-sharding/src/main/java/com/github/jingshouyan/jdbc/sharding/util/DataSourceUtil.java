@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.sharding.util;
 
 import com.github.jingshouyan.jdbc.sharding.algorithm.ModPreciseShardingAlgorithm;
+import com.github.jingshouyan.jdbc.sharding.algorithm.ModRangeShardingAlgorithm;
 import com.github.jingshouyan.jdbc.sharding.entity.DataSourceInfo;
 import com.github.jingshouyan.jdbc.sharding.entity.DatabaseLinkInfo;
 import com.google.common.collect.Lists;
@@ -113,14 +114,15 @@ public class DataSourceUtil {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         int dsShard = info.getLinkInfos().size();
         int tableShard = info.getTableShard();
-        ModPreciseShardingAlgorithm algorithm = new ModPreciseShardingAlgorithm();
+        ModPreciseShardingAlgorithm preciseShardingAlgorithm = new ModPreciseShardingAlgorithm();
+        ModRangeShardingAlgorithm rangeShardingAlgorithm = new ModRangeShardingAlgorithm();
         for (Map.Entry<String, String> entry : info.getRouteMap().entrySet()) {
             String logicTable = entry.getKey();
             String shardingColumn = entry.getValue();
             String actualNodes = actualNodes(logicTable, dsShard, tableShard);
             TableRuleConfiguration tableRuleConfiguration = new TableRuleConfiguration(logicTable, actualNodes);
             ShardingStrategyConfiguration shardingStrategyConfiguration = new StandardShardingStrategyConfiguration(
-                    shardingColumn, algorithm);
+                    shardingColumn, preciseShardingAlgorithm, rangeShardingAlgorithm);
             tableRuleConfiguration.setTableShardingStrategyConfig(shardingStrategyConfiguration);
             if (dsShard > 1) {
                 tableRuleConfiguration.setDatabaseShardingStrategyConfig(shardingStrategyConfiguration);
