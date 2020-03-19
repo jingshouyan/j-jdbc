@@ -16,7 +16,7 @@ public interface BaseDao<T extends Record> {
     /**
      * 获取 T 的类型
      *
-     * @return
+     * @return 泛型类型
      */
     Class<T> getClazz();
 
