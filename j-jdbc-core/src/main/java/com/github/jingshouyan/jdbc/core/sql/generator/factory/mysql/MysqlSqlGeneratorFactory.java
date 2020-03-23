@@ -16,6 +16,7 @@ public class MysqlSqlGeneratorFactory implements SqlGeneratorFactory {
     private static final Map<Class<?>, SqlGenerator<?>> GENERATOR_CACHE = Maps.newConcurrentMap();
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> SqlGenerator<T> sqlGenerator(Class<T> clazz) {
         return (SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz, SqlGenerator4Mysql::new);
     }
