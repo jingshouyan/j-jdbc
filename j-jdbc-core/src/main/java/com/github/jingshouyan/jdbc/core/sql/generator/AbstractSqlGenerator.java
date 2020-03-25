@@ -349,7 +349,10 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     }
 
     protected String columnName(String fieldName) {
-        return columnName(columnInfo(fieldName));
+        ColumnInfo columnInfo = columnInfo(fieldName);
+        Preconditions.checkNotNull(columnInfo,
+                String.format("[%s] dos not contains field [%s]", clazz, fieldName));
+        return columnName(columnInfo);
     }
 
     protected String columnName(ColumnInfo columnInfo) {
