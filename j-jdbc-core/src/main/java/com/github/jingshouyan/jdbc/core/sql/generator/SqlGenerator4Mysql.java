@@ -124,6 +124,8 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
                 str = "DATETIME";
                 break;
             case JSON:
+                str = "JSON";
+                break;
             case TEXT:
                 str = "TEXT";
                 break;
