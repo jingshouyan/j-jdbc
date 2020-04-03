@@ -46,7 +46,7 @@
         <guava.version>18.0</guava.version>
         <brave.version>5.5.0</brave.version>
         <springboot.version>2.1.2.RELEASE</springboot.version>
-        <shardingsphere.version>4.0.0</shardingsphere.version>
+        <shardingsphere.version>4.0.1</shardingsphere.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
