@@ -3,6 +3,7 @@ package com.github.jingshouyan.jdbc.core.sql.generator;
 import com.github.jingshouyan.jdbc.comm.bean.*;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
+import com.google.common.collect.Lists;
 import lombok.NonNull;
 
 import java.util.Collection;
@@ -42,13 +43,12 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     }
 
     @Override
-    public SqlPrepared createTableSql() {
+    public List<SqlPrepared> createTableSql() {
         SqlPrepared sqlPrepared = new SqlPrepared();
         StringBuilder sql = new StringBuilder();
         sql.append("CREATE TABLE IF NOT EXISTS ");
         sql.append(tableName());
         sql.append(" (");
-        TableInfo tableInfo = TableUtil.tableInfo(clazz);
         for (ColumnInfo column : tableInfo.getColumns()) {
             if (column.isForeign()) {
                 continue;
@@ -59,9 +59,9 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         sql.deleteCharAt(sql.length() - 1);
         ColumnInfo key = tableInfo.getKey();
         if (null != key) {
-            sql.append(", PRIMARY KEY (`");
-            sql.append(key.getColumnName());
-            sql.append("`)");
+            sql.append(", PRIMARY KEY (");
+            sql.append(columnName(key));
+            sql.append(")");
         }
         for (IndexInfo indexInfo : tableInfo.getIndices()) {
             if (indexInfo.isUnique()) {
@@ -75,15 +75,15 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
             sql.append(index);
             sql.append(")");
         }
-        sql.append(")  COMMENT='").append(tableComment()).append("';");
+        sql.append(")  COMMENT='").append(tableComment()).append("'");
         sqlPrepared.setSql(sql.toString());
-        return sqlPrepared;
+        return Lists.newArrayList(sqlPrepared);
     }
 
     @Override
     public SqlPrepared dropTableSql() {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "DROP TABLE IF EXISTS " + tableName() + ";";
+        String sql = "DROP TABLE IF EXISTS " + tableName();
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
@@ -91,7 +91,7 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
     @Override
     public SqlPrepared addColumn(ColumnInfo columnInfo) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        String sql = "ALTER TABLE " + tableName() + " ADD " + columnString(columnInfo) + ";";
+        String sql = "ALTER TABLE " + tableName() + " ADD " + columnString(columnInfo);
         sqlPrepared.setSql(sql);
         return sqlPrepared;
     }
