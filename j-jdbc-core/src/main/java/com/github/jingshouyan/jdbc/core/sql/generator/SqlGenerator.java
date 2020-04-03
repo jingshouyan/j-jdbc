@@ -83,7 +83,7 @@ public interface SqlGenerator<T> {
      *
      * @return sql语句和参数
      */
-    SqlPrepared createTableSql();
+    List<SqlPrepared> createTableSql();
 
     /**
      * 删表语句生成

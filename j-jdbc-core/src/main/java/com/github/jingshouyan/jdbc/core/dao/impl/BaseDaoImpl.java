@@ -18,7 +18,7 @@ import com.google.common.collect.Sets;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -182,7 +182,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
 
-
     @Override
     public int update(T t) {
         t.forUpdate();
@@ -246,8 +245,11 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
 
     @Override
     public int createTable() {
-        SqlPrepared sqlPrepared = sqlGenerator().createTableSql();
-        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        List<SqlPrepared> sqlPrepareds = sqlGenerator().createTableSql();
+        for (SqlPrepared sqlPrepared : sqlPrepareds) {
+            template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        }
+        return 1;
     }
 
     @Override
@@ -262,7 +264,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
             SqlPrepared sqlPrepared = sqlGenerator().selectNull();
             template.queryForRowSet(sqlPrepared.getSql(), sqlPrepared.getParams());
             return true;
-        } catch (BadSqlGrammarException e) {
+        } catch (DataAccessException e) {
             return false;
         }
     }
