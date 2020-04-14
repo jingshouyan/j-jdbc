@@ -1,8 +1,10 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
-import com.github.jingshouyan.jdbc.comm.bean.*;
+import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
+import com.github.jingshouyan.jdbc.comm.bean.Condition;
+import com.github.jingshouyan.jdbc.comm.bean.IndexInfo;
+import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
-import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.google.common.collect.Lists;
 import lombok.NonNull;
 

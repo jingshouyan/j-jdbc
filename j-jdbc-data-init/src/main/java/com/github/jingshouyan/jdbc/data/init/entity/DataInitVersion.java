@@ -13,12 +13,12 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "DATA_INIT_VERSION",comment = "初始化数据版本")
+@Table(value = "DATA_INIT_VERSION", comment = "初始化数据版本")
 public class DataInitVersion extends BaseDO {
     @Key
     private Long id;
 
-    @Column(length = 50,comment = "版本")
+    @Column(length = 50, comment = "版本")
     private String version;
 
 }

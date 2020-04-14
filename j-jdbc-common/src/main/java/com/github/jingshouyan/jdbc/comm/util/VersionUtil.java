@@ -9,11 +9,12 @@ public class VersionUtil {
 
     /**
      * 比较版本号的大小,前者大则返回一个正数,后者大返回一个负数,相等则返回0
+     *
      * @param version1 version1
      * @param version2 version2
      * @return 结果
      */
-    public static int compareVersion(String version1, String version2)  {
+    public static int compareVersion(String version1, String version2) {
         if (version1 == null || version2 == null) {
             throw new IllegalArgumentException("compareVersion error:illegal params.");
         }
