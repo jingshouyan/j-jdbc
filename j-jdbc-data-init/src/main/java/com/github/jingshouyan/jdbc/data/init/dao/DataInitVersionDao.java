@@ -13,6 +13,7 @@ public interface DataInitVersionDao extends BaseDao<DataInitVersion> {
 
     /**
      * 获取最新的版本号
+     *
      * @return 最新的版本号
      */
     Optional<DataInitVersion> latestVersion();

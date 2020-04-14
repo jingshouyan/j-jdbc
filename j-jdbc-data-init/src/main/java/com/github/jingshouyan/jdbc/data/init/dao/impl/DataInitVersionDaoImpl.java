@@ -19,15 +19,15 @@ import java.util.Optional;
 public class DataInitVersionDaoImpl extends BaseDaoImpl<DataInitVersion> implements DataInitVersionDao {
 
     @Override
-    public Optional<DataInitVersion> latestVersion(){
+    public Optional<DataInitVersion> latestVersion() {
         List<Condition> conditions = ConditionUtil.newInstance()
                 .noDeleted()
                 .conditions();
         Page<DataInitVersion> page = new Page<>();
         page.setPage(1);
         page.setPageSize(1);
-        page.addOrderBy("createdAt",false);
-        List<DataInitVersion> versions = this.queryLimit(conditions,page);
+        page.addOrderBy("createdAt", false);
+        List<DataInitVersion> versions = this.queryLimit(conditions, page);
         return versions.stream().findFirst();
     }
 }

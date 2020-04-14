@@ -17,17 +17,17 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "DATA_INIT_RECORD",comment = "初始化数据记录")
+@Table(value = "DATA_INIT_RECORD", comment = "初始化数据记录")
 public class DataInitRecord extends BaseDO {
     @Key
     private Long id;
-    @Column(length = 50,comment = "版本id")
+    @Column(length = 50, comment = "版本id")
     private Long versionId;
-    @Column(length = 50,comment = "版本")
+    @Column(length = 50, comment = "版本")
     private String version;
-    @Column(length = 100,comment = "数据对象类型")
+    @Column(length = 100, comment = "数据对象类型")
     private String entity;
-    @Column(json = true,dataType = DataType.MEDIUMTEXT,comment = "数据")
+    @Column(json = true, dataType = DataType.MEDIUMTEXT, comment = "数据")
     private List<Record> data;
     @Column(comment = "导入结果")
     private Boolean success;
