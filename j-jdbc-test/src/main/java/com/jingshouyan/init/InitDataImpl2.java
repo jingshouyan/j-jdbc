@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class InitDataImpl implements VersionHandler {
+public class InitDataImpl2 implements VersionHandler {
 
     @Override
     public String version() {
-        return "1.1";
+        return "1.2";
     }
 
     @Override
