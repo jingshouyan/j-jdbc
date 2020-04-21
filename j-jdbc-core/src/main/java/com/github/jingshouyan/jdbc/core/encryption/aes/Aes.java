@@ -31,18 +31,8 @@ public class Aes implements Encryption {
     @Override
     @SneakyThrows
     public String encrypt(String content, String password) {
-        KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
-        SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
-        random.setSeed(password.getBytes(CHARSET));
-        kgen.init(128, random);
-        SecretKey secretKey = kgen.generateKey();
-        byte[] enCodeFormat = secretKey.getEncoded();
-        SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
-        // 创建密码器
-        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+        Cipher cipher = initCipher(password,Cipher.ENCRYPT_MODE);
         byte[] byteContent = content.getBytes(CHARSET);
-        // 初始化
-        cipher.init(Cipher.ENCRYPT_MODE, key);
         // 加密
         byte[] result = cipher.doFinal(byteContent);
         return base64Encode(result);
@@ -59,20 +49,26 @@ public class Aes implements Encryption {
     @SneakyThrows
     public String decrypt(String content, String password) {
         byte[] buf = base64Decode(content);
-        KeyGenerator kgen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
+        Cipher cipher = initCipher(password,Cipher.DECRYPT_MODE);
+        //解密
+        byte[] result = cipher.doFinal(buf);
+        return new String(result, CHARSET);
+    }
+
+    @SneakyThrows
+    private Cipher initCipher(String password,int mode) {
+        KeyGenerator keyGen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
         SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         random.setSeed(password.getBytes(CHARSET));
-        kgen.init(128, random);
-        SecretKey secretKey = kgen.generateKey();
+        keyGen.init(128, random);
+        SecretKey secretKey = keyGen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
         SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
         // 创建密码器
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         // 初始化
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        //解密
-        byte[] result = cipher.doFinal(buf);
-        return new String(result, CHARSET);
+        cipher.init(mode, key);
+        return cipher;
     }
 
 
