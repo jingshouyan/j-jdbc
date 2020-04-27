@@ -98,7 +98,8 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
         return sqlPrepared;
     }
 
-    protected String columnString(@NonNull ColumnInfo column) {
+    @Override
+    public String dataType(@NonNull ColumnInfo column) {
         String str;
         switch (column.getDataType()) {
             case TINYINT:
@@ -142,7 +143,11 @@ public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements Sq
                 str = "VARCHAR(" + column.getColumnLength() + ")";
                 break;
         }
+        return str;
+    }
 
+    protected String columnString(@NonNull ColumnInfo column) {
+        String str = dataType(column);
         str = columnName(column) + " " + str;
         if (null != column.getDefaultData()) {
             str += " DEFAULT '" + column.getDefaultData() + "'";

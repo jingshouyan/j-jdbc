@@ -301,6 +301,11 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
         return columnInfos.size();
     }
 
+    @Override
+    public String doc() {
+        return sqlGenerator().doc();
+    }
+
     /**
      * 查询时默认指定的列
      *

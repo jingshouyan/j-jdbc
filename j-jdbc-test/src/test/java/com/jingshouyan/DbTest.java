@@ -54,6 +54,12 @@ public class DbTest {
     }
 
     @Test
+    public void doc(){
+        String doc = userDao.doc();
+        log.info(doc);
+    }
+
+    @Test
     public void queryRangeKey() {
         List<Condition> conditions = ConditionUtil.newInstance()
                 .field("id")
