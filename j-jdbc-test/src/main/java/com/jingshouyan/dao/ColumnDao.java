@@ -2,7 +2,6 @@ package com.jingshouyan.dao;
 
 import com.github.jingshouyan.jdbc.core.dao.BaseDao;
 import com.jingshouyan.bean.ColumnDO;
-import com.jingshouyan.bean.UserDO;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ import java.util.List;
 public interface ColumnDao extends BaseDao<ColumnDO> {
     /**
      * 查询列信息
+     *
      * @param schema 库
      * @return 列信息
      */

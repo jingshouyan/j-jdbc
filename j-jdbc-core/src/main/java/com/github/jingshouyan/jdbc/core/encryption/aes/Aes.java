@@ -31,7 +31,7 @@ public class Aes implements Encryption {
     @Override
     @SneakyThrows
     public String encrypt(String content, String password) {
-        Cipher cipher = initCipher(password,Cipher.ENCRYPT_MODE);
+        Cipher cipher = initCipher(password, Cipher.ENCRYPT_MODE);
         byte[] byteContent = content.getBytes(CHARSET);
         // 加密
         byte[] result = cipher.doFinal(byteContent);
@@ -49,14 +49,14 @@ public class Aes implements Encryption {
     @SneakyThrows
     public String decrypt(String content, String password) {
         byte[] buf = base64Decode(content);
-        Cipher cipher = initCipher(password,Cipher.DECRYPT_MODE);
+        Cipher cipher = initCipher(password, Cipher.DECRYPT_MODE);
         //解密
         byte[] result = cipher.doFinal(buf);
         return new String(result, CHARSET);
     }
 
     @SneakyThrows
-    private Cipher initCipher(String password,int mode) {
+    private Cipher initCipher(String password, int mode) {
         KeyGenerator keyGen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
         SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         random.setSeed(password.getBytes(CHARSET));
