@@ -44,7 +44,7 @@ public class ShardingConfig {
     public static final String USERNAME = "root";
     public static final String PASSWORD = "abcd1234";
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-    public static final int DS_SHARD = 3;
+    public static final int DS_SHARD = 1;
     public static final int SLAVE = 2;
     public static final int TABLE_SHARD = 10;
     public static final String DS_LOGIC_NAME = "ds";

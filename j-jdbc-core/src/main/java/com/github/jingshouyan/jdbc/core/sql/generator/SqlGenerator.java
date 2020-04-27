@@ -106,4 +106,17 @@ public interface SqlGenerator<T> {
      * @return SqlPrepared
      */
     SqlPrepared addColumn(ColumnInfo columnInfo);
+
+    /**
+     *  markdown格式表说明
+     * @return markdown格式表说明
+     */
+    String doc();
+
+    /**
+     * 数据库字段类型
+     * @param columnInfo 列信息
+     * @return 数据库字段类型
+     */
+    String dataType(ColumnInfo columnInfo);
 }

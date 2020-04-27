@@ -103,6 +103,8 @@ public class UserDO extends BaseDO {
 
     private String new2;
 
+    private String new4;
+
     /**
      * 当使用string类型主键时,主键前缀
      *

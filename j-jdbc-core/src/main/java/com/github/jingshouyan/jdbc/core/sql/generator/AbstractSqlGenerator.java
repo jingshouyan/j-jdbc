@@ -372,4 +372,27 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
         return TableUtil.isEmpty(obj);
     }
 
+    public static final String LINK_BREAK = "\r\n";
+
+    @Override
+    public String doc() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(LINK_BREAK);
+        sb.append("## ").append(tableInfo.getTableName()).append("  ").append(tableInfo.getComment()).append(LINK_BREAK);
+        // 数据结构信息
+        sb.append("|#|列名|数据类型|备注|").append(LINK_BREAK);
+        sb.append("|-|----|-------|----|").append(LINK_BREAK);
+        for (int i = 0; i < tableInfo.getColumns().size(); i++) {
+            ColumnInfo columnInfo = tableInfo.getColumns().get(i);
+            String columnName = columnInfo.getColumnName();
+            String dataType = dataType(columnInfo);
+            String comment = columnInfo.getComment();
+            sb.append("|").append(i + 1)
+                    .append("|").append(columnName)
+                    .append("|").append(dataType)
+                    .append("|").append(comment)
+                    .append("|").append(LINK_BREAK);
+        }
+        return sb.toString();
+    }
 }
