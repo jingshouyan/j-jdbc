@@ -36,8 +36,8 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
-    private Class<T> clazz;
-    private RowMapper<T> rowMapper;
+    protected Class<T> clazz;
+    protected RowMapper<T> rowMapper;
 
     public BaseDaoImpl() {
         init();
