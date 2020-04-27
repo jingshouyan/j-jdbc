@@ -18,8 +18,6 @@ import org.springframework.core.annotation.Order;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author jingshouyan
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 @ComponentScan()
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DataInitAutoConfiguration implements ApplicationRunner {
-
 
 
     @Autowired
@@ -46,17 +43,17 @@ public class DataInitAutoConfiguration implements ApplicationRunner {
         List<VersionHandler> handlers = Lists.newArrayList(map.values());
         Collections.sort(handlers);
         String latest = versionDao.latestVersion().map(DataInitVersion::getVersion).orElse("");
-        handlers.stream().filter(h -> isNew(h.version(),latest))
+        handlers.stream().filter(h -> isNew(h.version(), latest))
                 .forEach(h -> {
                     DataInitVersion version = new DataInitVersion();
                     version.setVersion(h.version());
                     version.setClazz(h.getClass().getName());
                     versionDao.insert(version);
-                    try{
+                    try {
                         h.action();
                         version.setSuccess(true);
                         versionDao.update(version);
-                    }catch (Throwable e){
+                    } catch (Throwable e) {
                         version.setSuccess(false);
                         version.setMessage(e.getMessage());
                         version.forDelete();

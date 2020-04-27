@@ -25,7 +25,7 @@ public class DataInitVersion extends BaseDO {
     private String clazz;
     @Column(length = 50, comment = "执行结果")
     private Boolean success;
-    @Column(dataType = DataType.TEXT,comment = "错误信息")
+    @Column(dataType = DataType.TEXT, comment = "错误信息")
     private String message;
 
 }

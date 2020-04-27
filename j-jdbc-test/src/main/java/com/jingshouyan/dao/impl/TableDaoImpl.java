@@ -29,8 +29,8 @@ public class TableDaoImpl extends BaseDaoImpl<TableDO> implements TableDao {
                 "\tAND (\n" +
                 "\tTABLE_NAME LIKE '%\\_0' \n" +
                 "\tOR TABLE_NAME NOT REGEXP '[0-9]$')";
-        Map<String,Object> params= Maps.newHashMap();
-        params.put("schema",schema);
-        return template.query(sql,params,rowMapper);
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("schema", schema);
+        return template.query(sql, params, rowMapper);
     }
 }

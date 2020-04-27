@@ -1,14 +1,14 @@
 j-jdbc:
-  tableInit: 3
+  tableInit: 2
 
 
 
 db:
-  host: 127.0.0.1
+  host: 192.168.6.127
   port: 3306
-  schema: DB_TEST
+  schema: DATA_TEST
   username: root
-  password: abcd1234
+  password: knilVrvim0228%)
 
 spring:
   application:

@@ -229,6 +229,7 @@ public interface BaseDao<T extends Record> {
 
     /**
      * 数据库结构文档
+     *
      * @return 数据库结构文档
      */
     String doc();

@@ -4,7 +4,6 @@ import com.github.jingshouyan.jdbc.core.dao.impl.BaseDaoImpl;
 import com.google.common.collect.Maps;
 import com.jingshouyan.bean.ColumnDO;
 import com.jingshouyan.dao.ColumnDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,8 +30,8 @@ public class ColumnDaoImpl extends BaseDaoImpl<ColumnDO> implements ColumnDao {
                 "WHERE\n" +
                 "\ttable_schema = :schema \n" +
                 "\tAND ( TABLE_NAME LIKE '%\\_0' OR TABLE_NAME NOT REGEXP '[0-9]$' ) ";
-        Map<String,Object> params= Maps.newHashMap();
-        params.put("schema",schema);
-        return template.query(sql,params,rowMapper);
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("schema", schema);
+        return template.query(sql, params, rowMapper);
     }
 }

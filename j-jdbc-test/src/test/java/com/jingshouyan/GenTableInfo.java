@@ -1,6 +1,5 @@
 package com.jingshouyan;
 
-import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.jingshouyan.bean.ColumnDO;
 import com.jingshouyan.bean.TableDO;
 import com.jingshouyan.dao.ColumnDao;
@@ -31,24 +30,26 @@ public class GenTableInfo {
     private ColumnDao columnDao;
 
     @Test
-    public void show(){
+    public void show() {
         List<TableDO> tables = tableDao.listBySchema("IM_PLATFORM");
         List<ColumnDO> columns = columnDao.listBySchema("IM_PLATFORM");
         tables.forEach(t -> t.setTableComment(t.getTableComment().trim()));
         columns.forEach(c -> c.setColumnComment(c.getColumnComment().trim()));
-        Map<String,List<ColumnDO>> map = columns.stream()
+        Map<String, List<ColumnDO>> map = columns.stream()
                 .collect(Collectors.groupingBy(ColumnDO::getTableName));
 //        System.out.println(map);
         for (TableDO table : tables) {
             List<ColumnDO> columns2 = map.get(table.getTableName());
-            String doc = doc(table,columns2);
+            String doc = doc(table, columns2);
             System.out.println(doc);
         }
     }
+
     public static final String LINK_BREAK = "\r\n";
-    private String doc(TableDO table,List<ColumnDO> columns) {
+
+    private String doc(TableDO table, List<ColumnDO> columns) {
         StringBuilder sb = new StringBuilder();
-        String tableName = table.getTableName().replaceAll("_0","");
+        String tableName = table.getTableName().replaceAll("_0", "");
         sb.append("## ").append(tableName).append("  ").append(table.getTableComment()).append(LINK_BREAK);
         // 数据结构信息
         sb.append("|#|列名|数据类型|备注|").append(LINK_BREAK);

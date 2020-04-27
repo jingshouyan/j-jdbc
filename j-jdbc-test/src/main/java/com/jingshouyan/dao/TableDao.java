@@ -12,6 +12,7 @@ import java.util.List;
 public interface TableDao extends BaseDao<TableDO> {
     /**
      * 查询表信息
+     *
      * @param schema 库
      * @return 列信息
      */

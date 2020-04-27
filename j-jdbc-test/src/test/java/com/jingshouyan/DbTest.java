@@ -54,7 +54,7 @@ public class DbTest {
     }
 
     @Test
-    public void doc(){
+    public void doc() {
         String doc = userDao.doc();
         log.info(doc);
     }
