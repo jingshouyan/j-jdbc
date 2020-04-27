@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
  * @author jingshouyan
  * #date 2020/2/8 12:13
  */
-@Configuration
+//@Configuration
 public class ShardingConfig {
 
     public static final String URL = "jdbc:mysql://127.0.0.1:3306/DB_TEST_NEW_%02d" +
