@@ -161,24 +161,28 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
     private int insert(@NonNull List<T> list) {
+
+        SqlPrepared sqlPrepared = sqlGenerator().insert(list);
+
+        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+    }
+
+
+
+    @Override
+    public int batchInsert(@NonNull List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         for (T t : list) {
             t.forCreate();
             //如果不设置主键，则使用 keygen 生成主键
             genKey(t);
         }
-        SqlPrepared sqlPrepared = sqlGenerator().insert(list);
-        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        int fetch = insert(list);
         for (T t : list) {
             //添加插入事件
             DmlEventBus.onCreate(t);
         }
         return fetch;
-    }
-
-    @Override
-    public int batchInsert(@NonNull List<T> list) {
-        return insert(list);
     }
 
 
