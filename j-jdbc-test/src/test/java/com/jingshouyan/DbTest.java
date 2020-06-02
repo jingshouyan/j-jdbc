@@ -82,12 +82,6 @@ public class DbTest {
                 .conditions();
         List<UserDO> userBeans = userDao.query(conditions);
         userBeans.forEach(System.out::println);
-        String json = JsonUtil.toJsonString(userBeans);
-        System.out.println(json);
-        long count = userDao.count(conditions);
-        System.out.println(count);
-        userBeans = JsonUtil.toList(json, UserDO.class);
-        System.out.println(userBeans);
         Page<UserDO> page = userDao.queryPage(conditions, new Page<>());
         System.out.println(page);
     }
