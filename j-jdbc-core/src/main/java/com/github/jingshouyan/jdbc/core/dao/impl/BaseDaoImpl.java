@@ -157,28 +157,46 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     public int insert(T t) {
         @SuppressWarnings("unchecked")
         List<T> list = Lists.newArrayList(t);
-        return insert(list);
+        return batchInsert(list);
     }
 
-    private int insert(@NonNull List<T> list) {
+    private int insertRawBatch(List<T> list) {
+
+        SqlPrepared sqlPrepared = sqlGenerator().insert(list);
+
+        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+    }
+
+    private int insertJdbcBatch(List<T> list) {
+        String sql = null;
+        @SuppressWarnings("unchecked")
+        Map<String, Object>[] v = new Map[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            @SuppressWarnings("unchecked")
+            List<T> ts = Lists.newArrayList(list.get(i));
+            SqlPrepared sqlPrepared = sqlGenerator().insert(ts);
+            sql = sqlPrepared.getSql();
+            v[i] = sqlPrepared.getParams();
+        }
+        assert sql != null;
+        int[] fetches = template.batchUpdate(sql, v);
+        return IntStream.of(fetches).sum();
+    }
+
+    @Override
+    public int batchInsert(@NonNull List<T> list) {
         Preconditions.checkArgument(!list.isEmpty(), "list is empty!");
         for (T t : list) {
             t.forCreate();
             //如果不设置主键，则使用 keygen 生成主键
             genKey(t);
         }
-        SqlPrepared sqlPrepared = sqlGenerator().insert(list);
-        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        int fetch = insertRawBatch(list);
         for (T t : list) {
             //添加插入事件
             DmlEventBus.onCreate(t);
         }
         return fetch;
-    }
-
-    @Override
-    public int batchInsert(@NonNull List<T> list) {
-        return insert(list);
     }
 
 
