@@ -2,6 +2,7 @@ package com.github.jingshouyan.jdbc.comm.entity;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.annotation.Column;
+import com.github.jingshouyan.jdbc.comm.annotation.Ignore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,17 +15,25 @@ import java.io.Serializable;
  * @author jingshouyan
  * 11/22/18 5:04 PM
  */
-@Getter
-@Setter
-@ToString
+@ToString(exclude = "_c")
 public abstract class BaseDO implements Serializable, Record {
 
+    @Getter
+    @Setter
     @Column(order = 1001, comment = "创建时间")
     private Long createdAt;
+    @Getter
+    @Setter
     @Column(order = 1002, comment = "修改时间")
     private Long updatedAt;
+    @Getter
+    @Setter
     @Column(order = 1003, comment = "删除时间")
     private Long deletedAt;
+
+    @Ignore
+    transient private Long _c;
+
 
     /**
      * 自动生成Id时,String 类型的前缀
@@ -56,24 +65,24 @@ public abstract class BaseDO implements Serializable, Record {
     @Override
     public void forUpdate() {
         long now = System.currentTimeMillis();
+        _c = createdAt;
         createdAt = null;
         updatedAt = now;
     }
 
     @Override
     public void forDelete() {
-        long now = System.currentTimeMillis();
-        createdAt = null;
-        updatedAt = now;
-        deletedAt = now;
+        deletedAt = System.currentTimeMillis();
     }
 
     @Override
     public void forUndelete() {
-        long now = System.currentTimeMillis();
-        createdAt = null;
-        updatedAt = now;
         deletedAt = Constant.NO_DELETE;
+    }
+
+    @Override
+    public void dataRecovery(){
+        createdAt = _c;
     }
 
 

@@ -137,12 +137,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
 
-    @Override
-    public int update(T t, List<Condition> conditions) {
-        t.forUpdate();
-        SqlPrepared sqlPrepared = sqlGenerator().update(t, conditions);
-        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
-    }
+
 
 
     @Override
@@ -187,8 +182,18 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
         t.forUpdate();
         SqlPrepared sqlPrepared = sqlGenerator().update(t);
         int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        t.dataRecovery();
         //添加更新事件
         DmlEventBus.onUpdate(t);
+        return fetch;
+    }
+
+    @Override
+    public int update(T t, List<Condition> conditions) {
+        t.forUpdate();
+        SqlPrepared sqlPrepared = sqlGenerator().update(t, conditions);
+        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
+        t.dataRecovery();
         return fetch;
     }
 
@@ -208,6 +213,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
         int[] fetches = template.batchUpdate(sql, v);
         int fetch = IntStream.of(fetches).sum();
         for (T t : list) {
+            t.dataRecovery();
             //添加更新事件
             DmlEventBus.onUpdate(t);
         }
