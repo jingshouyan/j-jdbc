@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 /**
  * 表注解,指定表明,不加默认为类名
  */

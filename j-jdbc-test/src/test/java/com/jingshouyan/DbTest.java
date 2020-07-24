@@ -7,6 +7,7 @@ import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.collect.Lists;
 import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -124,9 +126,12 @@ public class DbTest {
             u.setId(user.getId());
             u.setName(user.getName() + "abc");
             u.setAge(333);
-            return u;
+            user.setAge(user.getAge()+3);
+            user.setNickname(UUID.randomUUID().toString());
+            return user;
         }).collect(Collectors.toList());
         userDao.batchUpdate(users);
+        users.forEach(System.out::println);
     }
 
     @Test
@@ -135,6 +140,18 @@ public class DbTest {
         userDO.setAge(22);
         userDO.setKey("key-test ");
         userDao.update(userDO, null);
+    }
+
+    @Test
+    public void update() {
+        Page<UserDO> page = new Page<>();
+        page.setPageSize(1);
+        List<UserDO> users = userDao.queryLimit(null,page);
+        users.stream().findFirst().ifPresent(user -> {
+            user.setAcc1(BigDecimal.valueOf(4564.786555));
+            userDao.update(user);
+            System.out.println(user);
+        });
     }
 
     @Test
