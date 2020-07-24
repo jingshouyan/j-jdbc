@@ -4,11 +4,11 @@ j-jdbc:
 
 
 db:
-  host: 192.168.6.127
+  host: 127.0.0.1
   port: 3306
   schema: DATA_TEST
   username: root
-  password: knilVrvim0228%)
+  password: abcd1234
 
 spring:
   application:
