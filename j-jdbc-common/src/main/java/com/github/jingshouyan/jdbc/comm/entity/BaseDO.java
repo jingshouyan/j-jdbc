@@ -15,12 +15,12 @@ import java.io.Serializable;
  * @author jingshouyan
  * 11/22/18 5:04 PM
  */
-@ToString(exclude = "_c")
+@ToString
 public abstract class BaseDO implements Serializable, Record {
 
     @Getter
     @Setter
-    @Column(order = 1001, comment = "创建时间")
+    @Column(order = 1001, comment = "创建时间", immutable = true)
     private Long createdAt;
     @Getter
     @Setter
@@ -30,9 +30,6 @@ public abstract class BaseDO implements Serializable, Record {
     @Setter
     @Column(order = 1003, comment = "删除时间")
     private Long deletedAt;
-
-    @Ignore
-    transient private Long _c;
 
 
     /**
@@ -65,8 +62,6 @@ public abstract class BaseDO implements Serializable, Record {
     @Override
     public void forUpdate() {
         long now = System.currentTimeMillis();
-        _c = createdAt;
-        createdAt = null;
         updatedAt = now;
     }
 
@@ -78,11 +73,6 @@ public abstract class BaseDO implements Serializable, Record {
     @Override
     public void forUndelete() {
         deletedAt = Constant.NO_DELETE;
-    }
-
-    @Override
-    public void dataRecovery(){
-        createdAt = _c;
     }
 
 

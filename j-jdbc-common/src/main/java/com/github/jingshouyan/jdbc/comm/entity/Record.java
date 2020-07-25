@@ -18,11 +18,6 @@ public interface Record {
     default void forUpdate() {
     }
 
-    /**
-     * 恢复数据
-     */
-    default void dataRecovery() {
-    }
 
     /**
      * 伪删除
