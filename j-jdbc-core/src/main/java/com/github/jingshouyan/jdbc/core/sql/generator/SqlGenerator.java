@@ -3,6 +3,7 @@ package com.github.jingshouyan.jdbc.core.sql.generator;
 import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author jingshouyan
  * #date 2018/4/14 17:25
  */
-public interface SqlGenerator<T> {
+public interface SqlGenerator<T extends Record> {
 
     /**
      * 条件查询语句生成

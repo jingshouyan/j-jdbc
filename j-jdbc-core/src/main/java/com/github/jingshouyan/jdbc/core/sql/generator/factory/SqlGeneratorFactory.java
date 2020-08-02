@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.core.sql.generator.factory;
 
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.core.sql.generator.SqlGenerator;
 
 /**
@@ -15,5 +16,5 @@ public interface SqlGeneratorFactory {
      * @param <T>   T
      * @return sql 生成器
      */
-    <T> SqlGenerator<T> sqlGenerator(Class<T> clazz);
+    <T extends Record> SqlGenerator<T> sqlGenerator(Class<T> clazz);
 }

@@ -1,5 +1,6 @@
 package com.github.jingshouyan.jdbc.core.sql.generator.factory.mysql;
 
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.core.sql.generator.SqlGenerator;
 import com.github.jingshouyan.jdbc.core.sql.generator.SqlGenerator4Mysql;
 import com.github.jingshouyan.jdbc.core.sql.generator.factory.SqlGeneratorFactory;
@@ -17,7 +18,9 @@ public class MysqlSqlGeneratorFactory implements SqlGeneratorFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> SqlGenerator<T> sqlGenerator(Class<T> clazz) {
-        return (SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz, SqlGenerator4Mysql::new);
+    public <T extends Record> SqlGenerator<T> sqlGenerator(Class<T> clazz) {
+        return (SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz,
+                (c) ->  new SqlGenerator4Mysql(c)
+        );
     }
 }
