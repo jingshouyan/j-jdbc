@@ -1,6 +1,7 @@
 package com.github.jingshouyan.jdbc.core.sql.generator;
 
 import com.github.jingshouyan.jdbc.comm.bean.*;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
 import com.github.jingshouyan.jdbc.core.encryption.EncryptionProvider;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
@@ -19,10 +20,16 @@ import java.util.stream.Collectors;
  * @author jingshouyan
  * #date 2018/4/14 17:25
  */
-public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
+public abstract class AbstractSqlGenerator<T extends Record> implements SqlGenerator<T> {
 
     protected Class<T> clazz;
     protected TableInfo tableInfo;
+
+
+    /**
+     * 更新时设置为null的占位符
+     */
+    private static final Object FLAG_NULL = new Object();
 
 
     public AbstractSqlGenerator(Class<T> clazz) {
@@ -78,7 +85,7 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
     @Override
     public SqlPrepared insert(List<T> beans) {
         SqlPrepared sqlPrepared = new SqlPrepared();
-        Object bean = beans.get(0);
+        Record bean = beans.get(0);
         Map<String, Object> valueMap = valueMap(bean);
         StringBuilder sb = new StringBuilder();
         StringBuilder keys = new StringBuilder();
@@ -148,13 +155,29 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
             }
         }
         List<Condition> conditions = conditionUtil.conditions();
+        prepareUpdateNull(bean,beanMap);
         return update(beanMap, conditions);
     }
 
     @Override
     public SqlPrepared update(T bean, List<Condition> conditions) {
         Map<String, Object> beanMap = valueMap(bean);
+        prepareUpdateNull(bean,beanMap);
         return update(beanMap, conditions);
+    }
+
+    /**
+     * 准备更新为 null 的字段
+     * @param bean bean
+     * @param beanMap beamMap
+     */
+    private void prepareUpdateNull(T bean, Map<String, Object> beanMap) {
+        List<String> nullFields = bean.updateNullFields();
+        if(nullFields != null && !nullFields.isEmpty()){
+            for (String field : nullFields){
+                beanMap.put(field,FLAG_NULL);
+            }
+        }
     }
 
     private SqlPrepared update(Map<String, Object> beanMap, List<Condition> conditions) {
@@ -177,8 +200,15 @@ public abstract class AbstractSqlGenerator<T> implements SqlGenerator<T> {
                 continue;
             }
             String column = columnName(key);
-            sql.append(String.format(" %s = :%s__set ,", column, key));
-            param.put(key + "__set", value);
+
+            if(value == FLAG_NULL) {
+                // 更新为null
+                sql.append(String.format(" %s = null ,", column));
+            } else {
+                // 正常更新值
+                sql.append(String.format(" %s = :%s__set ,", column, key));
+                param.put(key + "__set", value);
+            }
         }
         //只有当有字段需要更新
         Preconditions.checkArgument(!param.isEmpty(), "nothing to update");

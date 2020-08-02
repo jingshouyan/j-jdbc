@@ -4,6 +4,7 @@ import com.github.jingshouyan.jdbc.comm.bean.ColumnInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.IndexInfo;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
+import com.github.jingshouyan.jdbc.comm.entity.Record;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.google.common.collect.Lists;
 import lombok.NonNull;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * @author jingshouyan
  * #date 2018/4/14 17:25
  */
-public class SqlGenerator4Mysql<T> extends AbstractSqlGenerator<T> implements SqlGenerator<T> {
+public class SqlGenerator4Mysql<T extends Record> extends AbstractSqlGenerator<T> implements SqlGenerator<T> {
 
 
     public SqlGenerator4Mysql(Class<T> clazz) {
