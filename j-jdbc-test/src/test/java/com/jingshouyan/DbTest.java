@@ -107,6 +107,10 @@ public class DbTest {
             userBean.setLocalDate(LocalDate.now());
             userBean.setLocalDateTime(LocalDateTime.now());
             userBean.setLocalTime(LocalTime.now());
+            userBean.setText("test");
+            userBean.setNew1("new1 dfd");
+            userBean.setNew2("new2 dfd");
+            userBean.setNew4("new3 dfd");
             users.add(userBean);
         }
         userDao.batchInsert(users);
@@ -152,6 +156,52 @@ public class DbTest {
     public void exist() {
         boolean b = userDao.existTable();
         System.out.println(b);
+    }
+
+    @Test
+    public void nullTest() {
+        UserDO user = new UserDO();
+        user.setName("掌声");
+        user.setAge(33998);
+        user.setTags(Lists.newArrayList("哈哈"));
+        user.setNickname("大嘴巴子");
+        user.setEncryptTest("发生温热");
+        user.setKey("13123");
+        user.setAcc1(new BigDecimal("1.1"));
+        user.setAcc2(new BigDecimal("2.2"));
+        user.setAcc3(new BigDecimal("3.3"));
+        user.setAcc4(new BigDecimal("4.4"));
+        user.setAcc5(new BigDecimal("5.5"));
+        user.setAcc6(new BigDecimal("6.6"));
+        user.setAcc7(new BigDecimal("7.7"));
+        user.setAcc8(new BigDecimal("8.8"));
+        user.setLocalDate(LocalDate.now());
+        user.setLocalDateTime(LocalDateTime.now());
+        user.setLocalTime(LocalTime.now());
+        user.setText("test");
+        user.setNew1("new1 dfd");
+        user.setNew2("new2 dfd");
+        user.setNew4("new3 dfd");
+        userDao.insert(user);
+        UserDO u2 = userDao.find(user.getId()).get();
+
+        u2.setNew1("");
+        userDao.update(u2);
+        userDao.find(user.getId());
+
+    }
+    @Test
+    public void nullTest2() {
+
+        List<Condition> conditions = ConditionUtil.newInstance()
+                .field("age").gt(302).lt(310)
+                .conditions();
+        UserDO userDO = new UserDO();
+        userDO.setText("new xxx is null");
+        userDO.setNew1("");
+        userDO.setNew2("");
+        userDO.setNew4("");
+        userDao.update(userDO,conditions);
     }
 
 }

@@ -4,6 +4,7 @@ import com.github.jingshouyan.jdbc.comm.annotation.*;
 import com.github.jingshouyan.jdbc.comm.bean.DataType;
 import com.github.jingshouyan.jdbc.comm.bean.EncryptType;
 import com.github.jingshouyan.jdbc.comm.entity.BaseDO;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @Table(value = "DEMO_USER", comment = "用户表")
 
-@Index(value = {"age", "nickname"}, unique = true)
+@Index(value = {"age", "nickname"})
 @Index({"id", "name"})
 //@ListQueryFields({"name", "age"})
 //@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
@@ -100,10 +101,25 @@ public class UserDO extends BaseDO {
     private String text;
 
     private String new1;
-
+    @Column(value = "T_NEW2")
     private String new2;
-
+    @Column(value = "T_NEW4")
     private String new4;
+
+    @Override
+    public List<String> updateNullFields() {
+        List<String> list = Lists.newArrayList();
+        if("".equals(new1)){
+            list.add("new1");
+        }
+        if("".equals(new2)){
+            list.add("new2");
+        }
+        if("".equals(new4)){
+            list.add("new4");
+        }
+        return list;
+    }
 
     /**
      * 当使用string类型主键时,主键前缀
