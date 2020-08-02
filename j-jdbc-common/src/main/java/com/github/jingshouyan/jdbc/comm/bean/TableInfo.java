@@ -94,7 +94,9 @@ public class TableInfo {
                             List<ColumnInfo> columnInfos = Arrays.stream(index.value())
                                     .map(fieldName -> {
                                         ColumnInfo columnInfo = fieldNameMap.get(fieldName);
-                                        assert columnInfo != null;
+                                        if (columnInfo == null) {
+                                            throw new NullPointerException("["+ fieldName +"] not exist for index");
+                                        }
                                         return columnInfo;
                                     })
                                     .collect(Collectors.toList());
