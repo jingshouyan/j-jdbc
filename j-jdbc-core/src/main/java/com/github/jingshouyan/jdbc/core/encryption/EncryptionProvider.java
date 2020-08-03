@@ -1,8 +1,11 @@
 package com.github.jingshouyan.jdbc.core.encryption;
 
 import com.github.jingshouyan.jdbc.core.encryption.aes.Aes;
+import com.github.jingshouyan.jdbc.core.encryption.offset.OffsetEncryption;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Optional;
 
 /**
  * @author jingshouyan
@@ -13,7 +16,7 @@ public class EncryptionProvider {
 
     @Getter
     @Setter
-    private static Encryption encryption = new Aes();
+    private static Encryption encryption = new OffsetEncryption();
 
     public static String encrypt(String content, String password) {
         return encryption.encrypt(content, password);

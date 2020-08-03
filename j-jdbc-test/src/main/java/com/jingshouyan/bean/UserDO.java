@@ -47,7 +47,7 @@ public class UserDO extends BaseDO {
      * 使用加密后,无法作为查询条件,因为数据库中存放的是密文
      */
     @Column(encryptType = EncryptType.FLIED, encryptKey = "id", immutable = true, router = true)
-    @Index(unique = true)
+//    @Index(unique = true)
     private String name;
     /**
      * 列类型使用包装类型,因为在更新操作时 null 值不更新

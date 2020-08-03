@@ -286,8 +286,12 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                     params.put(key + "__eq", eq);
                 }
                 if (null != compare.getLike()) {
+                    Object like = compare.getLike();
+                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                        like = EncryptionProvider.encrypt(like.toString(), columnInfo.getEncryptKey());
+                    }
                     sql.append(String.format(" AND %s LIKE :%s__like ", column, key));
-                    params.put(key + "__like", compare.getLike());
+                    params.put(key + "__like", like);
                 }
                 if (null != compare.getGt()) {
                     sql.append(String.format(" AND %s > :%s__gt ", column, key));

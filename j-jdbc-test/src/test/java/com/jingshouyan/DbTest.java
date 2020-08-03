@@ -89,6 +89,24 @@ public class DbTest {
     }
 
     @Test
+    public void queryEncryptLike() {
+        List<Condition> conditions = ConditionUtil.newInstance()
+                .field("encryptTest").like("士大夫3%")
+                .conditions();
+        List<UserDO> users = userDao.query(conditions);
+        users.forEach(System.out::println);
+    }
+
+    @Test
+    public void sqlInject() {
+        List<Condition> conditions = ConditionUtil.newInstance()
+                .field("age").eq("1' or 1=1 ")
+                .conditions();
+        List<UserDO> users = userDao.query(conditions);
+        users.forEach(System.out::println);
+    }
+
+    @Test
     public void queryDistinct() {
         List<UserDO> users = userDao.queryDistinct(null, Lists.newArrayList("tags"));
         System.out.println(users);
