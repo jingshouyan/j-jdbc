@@ -15,6 +15,7 @@
         <module>j-jdbc-sharding</module>
         <module>j-jdbc-test</module>
         <module>j-jdbc-data-init</module>
+        <module>j-jdbc-bom</module>
     </modules>
 
     <name>j-jdbc</name>
@@ -70,6 +71,7 @@
                 <artifactId>sharding-jdbc-core</artifactId>
                 <version>${shardingsphere.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>j-jdbc-common</artifactId>
@@ -95,6 +97,8 @@
                 <artifactId>j-jdbc-sharding</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
