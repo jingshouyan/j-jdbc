@@ -74,30 +74,11 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>j-jdbc-common</artifactId>
+                <artifactId>j-jdbc-bom</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>j-jdbc-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>j-jdbc-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>j-jdbc-data-init</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>j-jdbc-sharding</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
