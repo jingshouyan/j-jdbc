@@ -1,7 +1,6 @@
 package com.github.jingshouyan.jdbc.core.encryption.aes;
 
 import com.github.jingshouyan.jdbc.core.encryption.Encryption;
-import com.google.common.io.BaseEncoding;
 import lombok.SneakyThrows;
 
 import javax.crypto.Cipher;
@@ -9,6 +8,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
  * @author jingshouyan
@@ -73,10 +73,10 @@ public class Aes implements Encryption {
 
 
     private static String base64Encode(byte[] buf) {
-        return BaseEncoding.base64().encode(buf);
+        return Base64.getEncoder().encodeToString(buf);
     }
 
     private static byte[] base64Decode(String content) {
-        return BaseEncoding.base64().decode(content);
+        return Base64.getDecoder().decode(content);
     }
 }
