@@ -4,6 +4,7 @@ import com.github.jingshouyan.jdbc.comm.annotation.Ignore;
 import com.github.jingshouyan.jdbc.comm.annotation.Index;
 import com.github.jingshouyan.jdbc.comm.annotation.ListQueryFields;
 import com.github.jingshouyan.jdbc.comm.annotation.Table;
+import com.github.jingshouyan.jdbc.comm.exception.IllegalTypeException;
 import com.github.jingshouyan.jdbc.comm.util.StringUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,7 +57,7 @@ public class TableInfo {
 
         // 属性名 用于排除 重名的 父类中的属性
         Set<String> fieldNames = new HashSet<>();
-        for (Class c = clazz; Object.class != c; c = c.getSuperclass()) {
+        for (Class<?> c = clazz; Object.class != c; c = c.getSuperclass()) {
             Field[] fields = c.getDeclaredFields();
             for (Field field : fields) {
                 int mod = field.getModifiers();
@@ -123,9 +124,23 @@ public class TableInfo {
         fieldNameMap.put(column.getFieldName(), column);
         lowerCaseColumnMap.put(column.getColumnName().toLowerCase(), column);
         if (column.isKey() && key == null) {
+            Class<?> clazz = column.getField().getType();
+            if(!ALLOWED_KEY_TYPES.contains(clazz)) {
+                throw new IllegalTypeException("@Key must be Long or String");
+            }
             //取第一个为 key
             //因为是先取 类 中的属性，然后再取 父类 中的属性
             key = column;
         }
+    }
+
+    private static final Set<Class<?>> ALLOWED_KEY_TYPES = allowedKeyTypes();
+
+    private static Set<Class<?>> allowedKeyTypes() {
+        Set<Class<?>> set = new HashSet<>();
+        set.add(Long.class);
+        set.add(long.class);
+        set.add(String.class);
+        return set;
     }
 }
