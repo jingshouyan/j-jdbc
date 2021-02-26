@@ -126,7 +126,7 @@ public class TableInfo {
         if (column.isKey() && key == null) {
             Class<?> clazz2 = column.getField().getType();
             if(!ALLOWED_KEY_TYPES.contains(clazz2)) {
-                throw new IllegalTypeException(clazz + " @Key must be Long or String");
+                throw new IllegalTypeException(clazz.getName() + " @Key must be Long or String");
             }
             //取第一个为 key
             //因为是先取 类 中的属性，然后再取 父类 中的属性
