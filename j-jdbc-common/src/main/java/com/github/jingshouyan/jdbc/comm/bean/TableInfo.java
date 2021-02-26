@@ -124,9 +124,9 @@ public class TableInfo {
         fieldNameMap.put(column.getFieldName(), column);
         lowerCaseColumnMap.put(column.getColumnName().toLowerCase(), column);
         if (column.isKey() && key == null) {
-            Class<?> clazz = column.getField().getType();
-            if(!ALLOWED_KEY_TYPES.contains(clazz)) {
-                throw new IllegalTypeException("@Key must be Long or String");
+            Class<?> clazz2 = column.getField().getType();
+            if(!ALLOWED_KEY_TYPES.contains(clazz2)) {
+                throw new IllegalTypeException(clazz + " @Key must be Long or String");
             }
             //取第一个为 key
             //因为是先取 类 中的属性，然后再取 父类 中的属性
