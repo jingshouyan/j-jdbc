@@ -17,9 +17,10 @@ import java.util.Base64;
 
 public class Aes implements Encryption {
 
-    public static final String CHARSET = "utf-8";
-    public static final String CIPHER_ALGORITHM = "Aes";
-    public static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+    private static final String CHARSET = "utf-8";
+    private static final String CIPHER_ALGORITHM = "Aes";
+    private static final String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
+    private static final int KEY_SIZE = 128;
 
     /**
      * 加密
@@ -60,7 +61,7 @@ public class Aes implements Encryption {
         KeyGenerator keyGen = KeyGenerator.getInstance(CIPHER_ALGORITHM);
         SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
         random.setSeed(password.getBytes(CHARSET));
-        keyGen.init(128, random);
+        keyGen.init(KEY_SIZE, random);
         SecretKey secretKey = keyGen.generateKey();
         byte[] enCodeFormat = secretKey.getEncoded();
         SecretKeySpec key = new SecretKeySpec(enCodeFormat, CIPHER_ALGORITHM);
