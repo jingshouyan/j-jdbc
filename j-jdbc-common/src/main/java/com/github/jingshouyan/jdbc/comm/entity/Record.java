@@ -35,6 +35,7 @@ public interface Record {
 
     /**
      * 更新时将以下字段更新为 null
+     *
      * @return 需要更新为null的字段
      */
     default List<String> updateNullFields() {

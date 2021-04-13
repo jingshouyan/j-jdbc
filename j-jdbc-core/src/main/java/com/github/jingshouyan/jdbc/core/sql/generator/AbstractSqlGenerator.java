@@ -155,27 +155,28 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
             }
         }
         List<Condition> conditions = conditionUtil.conditions();
-        prepareUpdateNull(bean,beanMap);
+        prepareUpdateNull(bean, beanMap);
         return update(beanMap, conditions);
     }
 
     @Override
     public SqlPrepared update(T bean, List<Condition> conditions) {
         Map<String, Object> beanMap = valueMap(bean);
-        prepareUpdateNull(bean,beanMap);
+        prepareUpdateNull(bean, beanMap);
         return update(beanMap, conditions);
     }
 
     /**
      * 准备更新为 null 的字段
-     * @param bean bean
+     *
+     * @param bean    bean
      * @param beanMap beamMap
      */
     private void prepareUpdateNull(T bean, Map<String, Object> beanMap) {
         List<String> nullFields = bean.updateNullFields();
-        if(nullFields != null && !nullFields.isEmpty()){
-            for (String field : nullFields){
-                beanMap.put(field,FLAG_NULL);
+        if (nullFields != null && !nullFields.isEmpty()) {
+            for (String field : nullFields) {
+                beanMap.put(field, FLAG_NULL);
             }
         }
     }
@@ -201,7 +202,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
             }
             String column = columnName(key);
 
-            if(value == FLAG_NULL) {
+            if (value == FLAG_NULL) {
                 // 更新为null
                 sql.append(String.format(" %s = null ,", column));
             } else {

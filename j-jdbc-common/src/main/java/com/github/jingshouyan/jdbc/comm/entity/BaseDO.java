@@ -2,7 +2,6 @@ package com.github.jingshouyan.jdbc.comm.entity;
 
 import com.github.jingshouyan.jdbc.comm.Constant;
 import com.github.jingshouyan.jdbc.comm.annotation.Column;
-import com.github.jingshouyan.jdbc.comm.annotation.Ignore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
