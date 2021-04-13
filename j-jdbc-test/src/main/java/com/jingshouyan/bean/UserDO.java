@@ -109,13 +109,13 @@ public class UserDO extends BaseDO {
     @Override
     public List<String> updateNullFields() {
         List<String> list = Lists.newArrayList();
-        if("".equals(new1)){
+        if ("".equals(new1)) {
             list.add("new1");
         }
-        if("".equals(new2)){
+        if ("".equals(new2)) {
             list.add("new2");
         }
-        if("".equals(new4)){
+        if ("".equals(new4)) {
             list.add("new4");
         }
         return list;

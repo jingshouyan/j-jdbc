@@ -1,11 +1,8 @@
 package com.github.jingshouyan.jdbc.core.encryption;
 
-import com.github.jingshouyan.jdbc.core.encryption.aes.Aes;
 import com.github.jingshouyan.jdbc.core.encryption.offset.OffsetEncryption;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Optional;
 
 /**
  * @author jingshouyan

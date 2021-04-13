@@ -1,6 +1,5 @@
 package com.jingshouyan;
 
-import com.github.jingshouyan.jdbc.comm.annotation.Table;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.comm.exception.IllegalTypeException;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
@@ -30,13 +29,13 @@ public class TableInfoTest {
     @Test
     public void illegalKey() {
         boolean t = false;
-        try{
+        try {
             TableInfo tableInfo = TableUtil.tableInfo(IllegalKey.class);
-        }catch (IllegalTypeException e){
+        } catch (IllegalTypeException e) {
             e.printStackTrace();
-            t  = true;
+            t = true;
         }
 
-        Assert.isTrue(t,"catch exception");
+        Assert.isTrue(t, "catch exception");
     }
 }

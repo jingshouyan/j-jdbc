@@ -96,7 +96,7 @@ public class TableInfo {
                                     .map(fieldName -> {
                                         ColumnInfo columnInfo = fieldNameMap.get(fieldName);
                                         if (columnInfo == null) {
-                                            throw new NullPointerException("["+ fieldName +"] not exist for index");
+                                            throw new NullPointerException("[" + fieldName + "] not exist for index");
                                         }
                                         return columnInfo;
                                     })
@@ -125,7 +125,7 @@ public class TableInfo {
         lowerCaseColumnMap.put(column.getColumnName().toLowerCase(), column);
         if (column.isKey() && key == null) {
             Class<?> clazz2 = column.getField().getType();
-            if(!ALLOWED_KEY_TYPES.contains(clazz2)) {
+            if (!ALLOWED_KEY_TYPES.contains(clazz2)) {
                 throw new IllegalTypeException(clazz.getName() + " @Key must be Long or String");
             }
             //取第一个为 key

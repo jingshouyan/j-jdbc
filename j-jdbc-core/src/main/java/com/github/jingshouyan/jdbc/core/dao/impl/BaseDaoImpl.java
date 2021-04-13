@@ -137,9 +137,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
 
-
-
-
     @Override
     public int count(List<Condition> conditions) {
         SqlPrepared sqlPrepared = sqlGenerator().count(conditions);
