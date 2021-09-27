@@ -26,9 +26,12 @@ public class DbKeyGenerator implements KeyGenerator {
 
     @Override
     public long generateKey(String type) {
-        AtomicLong longAdder = MAP.computeIfAbsent(type, idType ->
-                new AtomicLong(idHelper.get(idType))
-        );
+        AtomicLong longAdder = MAP.get(type);
+        if (longAdder == null) {
+            longAdder = MAP.computeIfAbsent(type, idType ->
+                    new AtomicLong(idHelper.get(idType))
+            );
+        }
         long result = longAdder.incrementAndGet();
         if (result % IdHelper.STEP == 0) {
             execHelper.exec(() -> idHelper.update(type, result));
