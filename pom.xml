@@ -40,14 +40,13 @@
     </scm>
 
 
-
     <properties>
         <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
         <lombok-maven-plugin.version>1.18.4.0</lombok-maven-plugin.version>
         <guava.version>30.1.1-jre</guava.version>
         <brave.version>5.5.0</brave.version>
-        <springboot.version>2.1.2.RELEASE</springboot.version>
+        <springboot.version>2.6.1</springboot.version>
         <shardingsphere.version>4.0.1</shardingsphere.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -61,7 +60,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
+                <artifactId>spring-boot-dependencies</artifactId>
                 <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
