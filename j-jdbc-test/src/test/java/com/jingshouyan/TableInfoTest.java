@@ -6,7 +6,7 @@ import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.sql.generator.SqlGenerator4Mysql;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.jingshouyan.bean.UserDO;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
 import java.util.List;

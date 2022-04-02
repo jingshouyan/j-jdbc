@@ -7,11 +7,9 @@ import com.google.common.collect.Lists;
 import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
  * @author jingshouyan
  * 11/29/18 5:38 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @Slf4j
 public class DbTest {

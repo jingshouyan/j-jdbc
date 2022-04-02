@@ -5,11 +5,9 @@ import com.jingshouyan.bean.TableDO;
 import com.jingshouyan.dao.ColumnDao;
 import com.jingshouyan.dao.TableDao;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
  * @author jingshouyan
  * #date 2020/4/27 19:16
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @Slf4j
 public class GenTableInfo {
