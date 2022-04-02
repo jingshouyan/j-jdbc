@@ -103,8 +103,14 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     public Page<T> queryFieldPage(List<Condition> conditions, Page<T> page, Collection<String> fields) {
         int count = count(conditions);
         page.totalCount(count);
-        List<T> ts = queryFieldLimit(conditions, page, fields);
-        page.setList(ts);
+        // 当前页是否有数据
+        boolean hasData = (page.getPage() - 1) * page.getPageSize() >= count;
+        if (!hasData) {
+            page.setList(new ArrayList<>());
+        } else {
+            List<T> ts = queryFieldLimit(conditions, page, fields);
+            page.setList(ts);
+        }
         return page;
     }
 
@@ -137,9 +143,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     }
 
 
-
-
-
     @Override
     public int count(List<Condition> conditions) {
         SqlPrepared sqlPrepared = sqlGenerator().count(conditions);
@@ -150,7 +153,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
 
     @Override
     public int insert(T t) {
-        @SuppressWarnings("unchecked")
         List<T> list = Lists.newArrayList(t);
         return batchInsert(list);
     }
@@ -167,7 +169,6 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
         @SuppressWarnings("unchecked")
         Map<String, Object>[] v = new Map[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            @SuppressWarnings("unchecked")
             List<T> ts = Lists.newArrayList(list.get(i));
             SqlPrepared sqlPrepared = sqlGenerator().insert(ts);
             sql = sqlPrepared.getSql();
@@ -209,8 +210,7 @@ public abstract class BaseDaoImpl<T extends Record> implements BaseDao<T> {
     public int update(T t, List<Condition> conditions) {
         t.forUpdate();
         SqlPrepared sqlPrepared = sqlGenerator().update(t, conditions);
-        int fetch = template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
-        return fetch;
+        return template.update(sqlPrepared.getSql(), sqlPrepared.getParams());
     }
 
     @Override

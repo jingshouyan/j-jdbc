@@ -20,7 +20,7 @@ public class MysqlSqlGeneratorFactory implements SqlGeneratorFactory {
     @SuppressWarnings("unchecked")
     public <T extends Record> SqlGenerator<T> sqlGenerator(Class<T> clazz) {
         return (SqlGenerator<T>) GENERATOR_CACHE.computeIfAbsent(clazz,
-                (c) ->  new SqlGenerator4Mysql(c)
+                (c) -> new SqlGenerator4Mysql(c)
         );
     }
 }

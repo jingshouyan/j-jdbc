@@ -3,17 +3,13 @@ package com.jingshouyan;
 import com.github.jingshouyan.jdbc.comm.bean.Condition;
 import com.github.jingshouyan.jdbc.comm.bean.Page;
 import com.github.jingshouyan.jdbc.comm.util.ConditionUtil;
-import com.github.jingshouyan.jdbc.core.util.json.JsonUtil;
 import com.google.common.collect.Lists;
 import com.jingshouyan.bean.UserDO;
 import com.jingshouyan.dao.UserDao;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,7 +24,6 @@ import java.util.stream.Collectors;
  * @author jingshouyan
  * 11/29/18 5:38 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = App.class)
 @Slf4j
 public class DbTest {
@@ -142,7 +137,7 @@ public class DbTest {
             u.setId(user.getId());
             u.setName(user.getName() + "abc");
             u.setAge(333);
-            user.setAge(user.getAge()+3);
+            user.setAge(user.getAge() + 3);
             user.setNickname(UUID.randomUUID().toString());
             return user;
         }).collect(Collectors.toList());
@@ -162,7 +157,7 @@ public class DbTest {
     public void update() {
         Page<UserDO> page = new Page<>();
         page.setPageSize(1);
-        List<UserDO> users = userDao.queryLimit(null,page);
+        List<UserDO> users = userDao.queryLimit(null, page);
         users.stream().findFirst().ifPresent(user -> {
             user.setAcc1(BigDecimal.valueOf(4564.786555));
             userDao.update(user);
@@ -208,6 +203,7 @@ public class DbTest {
         userDao.find(user.getId());
 
     }
+
     @Test
     public void nullTest2() {
 
@@ -219,7 +215,7 @@ public class DbTest {
         userDO.setNew1("");
         userDO.setNew2("");
         userDO.setNew4("");
-        userDao.update(userDO,conditions);
+        userDao.update(userDO, conditions);
     }
 
 }

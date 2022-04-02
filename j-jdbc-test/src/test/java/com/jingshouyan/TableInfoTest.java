@@ -1,13 +1,12 @@
 package com.jingshouyan;
 
-import com.github.jingshouyan.jdbc.comm.annotation.Table;
 import com.github.jingshouyan.jdbc.comm.bean.TableInfo;
 import com.github.jingshouyan.jdbc.comm.exception.IllegalTypeException;
 import com.github.jingshouyan.jdbc.core.sql.SqlPrepared;
 import com.github.jingshouyan.jdbc.core.sql.generator.SqlGenerator4Mysql;
 import com.github.jingshouyan.jdbc.core.util.table.TableUtil;
 import com.jingshouyan.bean.UserDO;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -30,13 +29,13 @@ public class TableInfoTest {
     @Test
     public void illegalKey() {
         boolean t = false;
-        try{
+        try {
             TableInfo tableInfo = TableUtil.tableInfo(IllegalKey.class);
-        }catch (IllegalTypeException e){
+        } catch (IllegalTypeException e) {
             e.printStackTrace();
-            t  = true;
+            t = true;
         }
 
-        Assert.isTrue(t,"catch exception");
+        Assert.isTrue(t, "catch exception");
     }
 }

@@ -33,7 +33,7 @@ public class OffsetEncryption implements Encryption {
                 0x61, 0x7B,
                 0x80, 0xdc00
         };
-        OffsetCalc calc = new OffsetCalc(range,offset);
+        OffsetCalc calc = new OffsetCalc(range, offset);
         OffsetEncrypt offsetEncrypt = new OffsetEncrypt();
         offsetEncrypt.addCalc(calc);
         return offsetEncrypt;

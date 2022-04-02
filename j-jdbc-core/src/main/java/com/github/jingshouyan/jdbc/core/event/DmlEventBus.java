@@ -18,6 +18,10 @@ public final class DmlEventBus {
     private static final Map<DmlType, EventBus> BUS_MAP = Maps.newConcurrentMap();
 
     public static EventBus getEventBus(DmlType dmlType) {
+        EventBus eventBus = BUS_MAP.get(dmlType);
+        if (eventBus != null) {
+            return eventBus;
+        }
         return BUS_MAP.computeIfAbsent(dmlType, (key) -> new EventBus());
     }
 

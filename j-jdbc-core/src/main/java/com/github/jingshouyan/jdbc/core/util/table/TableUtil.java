@@ -25,6 +25,10 @@ public class TableUtil {
 
 
     public static TableInfo tableInfo(Class<?> clazz) {
+        TableInfo tableInfo = TABLE_MAP.get(clazz);
+        if(tableInfo != null) {
+            return tableInfo;
+        }
         return TABLE_MAP.computeIfAbsent(clazz, TableInfo::new);
     }
 
