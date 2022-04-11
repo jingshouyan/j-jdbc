@@ -280,7 +280,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 String column = columnName(columnInfo);
                 if (null != compare.getEq()) {
                     Object eq = compare.getEq();
-                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                    if (columnInfo.isFixEncrypted()) {
                         eq = EncryptionProvider.encrypt(eq.toString(), columnInfo.getEncryptKey());
                     }
                     sql.append(String.format(" AND %s = :%s__eq ", column, key));
@@ -288,7 +288,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 }
                 if (null != compare.getLike()) {
                     Object like = compare.getLike();
-                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                    if (columnInfo.isFixEncrypted()) {
                         like = EncryptionProvider.encrypt(like.toString(), columnInfo.getEncryptKey());
                     }
                     sql.append(String.format(" AND %s LIKE :%s__like ", column, key));
@@ -312,7 +312,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 }
                 if (null != compare.getNe()) {
                     Object neq = compare.getNe();
-                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                    if (columnInfo.isFixEncrypted()) {
                         neq = EncryptionProvider.encrypt(neq.toString(), columnInfo.getEncryptKey());
                     }
                     sql.append(String.format(" AND %s <> :%s__ne ", column, key));
@@ -327,7 +327,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 }
                 if (null != compare.getIn()) {
                     Collection<?> in = compare.getIn();
-                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                    if (columnInfo.isFixEncrypted()) {
                         in = in.stream()
                                 .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());
@@ -337,7 +337,7 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 }
                 if (null != compare.getNotIn()) {
                     Collection<?> notIn = compare.getNotIn();
-                    if (columnInfo.isEncrypt() && columnInfo.getEncryptType() == EncryptType.FIXED) {
+                    if (columnInfo.isFixEncrypted()) {
                         notIn = notIn.stream()
                                 .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
                                 .collect(Collectors.toList());

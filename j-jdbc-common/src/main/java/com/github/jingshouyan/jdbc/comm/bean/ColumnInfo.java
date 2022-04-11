@@ -41,6 +41,10 @@ public class ColumnInfo {
     private boolean foreign;
     private ForeignInfo foreignInfo;
 
+    public boolean isFixEncrypted() {
+        return encrypt && encryptType == EncryptType.FIXED;
+    }
+
 
     public ColumnInfo(Field field) {
         // 默认值
