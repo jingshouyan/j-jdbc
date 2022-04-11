@@ -280,17 +280,13 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 String column = columnName(columnInfo);
                 if (null != compare.getEq()) {
                     Object eq = compare.getEq();
-                    if (columnInfo.isFixEncrypted()) {
-                        eq = EncryptionProvider.encrypt(eq.toString(), columnInfo.getEncryptKey());
-                    }
+                    eq = encrypt(eq, columnInfo);
                     sql.append(String.format(" AND %s = :%s__eq ", column, key));
                     params.put(key + "__eq", eq);
                 }
                 if (null != compare.getLike()) {
                     Object like = compare.getLike();
-                    if (columnInfo.isFixEncrypted()) {
-                        like = EncryptionProvider.encrypt(like.toString(), columnInfo.getEncryptKey());
-                    }
+                    like = encrypt(like, columnInfo);
                     sql.append(String.format(" AND %s LIKE :%s__like ", column, key));
                     params.put(key + "__like", like);
                 }
@@ -312,36 +308,24 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
                 }
                 if (null != compare.getNe()) {
                     Object neq = compare.getNe();
-                    if (columnInfo.isFixEncrypted()) {
-                        neq = EncryptionProvider.encrypt(neq.toString(), columnInfo.getEncryptKey());
-                    }
+                    neq = encrypt(neq, columnInfo);
                     sql.append(String.format(" AND %s <> :%s__ne ", column, key));
                     params.put(key + "__ne", neq);
                 }
                 if (null != compare.getEmpty()) {
-                    if (compare.getEmpty()) {
-                        sql.append(String.format(" AND %s IS NULL  ", column));
-                    } else {
-                        sql.append(String.format(" AND %s IS NOT NULL  ", column));
-                    }
+                    sql.append(String.format(" AND %s IS %s NULL  ", column, compare.getEmpty() ? "" : "NOT"));
                 }
                 if (null != compare.getIn()) {
-                    Collection<?> in = compare.getIn();
-                    if (columnInfo.isFixEncrypted()) {
-                        in = in.stream()
-                                .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
-                                .collect(Collectors.toList());
-                    }
+                    Collection<?> in = compare.getIn().stream()
+                            .map(i -> encrypt(i, columnInfo))
+                            .collect(Collectors.toList());
                     sql.append(String.format(" AND %s IN (:%s__in) ", column, key));
                     params.put(key + "__in", in);
                 }
                 if (null != compare.getNotIn()) {
-                    Collection<?> notIn = compare.getNotIn();
-                    if (columnInfo.isFixEncrypted()) {
-                        notIn = notIn.stream()
-                                .map(i -> EncryptionProvider.encrypt(String.valueOf(i), columnInfo.getEncryptKey()))
-                                .collect(Collectors.toList());
-                    }
+                    Collection<?> notIn = compare.getNotIn().stream()
+                            .map(i -> encrypt(i, columnInfo))
+                            .collect(Collectors.toList());
                     sql.append(String.format(" AND %s NOT IN (:%s__notIn) ", column, key));
                     params.put(key + "__notIn", notIn);
                 }
@@ -356,6 +340,13 @@ public abstract class AbstractSqlGenerator<T extends Record> implements SqlGener
         sqlPrepared.setParams(params);
         sqlPrepared.setSql(sql.toString());
         return sqlPrepared;
+    }
+
+    private Object encrypt(Object source, ColumnInfo c) {
+        if (c.isFixEncrypted()) {
+            return EncryptionProvider.encrypt(String.valueOf(source), c.getEncryptKey());
+        }
+        return source;
     }
 
     protected String columns(Collection<String> fields) {
