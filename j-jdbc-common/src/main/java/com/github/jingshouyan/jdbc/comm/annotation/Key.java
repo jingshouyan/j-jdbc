@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 主键,一个类只能有一个
- * 仅支持 Long & String
+ * 仅支持 Long 或 String
  *
  * @author jingshouyan
  * #date 2018/4/14 17:25
