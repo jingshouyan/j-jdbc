@@ -6,8 +6,8 @@ package com.github.jingshouyan.jdbc.core.encryption.offset;
  */
 public class OffsetCalc {
 
-    private int[] range;
-    private int offset;
+    private final int[] range;
+    private final int offset;
 
     public static final int PAIR = 2;
 
@@ -73,14 +73,14 @@ public class OffsetCalc {
             return in;
         }
         int out = in;
-        int _offset = offset;
-        if (_offset > 0) {
+        int offsetLocal = offset;
+        if (offsetLocal > 0) {
             while (true) {
                 int siteV = range[position + 1];
-                if (out + _offset < siteV) {
-                    return out + _offset;
+                if (out + offsetLocal < siteV) {
+                    return out + offsetLocal;
                 }
-                _offset = _offset - (siteV - out);
+                offsetLocal = offsetLocal - (siteV - out);
                 position += PAIR;
                 if (position == range.length) {
                     position = 0;
@@ -90,10 +90,10 @@ public class OffsetCalc {
         } else {
             while (true) {
                 int siteV = range[position];
-                if (out + _offset >= siteV) {
-                    return out + _offset;
+                if (out + offsetLocal >= siteV) {
+                    return out + offsetLocal;
                 }
-                _offset = _offset + (out - siteV);
+                offsetLocal = offsetLocal + (out - siteV);
                 if (position == 0) {
                     position = range.length;
                 }
