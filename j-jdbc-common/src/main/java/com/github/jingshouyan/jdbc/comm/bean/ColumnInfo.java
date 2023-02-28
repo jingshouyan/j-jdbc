@@ -77,7 +77,6 @@ public class ColumnInfo {
             }
             if (column.encryptType() != EncryptType.NONE) {
                 encrypt = true;
-                encryptType = column.encryptType();
             }
             columnLength = column.length();
             json = column.json();
