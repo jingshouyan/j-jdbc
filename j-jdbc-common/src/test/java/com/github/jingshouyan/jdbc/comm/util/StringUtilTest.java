@@ -23,5 +23,6 @@ class StringUtilTest {
 
         assertEquals(StringUtil.toSnakeCase(s1), r1);
         assertEquals(StringUtil.toSnakeCase(s2), r2);
+        assertNull(StringUtil.toSnakeCase(null));
     }
 }
