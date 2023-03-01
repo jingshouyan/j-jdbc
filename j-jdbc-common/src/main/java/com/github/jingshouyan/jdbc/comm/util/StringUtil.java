@@ -15,11 +15,12 @@ public class StringUtil {
             return null;
         }
         StringBuilder out = new StringBuilder();
-        for (int i = 0; i < input.length(); i++) {
+        int len = input.length();
+        for (int i = 0; i < len; i++) {
             char c = input.charAt(i);
             if (i > 0 && Character.isUpperCase(c)) {
                 boolean isPrevCharLowCase = Character.isLowerCase(input.charAt(i - 1));
-                boolean isNextCharLowCase = (i < input.length() - 1 && Character.isLowerCase(input.charAt(i + 1)));
+                boolean isNextCharLowCase = (i < len - 1 && Character.isLowerCase(input.charAt(i + 1)));
                 if (isPrevCharLowCase || isNextCharLowCase) {
                     out.append('_');
                 }
