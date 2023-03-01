@@ -22,16 +22,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-/**
- * 表注解,指定表明,不加默认为类名
- */
-
 @Table(value = "DEMO_USER", comment = "用户表")
-
 @Index(value = {"age", "nickname"})
 @Index({"id", "name"})
-//@ListQueryFields({"name", "age"})
-//@Indices({@Index({"id","name"}),@Index({"age","nickname"})})
 public class UserDO extends BaseDO {
 
     /**

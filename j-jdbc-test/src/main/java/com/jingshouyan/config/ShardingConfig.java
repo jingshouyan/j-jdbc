@@ -72,14 +72,12 @@ public class ShardingConfig {
             linkInfo.setUsername(USERNAME);
             linkInfo.setPassword(PASSWORD);
             linkInfos.add(linkInfo);
-//            linkInfo.setSlaves(Lists.newArrayList(linkInfo, linkInfo));
 
         }
         return DataSourceUtil.createDataSource(info);
     }
 
     @SneakyThrows
-//    @Bean
     public DataSource dataSource2() {
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
         Map<String, String> shardingConfig = shardingConfig();
