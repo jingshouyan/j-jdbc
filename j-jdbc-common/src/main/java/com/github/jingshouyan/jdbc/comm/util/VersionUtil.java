@@ -18,6 +18,9 @@ public class VersionUtil {
         if (version1 == null || version2 == null) {
             throw new IllegalArgumentException("compareVersion error:illegal params.");
         }
+        if (version1.equals(version2)) {
+            return 0;
+        }
         //注意此处为正则匹配，不能用"."；
         String[] versionArray1 = version1.split("\\.");
         String[] versionArray2 = version2.split("\\.");
