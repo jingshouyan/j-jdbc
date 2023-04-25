@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * @author jingshouyan
@@ -26,6 +27,10 @@ public class DefaultKeyGenerator implements KeyGenerator {
     private static final long TIMESTAMP_LEFT_SHIFT_BITS = WORKER_ID_LEFT_SHIFT_BITS + WORKER_ID_BITS;
 
     private static final long WORKER_ID_MAX_VALUE = 1L << WORKER_ID_BITS;
+
+    private static final Random RANDOM = new Random();
+
+    private static final int MAX_INIT_SEQ = 10;
 
     private static final DefaultKeyGenerator INSTANCE = new DefaultKeyGenerator();
 
@@ -48,10 +53,6 @@ public class DefaultKeyGenerator implements KeyGenerator {
 
     private long sequence;
 
-    /**
-     * 当前毫秒的第一个种子值
-     */
-    private long firstSequenceThisMillis;
 
     private long lastTime;
 
@@ -78,19 +79,19 @@ public class DefaultKeyGenerator implements KeyGenerator {
             Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
             //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
             if (lastTime == currentMillis) {
-                if (firstSequenceThisMillis == (sequence = ++sequence & SEQUENCE_MASK)) {
+                if (++sequence > SEQUENCE_MASK) {
                     currentMillis = waitUntilNextTime(currentMillis);
-                    firstSequenceThisMillis = sequence;
+                    sequence = RANDOM.nextInt(MAX_INIT_SEQ);
                 }
             } else {
-                sequence = ++sequence & SEQUENCE_MASK;
-                firstSequenceThisMillis = sequence;
+                sequence = RANDOM.nextInt(MAX_INIT_SEQ);
             }
             lastTime = currentMillis;
+            long key = ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
             if (log.isDebugEnabled()) {
-                log.debug("{}-{}-{}", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
+                log.debug("{};{}-{}-{}", key, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
             }
-            return ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
+            return key;
         }
 
     }
