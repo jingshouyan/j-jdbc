@@ -13,7 +13,7 @@ class DefaultKeyGeneratorTest {
 
     @Test
     void generateKey() {
-        int i = 100000;
+        int i = 1000000;
         Set<Long> keys = Sets.newHashSetWithExpectedSize(i);
         for (int j = 0; j < i; j++) {
             long key = keyGenerator.generateKey("unused");

@@ -74,26 +74,30 @@ public class DefaultKeyGenerator implements KeyGenerator {
      */
     @Override
     public long generateKey(String type) {
-        synchronized (type.intern()) {
-            long currentMillis = currentTimeMillis();
-            Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
-            //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
-            if (lastTime == currentMillis) {
-                if (++sequence > SEQUENCE_MASK) {
-                    currentMillis = waitUntilNextTime(currentMillis);
-                    sequence = RANDOM.nextInt(MAX_INIT_SEQ);
+        return internalGenerateKey();
+    }
+
+    private synchronized long internalGenerateKey() {
+        long currentMillis = currentTimeMillis();
+        Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
+        //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
+        if (lastTime == currentMillis) {
+            if (++sequence > SEQUENCE_MASK) {
+                if (log.isDebugEnabled()) {
+                    log.debug("sequence[{}] overflow,waiting for next millisecond", sequence);
                 }
-            } else {
+                currentMillis = waitUntilNextTime(currentMillis);
                 sequence = RANDOM.nextInt(MAX_INIT_SEQ);
             }
-            lastTime = currentMillis;
-            long key = ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
-            if (log.isDebugEnabled()) {
-                log.debug("{};{}-{}-{}", key, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
-            }
-            return key;
+        } else {
+            sequence = RANDOM.nextInt(MAX_INIT_SEQ);
         }
-
+        lastTime = currentMillis;
+        long key = ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
+        if (log.isTraceEnabled()) {
+            log.debug("{};{}-{}-{}", key, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
+        }
+        return key;
     }
 
     private long waitUntilNextTime(final long lastTime) {
