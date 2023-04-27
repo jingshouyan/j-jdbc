@@ -18,7 +18,7 @@ public class DefaultKeyGenerator implements KeyGenerator {
 
     private static final long SEQUENCE_BITS = 12L;
 
-    private static final long WORKER_ID_BITS = 10L;
+    private static final long WORKER_ID_BITS = 7L;
 
     private static final long SEQUENCE_MASK = (1 << SEQUENCE_BITS) - 1;
 
@@ -42,7 +42,7 @@ public class DefaultKeyGenerator implements KeyGenerator {
 
     static {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2016, Calendar.NOVEMBER, 1);
+        calendar.set(2023, Calendar.JANUARY, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
