@@ -83,8 +83,8 @@ public class DefaultKeyGenerator implements KeyGenerator {
         //sequence 保持 连续 避免 一毫秒内第一个总是取到 0
         if (lastTime == currentMillis) {
             if (++sequence > SEQUENCE_MASK) {
-                if (log.isDebugEnabled()) {
-                    log.debug("sequence[{}] overflow,waiting for next millisecond", sequence);
+                if (log.isWarnEnabled()) {
+                    log.warn("sequence[{}] overflow,waiting for next millisecond", sequence);
                 }
                 currentMillis = waitUntilNextTime(currentMillis);
                 sequence = RANDOM.nextInt(MAX_INIT_SEQ);
@@ -95,7 +95,7 @@ public class DefaultKeyGenerator implements KeyGenerator {
         lastTime = currentMillis;
         long key = ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
         if (log.isTraceEnabled()) {
-            log.debug("{};{}-{}-{}", key, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
+            log.trace("{};{}-{}-{}", key, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(lastTime)), workerId, sequence);
         }
         return key;
     }
