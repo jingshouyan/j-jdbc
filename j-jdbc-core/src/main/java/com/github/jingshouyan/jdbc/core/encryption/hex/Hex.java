@@ -48,7 +48,7 @@ public class Hex implements Encryption {
     private static byte[] decodeHex(char[] data) {
         int len = data.length;
         if ((len & HEX_ONE) != 0) {
-            throw new RuntimeException("Odd number of characters.");
+            throw new RuntimeException("The length of characters must be even.");
         }
         byte[] out = new byte[len >> 1];
         // two characters form the hex value.
