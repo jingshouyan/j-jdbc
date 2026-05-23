@@ -1,0 +1,300 @@
+<section class="module" id="module-4">
+  <div class="module-container">
+
+    <!-- Screen 1: Overview -->
+    <div class="screen">
+      <div class="module-number">模块 4 / 5</div>
+      <h2 class="module-title">隐藏的超能力<br><span class="highlight">加密、ID 生成与安全删除</span></h2>
+      <p class="screen-text">
+        如果说前面三章是 j-jdbc 的"基础技能"，那这一章就是它的<strong>隐藏超能力</strong>。很多 CRUD 框架只能做增删改查，但 j-jdbc 内置了几个大多数开发者需要但懒得实现的特性——<strong>字段加密、分布式 ID 生成、逻辑删除和事件通知</strong>。
+      </p>
+      <p class="screen-text">
+        作为直觉型编程者，了解这些能力极其有价值：当你的 AI 助手建议在数据库中存储敏感数据时，你可以说"用 j-jdbc 的字段加密，别存明文"——这听起来就像你是个真正的后端架构师。
+      </p>
+    </div>
+
+    <!-- Screen 2: Field Encryption -->
+    <div class="screen">
+      <h3 class="screen-title">🔐 字段级加密 — 透明保护</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">字段加密<span class="glossary-tooltip">在数据写入数据库时自动加密指定字段，读取时自动解密。对应用程序代码完全透明——你读写的是明文，数据库里存的是密文。</span></strong> 意味着你可以在 Java 代码中正常读写数据，但数据库里存的是<strong>密文</strong>。即使数据库被拖库，黑客看到的也是一堆乱码。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// ===== FIXED 加密 =====</span>
+<span class="code-comment">// 用固定密钥 "abcd" 加密。查询时框架自动加密比较。</span>
+@<span class="code-type">Column</span>(encryptType = <span class="code-type">EncryptType</span>.FIXED,
+        encryptKey = <span class="code-string">"abcd"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> encryptTest;
+<span class="code-comment">// ✓ 支持 eq, neq, in, notIn 查询</span>
+<span class="code-comment">// ✗ 不支持 like 模糊查询</span>
+
+<span class="code-comment">// ===== FIELD 加密 =====</span>
+<span class="code-comment">// 用另一个字段 "id" 的值作为加密密钥</span>
+@<span class="code-type">Column</span>(encryptType = <span class="code-type">EncryptType</span>.FLIED,
+        encryptKey = <span class="code-string">"id"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> name;
+<span class="code-comment">// ✗ 每条记录密钥不同，不能作为查询条件</span>
+<span class="code-comment">// ✓ 更安全 —— 泄露一条不影响其他数据</span></code>
+      </div>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ 加密方式选择</span>
+          <span class="lang-label zh">什 么 时 候 用</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.FIXED</div>
+          <div class="translation-zh"><strong>固定密钥：</strong>需要作为查询条件的字段（如手机号、邮箱），所有记录使用同一个密钥加密</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.FLIED</div>
+          <div class="translation-zh"><strong>属性密钥：</strong>不需要查询的敏感字段（如密码、地址），每条记录使用不同的密钥（用其他字段的值加密）</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.NONE</div>
+          <div class="translation-zh"><strong>不加密：</strong>默认选项</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: AES Encryption -->
+    <div class="screen">
+      <h3 class="screen-title">底层加密：AES 算法</h3>
+      <p class="screen-text">
+        j-jdbc 默认使用 <strong>AES</strong>（高级加密标准）来加密数据。AES 是目前最广泛使用的对称加密算法——从银行系统到 WhatsApp 都在用它。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — Aes.java</span>
+        <code><span class="code-keyword">public class</span> <span class="code-type">Aes</span> <span class="code-keyword">implements</span> <span class="code-type">Encryption</span> {
+    <span class="code-comment">// 加密流程：</span>
+    <span class="code-keyword">public</span> <span class="code-type">String</span> encrypt(<span class="code-type">String</span> content, <span class="code-type">String</span> password) {
+        <span class="code-comment">// 1. 用密码生成加密密钥</span>
+        <span class="code-type">KeyGenerator</span> keyGen = <span class="code-type">KeyGenerator</span>.getInstance(<span class="code-string">"Aes"</span>);
+        <span class="code-type">SecureRandom</span> random = <span class="code-type">SecureRandom</span>
+            .getInstance(<span class="code-string">"SHA1PRNG"</span>);
+        random.setSeed(password.getBytes(<span class="code-string">"utf-8"</span>));
+        keyGen.init(<span class="code-number">128</span>, random);
+
+        <span class="code-comment">// 2. 初始化密码器（加密模式）</span>
+        <span class="code-type">Cipher</span> cipher = <span class="code-type">Cipher</span>.getInstance(<span class="code-string">"Aes"</span>);
+        cipher.init(<span class="code-type">Cipher</span>.ENCRYPT_MODE, secretKey);
+
+        <span class="code-comment">// 3. 加密 & Base64 编码</span>
+        <span class="code-keyword">byte</span>[] result = cipher.doFinal(content.getBytes(<span class="code-string">"utf-8"</span>));
+        <span class="code-keyword">return</span> <span class="code-type">Base64</span>.getEncoder().encodeToString(result);
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        你也可以通过 <strong>EncryptionProvider</strong> 设置自己的加密算法——只需实现 <code>Encryption</code> 接口（encrypt/decrypt 两个方法），然后调用 <code>EncryptionProvider.setEncryption(yourImpl)</code>。
+      </p>
+    </div>
+
+    <!-- Screen 4: Snowflake ID Generator -->
+    <div class="screen">
+      <h3 class="screen-title">❄️ 雪花 ID — 分布式系统的身份证</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">雪花算法（Snowflake）<span class="glossary-tooltip">Twitter 开源的一种分布式 ID 生成算法，生成 64 位的唯一整数。结构：时间戳（41位）+ 工作节点（10位）+ 序列号（12位）。可以在不依赖数据库的情况下生成全局唯一 ID。支持 1024 个节点，每毫秒单节点生成 4096 个 ID。</span></strong> 是 Twitter 发明的一种分布式 ID 生成算法。j-jdbc 的 <strong>DefaultKeyGenerator</strong> 是它的改进版。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — DefaultKeyGenerator</span>
+        <code><span class="code-comment">// 雪花 ID 的位分布（64位）</span>
+<span class="code-comment">// ┌──────────────┬──────────────┬──────────────┐</span>
+<span class="code-comment">// │ 时间戳(41位)  │ 工作节点(10位)│ 序列号(12位)  │</span>
+<span class="code-comment">// └──────────────┴──────────────┴──────────────┘</span>
+
+<span class="code-comment">// 生成逻辑：</span>
+<span class="code-keyword">return</span> ((currentMillis - EPOCH) &lt;&lt; TIMESTAMP_LEFT_SHIFT_BITS)
+       | (workerId &lt;&lt; WORKER_ID_LEFT_SHIFT_BITS)
+       | sequence;
+
+<span class="code-comment">// j-jdbc 的改进：奇偶间隔生成</span>
+<span class="code-comment">// 在同一个毫秒内，序列号从上一个值继续递增</span>
+<span class="code-comment">// 而不是每一毫秒都从 0 开始</span>
+<span class="code-comment">// → 这在某些分库分表场景下性能更好</span></code>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-title">⏰ EPOCH = 2016-11-01</div>
+        <p class="screen-text" style="margin-bottom:0;">j-jdbc 的雪花 ID 以 <strong>2016年11月1日</strong> 为纪元起点。这意味着 ID 将从大约 41 位时间戳的中间值开始，保证在很长一段时间内不会溢出。</p>
+      </div>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：酒店房卡系统</div>
+        <p>
+          雪花 ID 就像一家连锁酒店的<strong>房卡系统</strong>。<strong>时间戳</strong> = 入住日期（41 位日期码，可以覆盖 69 年）。<strong>工作节点</strong> = 酒店分店编号（每个分店有自己的一盒房卡）。<strong>序列号</strong> = 当天第几位客人。即使两个分店的客人同时入住，也绝不会拿到相同的房间号。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 5: DB-backed ID Generator -->
+    <div class="screen">
+      <h3 class="screen-title">🗄️ 数据库 ID 生成器</h3>
+      <p class="screen-text">
+        除了雪花算法，j-jdbc-starter 模块还提供了一种<strong>基于数据库表</strong>的 ID 生成器——<strong>DbKeyGenerator</strong>。它适用于需要严格控制 ID 生成进度的场景。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — DbKeyGenerator</span>
+        <code><span class="code-keyword">public class</span> <span class="code-type">DbKeyGenerator</span> <span class="code-keyword">implements</span> <span class="code-type">KeyGenerator</span> {
+    <span class="code-comment">// 内存中的 ID 缓存（每类一个计数器）</span>
+    <span class="code-keyword">private static final</span> <span class="code-type">Map</span>&lt;<span class="code-type">String</span>, <span class="code-type">AtomicLong</span>&gt; MAP = ...;
+
+    <span class="code-keyword">public</span> <span class="code-type">long</span> generateKey(<span class="code-type">String</span> type) {
+        <span class="code-comment">// 1. 第一次：从数据库读取种子值 (STEP &lt;&lt; 4 = 16384)</span>
+        <span class="code-type">AtomicLong</span> counter = MAP.computeIfAbsent(type,
+            idType -&gt; <span class="code-keyword">new</span> <span class="code-type">AtomicLong</span>(idHelper.get(idType)));
+
+        <span class="code-comment">// 2. 自增获取下一个 ID</span>
+        <span class="code-type">long</span> result = counter.incrementAndGet();
+
+        <span class="code-comment">// 3. 每消耗 1024 个 ID，批量更新数据库中的种子</span>
+        <span class="code-keyword">if</span> (result % <span class="code-type">IdHelper</span>.STEP == <span class="code-number">0</span>) {
+            execHelper.exec(() -&gt; idHelper.update(type, result));
+        }
+        <span class="code-keyword">return</span> result;
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>关键是批量预分配：</strong>每次从数据库中取出一段连续的 ID（16384 个），在内存中分配。只有在用完了这一批之后才会再次访问数据库。这样既保证了 ID 的连续性，又减少了数据库压力。
+      </p>
+    </div>
+
+    <!-- Screen 6: Soft Delete & Event Bus -->
+    <div class="screen">
+      <h3 class="screen-title">♻️ 软删除 — 给数据第二次生命</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">软删除<span class="glossary-tooltip">逻辑删除。数据不会物理删除，而是通过标记一个 deletedAt 字段表示"已删除"。查询时默认过滤删除的数据。可以随时恢复（undelete）。</span></strong> 意味着当你"删除"一条数据时，它并没有从数据库消失——而是在 <strong>deletedAt</strong> 字段上打了一个时间戳。这是企业级应用的标配做法。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — BaseDO</span>
+        <code><span class="code-keyword">public abstract class</span> <span class="code-type">BaseDO</span> {
+    @<span class="code-type">Column</span>(order = <span class="code-number">1003</span>, comment = <span class="code-string">"删除时间"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">Long</span> deletedAt;   <span class="code-comment">// null 或 Constant.NO_DELETE = 未删除</span>
+
+    <span class="code-keyword">public</span> <span class="code-type">void</span> forDelete() {
+        deletedAt = System.currentTimeMillis();   <span class="code-comment">// 👈 "删除"就是打个时间戳</span>
+    }
+
+    <span class="code-keyword">public</span> <span class="code-type">void</span> forUndelete() {
+        deletedAt = Constant.NO_DELETE;           <span class="code-comment">// 👈 "恢复"就是重置为 0</span>
+    }
+}</code>
+      </div>
+
+      <h3 class="screen-title" style="margin-top:var(--space-lg);">📢 DML 事件总线 — 监听每一次数据变更</h3>
+      <p class="screen-text">
+        <strong>DmlEventBus</strong> 是 j-jdbc 的通知系统。每次数据创建、更新、删除时，它都会通过 <strong>Guava EventBus</strong> 发布事件。你只需要注册监听器，就能在数据变更时获得通知。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 注册监听器：</span>
+<span class="code-type">DmlEventBus</span>.getEventBus(<span class="code-type">DmlType</span>.CREATE)
+    .register(<span class="code-keyword">new</span> <span class="code-type">Object</span>() {
+        @<span class="code-type">Subscribe</span>
+        <span class="code-keyword">public void</span> handle(<span class="code-type">UserDO</span> user) {
+            log.info(<span class="code-string">"新用户创建了：{}"</span>, user.getName());
+        }
+    });
+
+<span class="code-comment">// 内置事件点（BaseDaoImpl 中）：</span>
+<span class="code-type">DmlEventBus</span>.onCreate(t);     <span class="code-comment">// insert 后</span>
+<span class="code-type">DmlEventBus</span>.onUpdate(t);     <span class="code-comment">// update 后</span>
+<span class="code-type">DmlEventBus</span>.onDelete(t);     <span class="code-comment">// delete 后</span></code>
+      </div>
+    </div>
+
+    <!-- Screen 7: Group Chat -->
+    <div class="screen">
+      <h3 class="screen-title">ID 生成器们的辩论 💬</h3>
+
+      <div class="chat-container" style="max-width:500px;">
+        <div class="chat-message">
+          <div class="chat-avatar snf">❄</div>
+          <div class="chat-bubble">
+            <span class="chat-name">Snowflake（雪花）</span>
+            我是纯内存计算，<strong>零数据库依赖</strong>！每毫秒能生成 4096 个唯一 ID，整个系统也不过 69 年才会用完。集群部署，<strong>无需加锁</strong>。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar enc">🗄</div>
+          <div class="chat-bubble">
+            <span class="chat-name">DbGenerator（数据库）</span>
+            你说得对，但我的 ID 是<strong>连续且可预测的</strong>。适合做订单号、流水号这种需要直观排序的场景。而且我一次预取 16384 个 ID，数据库访问很少。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar snf">❄</div>
+          <div class="chat-bubble">
+            连续？你依赖数据库，万一数据库挂了怎么办？我的时间戳+机器+序列结构保证了<strong>全局唯一且随时间递增</strong>，即使跨数据中心也不冲突。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar enc">🗄</div>
+          <div class="chat-bubble">
+            我是 Starter 模块默认的——和 Spring Boot 配合使用，自动配置、自动建表。<strong>开箱即用</strong>不需要额外设置工作节点 ID。我们各有千秋！
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar ann">⚙</div>
+          <div class="chat-bubble">
+            <span class="chat-name">KeyGeneratorProvider</span>
+            好了好了，你们俩都是好样的。开发者可以通过我自由选择——<code>KeyGeneratorProvider.setKeyGenerator(...)</code>，喜欢谁就用谁！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 8: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>哪种加密方式允许在查询条件中使用？（即支持 WHERE field = ?）</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">A</span>FIXED 加密
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">B</span>FIELD 加密
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>两种都支持
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>两种都不支持
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" FIXED 加密使用固定密钥，框架会在查询时自动对条件值进行相同的加密，然后比较密文。FIELD 加密每条记录使用不同密钥，无法在数据库层面进行比较。在 AbstractSqlGenerator 的 where() 方法中，只有 encryptType == FIXED 会在 eq/neq/in/notIn 时自动加密。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>雪花 ID（DefaultKeyGenerator）的 64 位结构中，哪一部分占的位数最多？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>工作节点 ID（10 位）
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>时间戳（41 位）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>序列号（12 位）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>它们平均分配
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 时间戳占 41 位，工作节点占 10 位，序列号占 12 位。时间戳是 ID 的主要组成部分——它保证了 ID 随时间的递增性和全局唯一性。41 位时间戳可以覆盖约 69 年（从 2016 年到 2085 年）。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>

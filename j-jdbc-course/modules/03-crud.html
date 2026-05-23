@@ -1,0 +1,202 @@
+<section class="module" id="module-3">
+  <div class="module-container">
+
+    <!-- Screen 1: Overview -->
+    <div class="screen">
+      <div class="module-number">模块 3 / 5</div>
+      <h2 class="module-title">数据的旅程<br><span class="highlight">CRUD 的生命之旅</span></h2>
+      <p class="screen-text">
+        现在你已经知道了 j-jdbc 用注解来描述数据。但当你调用 <code>userDao.insert(user)</code> 时——<strong>按下键盘到数据落库，中间发生了什么？</strong>
+      </p>
+      <p class="screen-text">
+        这一章我们将追踪一条数据从 Java 代码到数据库的完整旅程。你会发现 j-jdbc 的 <strong>SQL 生成器</strong>是真正的幕后英雄——它把简单的 Java 方法调用，翻译成精确的 SQL 语句。
+      </p>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：外卖配送</div>
+        <p>
+          调用 <code>userDao.insert(user)</code> 就像在手机上点外卖。<strong>你（代码）</strong>只做了一件事——点了一下"下单"按钮。<strong>BaseDaoImpl</strong> 是外卖平台，接收你的订单。<strong>SqlGenerator</strong> 是厨房里的厨师，根据订单（注解信息）准备餐食（生成 SQL）。<strong>NamedParameterJdbcTemplate</strong> 是骑手，把餐食送到你的数据库门口。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 2: Data Flow Animation -->
+    <div class="screen">
+      <h3 class="screen-title">一次查询的完整旅程</h3>
+      <p class="screen-text">
+        当你调用 <code>userDao.find("U123@abc")</code>，从方法调用到数据库查询结果返回，经历了这些步骤：
+      </p>
+
+      <div class="flow-animation" data-steps='[
+        {"label": "UserDao.find()", "iconClass": "dao", "icon": "U"},
+        {"label": "构造条件", "iconClass": "app", "icon": "⚡"},
+        {"label": "SqlGenerator\n生成SQL", "iconClass": "gen", "icon": "⚙"},
+        {"label": "参数化查询\nWHERE id=:id", "iconClass": "sql", "icon": "SELECT"},
+        {"label": "MySQL\n执行", "iconClass": "db", "icon": "DB"},
+        {"label": "返回结果", "iconClass": "app", "icon": "✓"}
+      ]'></div>
+
+      <div class="code-block">
+        <span class="code-label">java — BaseDaoImpl.find()</span>
+        <code>@<span class="code-type">Override</span>
+<span class="code-keyword">public</span> <span class="code-type">Optional</span>&lt;<span class="code-type">T</span>&gt; find(<span class="code-type">Object</span> id) {
+    <span class="code-comment">// 1. 检查ID不为空</span>
+    Preconditions.checkNotNull(id, <span class="code-string">"id is null"</span>);
+
+    <span class="code-comment">// 2. 用 ConditionUtil 构建查询条件</span>
+    <span class="code-type">List</span>&lt;<span class="code-type">Condition</span>&gt; conditions = ConditionUtil
+        .newInstance()
+        .field(key()).eq(id)
+        .conditions();
+
+    <span class="code-comment">// 3. 调用 queryField → SqlGenerator → 生成 SQL</span>
+    <span class="code-type">List</span>&lt;<span class="code-type">T</span>&gt; ts = queryField(conditions, <span class="code-keyword">null</span>);
+
+    <span class="code-comment">// 4. 返回第一个结果</span>
+    <span class="code-keyword">return</span> ts.stream().findFirst();
+}</code>
+      </div>
+    </div>
+
+    <!-- Screen 3: Condition Builder -->
+    <div class="screen">
+      <h3 class="screen-title">ConditionUtil — 用 Java 写 WHERE 子句</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">ConditionUtil<span class="glossary-tooltip">条件查询构建工具。提供链式调用 API 来构造 SQL 的 WHERE 条件，支持 eq、ne、gt、lt、gte、lte、like、in、notIn、between、empty 等操作。</span></strong> 是 j-jdbc 中最常用的工具之一。它让你用<strong>链式调用</strong>的方式构建查询条件，而不用手写 SQL。
+      </p>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ Java 条件代码</span>
+          <span class="lang-label zh">生 成 的 SQL</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">ConditionUtil.newInstance()<br>  .field("age").gt(20).lte(89)<br>  .field("nickname").like("%张三%")<br>  .conditions()</div>
+          <div class="translation-zh"><code>WHERE age &gt; 20 AND age &lt;= 89<br>  AND nickname LIKE '%张三%'</code></div>
+        </div>
+      </div>
+
+      <p class="screen-text">
+        支持的所有条件操作：
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);">
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.eq(val)</span>等于 =</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.ne(val)</span>不等于 &lt;&gt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.gt(val)</span>大于 &gt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.lt(val)</span>小于 &lt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.gte(val)</span>大于等于 &gt;=</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.lte(val)</span>小于等于 &lt;=</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.like(str)</span>LIKE 模糊匹配</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.in(list)</span>IN 列表包含</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.notIn(list)</span>NOT IN 排除</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.between(a,b)</span>BETWEEN 范围</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.empty(bool)</span>IS NULL / IS NOT NULL</div>
+      </div>
+    </div>
+
+    <!-- Screen 4: SQL Generation -->
+    <div class="screen">
+      <h3 class="screen-title">SQL 生成器 — Java 到 SQL 的自动翻译</h3>
+      <p class="screen-text">
+        j-jdbc 的 SQL 生成器体系由 <strong>SqlGenerator 接口</strong>定义，<strong>AbstractSqlGenerator</strong> 提供通用实现，<strong>SqlGenerator4Mysql</strong> 提供 MySQL 特化版本。这种设计让 j-jdbc 可以轻松支持其他数据库——只需要写一个新的实现类。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — SqlGenerator 接口</span>
+        <code><span class="code-keyword">public interface</span> <span class="code-type">SqlGenerator</span>&lt;<span class="code-type">T</span>&gt; {
+    SqlPrepared query(...);        <span class="code-comment">// SELECT 查询</span>
+    SqlPrepared queryLimit(...);   <span class="code-comment">// 分页查询（带 LIMIT）</span>
+    SqlPrepared count(...);        <span class="code-comment">// SELECT COUNT(*)</span>
+    SqlPrepared insert(...);       <span class="code-comment">// INSERT</span>
+    SqlPrepared update(...);       <span class="code-comment">// UPDATE</span>
+    SqlPrepared delete(...);       <span class="code-comment">// DELETE</span>
+    List&lt;SqlPrepared&gt; createTableSql(); <span class="code-comment">// CREATE TABLE</span>
+    SqlPrepared dropTableSql();    <span class="code-comment">// DROP TABLE</span>
+    SqlPrepared addColumn(...);    <span class="code-comment">// ALTER TABLE ADD COLUMN</span>
+    String doc();                  <span class="code-comment">// 生成 Markdown 文档</span>
+}</code>
+      </div>
+
+      <p class="screen-text">
+        看那个 <strong>where()</strong> 方法是如何将 Condition 对象翻译成 SQL 条件的——它遍历每个条件，检查哪个字段被设置了（eq、gt、like 等），然后拼装对应的 SQL 片段。这就像是一个精心设计的状态机！
+      </p>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>「参数化查询」是 j-jdbc 默认的安全保障：</strong> 所有的 SQL 参数都使用命名参数（如 <code>:id__eq</code>）而不是拼字符串。这意味着 <strong>SQL 注入攻击从一开始就被杜绝了</strong>——你不需要额外做任何安全配置。这是框架设计者的明智决定。</p>
+      </div>
+    </div>
+
+    <!-- Screen 5: Insert & Update -->
+    <div class="screen">
+      <h3 class="screen-title">插入与更新 — 智能的 null 处理</h3>
+      <p class="screen-text">
+        j-jdbc 有一个非常贴心的设计：<strong>null 值不插入，null 值不更新</strong>。这意味着你可以只设置你想操作的字段，其他字段保持不变。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — 智能 null</span>
+        <code><span class="code-comment">// 插入时：只有设置了值的字段会出现在 INSERT 语句中</span>
+<span class="code-type">UserDO</span> user = <span class="code-keyword">new</span> <span class="code-type">UserDO</span>();
+user.setName(<span class="code-string">"Alice"</span>);
+user.setAge(<span class="code-number">25</span>);
+<span class="code-comment">// tags 为 null → 不会出现在 INSERT 中</span>
+userDao.insert(user);
+<span class="code-comment">// → INSERT INTO DEMO_USER (id, name, age) VALUES (..., :name, :age)</span>
+
+<span class="code-comment">// 更新时：只有非 null 字段会更新</span>
+user.setAge(<span class="code-number">26</span>);
+userDao.update(user);
+<span class="code-comment">// → UPDATE DEMO_USER SET age=:age__set WHERE id=:id__eq</span>
+<span class="code-comment">// name 不会被更新！</span></code>
+      </div>
+
+      <p class="screen-text">
+        更酷的是，如果你<strong>确实想把某个字段更新为 null</strong>，可以实现 <code>updateNullFields()</code> 方法告诉框架："这个字段我不是忘了设置，我是想把它清空。"
+      </p>
+    </div>
+
+    <!-- Screen 6: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>调用 userDao.update(user) 时，user 中为 null 的字段会怎样？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>被更新为数据库的 NULL
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>不会被包含在 UPDATE 语句中
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>抛出 NullPointerException
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>被更新为空字符串
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" AbstractSqlGenerator 的 update() 方法会跳过值为 null 的字段（if (isEmpty(value)) { continue; }）。这是为了防止意外覆盖掉数据库里的数据。如果需要置空，需要在 updateNullFields() 中声明。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>SqlGenerator 为什么设计成接口 + 抽象类 + 具体实现的模式？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>因为 Java 不支持多重继承
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>为了支持多种数据库（MySQL、PostgreSQL 等）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>为了加密 SQL
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>因为代码太多需要一个文件放不下
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 通过接口定义通用规范、抽象类提供通用逻辑（如 where() 条件的拼接）、具体子类处理数据库特有的语法（如 MySQL 的 LIMIT、引号 `、建表语句），使得 j-jdbc 可以轻松扩展支持其他数据库。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>j-jdbc 解密 — 从注解到数据库的魔法之旅</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="progress-bar"></div>
+
+  <header class="course-header">
+    <h1><span>◈</span> j-jdbc 解密</h1>
+    <nav class="nav-dots">
+      <button class="nav-dot" aria-label="模块 1"></button>
+      <button class="nav-dot" aria-label="模块 2"></button>
+      <button class="nav-dot" aria-label="模块 3"></button>
+      <button class="nav-dot" aria-label="模块 4"></button>
+      <button class="nav-dot" aria-label="模块 5"></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="module" id="module-1">
+  <div class="module-container">
+
+    <!-- Screen 1: The Problem -->
+    <div class="screen">
+      <div class="module-number">模块 1 / 5</div>
+      <h2 class="module-title">j-jdbc 是什么？<br><span class="highlight">让数据库操作变简单</span></h2>
+      <p class="screen-text">
+        你是否曾经用 Java 写过数据库代码？如果你写过，你一定经历过这个循环：打开连接 → 创建语句 → 执行查询 → 处理结果集 → 关闭连接 → 关闭语句 → 捕获异常……<strong>重复几十次</strong>。更糟糕的是，你的代码里到处都是 SQL 字符串，拼错一个字就会在运行时崩溃。
+      </p>
+      <p class="screen-text">
+        <strong class="glossary-term">j-jdbc<span class="glossary-tooltip">一个基于 Spring JDBC Template 的 CRUD 增强框架，通过注解自动生成 SQL 语句，大幅减少数据库操作的样板代码。</span></strong> 就是为了解决这个问题而生的。它是一个轻量级的 Java 库，工作方式是：<strong>"你告诉我数据结构，我来搞定数据库。"</strong>
+      </p>
+    </div>
+
+    <!-- Screen 2: The Core Idea -->
+    <div class="screen">
+      <h3 class="screen-title">「声明式」的魔法</h3>
+      <p class="screen-text">
+        j-jdbc 的核心思想是 <strong>声明式编程</strong>：你不用<em>告诉</em>代码"怎么"做（写 SQL），你只需要<em>声明</em>"是什么"（用注解描述数据）。框架会<strong>自动生成</strong>所有 SQL。
+      </p>
+      <p class="screen-text">
+        想象一下：你创建一个普通的 Java 类，加上几个注解，然后——<strong>嘭！</strong>——完整的增删改查、分页查询、条件过滤全部自动可用。不需要写一行 SQL。
+      </p>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：智能家居</div>
+        <p>
+          传统 JDBC 编程就像手动操作家里每一个电灯开关——你得知道每个开关在哪、怎么按、哪个控制哪个房间。<strong>j-jdbc</strong> 就像一个智能家居系统：你只需要告诉它"客厅需要灯光"（声明一个带注解的对象），它就会自动帮你打开正确的开关、调节亮度、甚至在日落时自动亮起（自动生成 SQL、管理连接、处理分页）。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 3: Concrete Example -->
+    <div class="screen">
+      <h3 class="screen-title">一行代码，一个世界</h3>
+      <p class="screen-text">
+        这是 j-jdbc 最令人惊叹的地方：你只需要 <strong>4 个文件</strong> 就能完成一个完整的数据库操作。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 1️⃣ 数据库对象 — 加注解描述表结构</span>
+@<span class="code-type">Table</span>(value = <span class="code-string">"DEMO_USER"</span>, comment = <span class="code-string">"用户表"</span>)
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDO</span> {
+    @<span class="code-type">Key</span>
+    @<span class="code-type">Column</span>(comment = <span class="code-string">"主键"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">String</span> id;
+
+    @<span class="code-type">Column</span>
+    <span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+    @<span class="code-type">Column</span>(value = <span class="code-string">"NICK_NAME_TT4"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">String</span> nickname;
+}
+
+<span class="code-comment">// 2️⃣ DAO 接口 — 就一行！</span>
+<span class="code-keyword">public interface</span> <span class="code-type">UserDao</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDao</span>&lt;<span class="code-type">UserDO</span>&gt; {}
+
+<span class="code-comment">// 3️⃣ DAO 实现 — 也是一行！</span>
+@<span class="code-type">Repository</span>
+<span class="code-keyword">public class</span> <span class="code-type">UserDaoImpl</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDaoImpl</span>&lt;<span class="code-type">UserDO</span>&gt;
+    <span class="code-keyword">implements</span> <span class="code-type">UserDao</span> {}
+
+<span class="code-comment">// 4️⃣ 使用 — 直接调用</span>
+userDao.insert(user);                 <span class="code-comment">// 插入</span>
+userDao.update(user);                 <span class="code-comment">// 更新</span>
+userDao.find(<span class="code-string">"U123@abc"</span>);          <span class="code-comment">// 按主键查询</span>
+userDao.query(conditions);            <span class="code-comment">// 条件查询</span>
+userDao.delete(<span class="code-string">"U123@abc"</span>);        <span class="code-comment">// 删除</span></code>
+      </div>
+
+      <p class="screen-text">
+        看到没？<strong>没有 SQL，没有连接管理，没有资源释放。</strong> 所有的数据库细节都被封装在 `BaseDaoImpl` 中。你可以把精力放在业务逻辑上，而不是重复编写 CRUD 代码。
+      </p>
+    </div>
+
+    <!-- Screen 4: Architecture overview -->
+    <div class="screen">
+      <h3 class="screen-title">j-jdbc 的「角色阵容」</h3>
+      <p class="screen-text">
+        这个代码库有 <strong>6 个模块</strong>，每个模块有明确的分工。下面是最重要的几个：
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-row">
+          <div class="diagram-box level-2">j-jdbc-common</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-1">j-jdbc-core</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-4">j-jdbc-starter</div>
+        </div>
+        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;justify-content:center;">
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-sharding</div>
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-data-init</div>
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-test</div>
+        </div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-title">📦 j-jdbc-common — 共享工具箱</div>
+        <p class="screen-text" style="margin-bottom:0;">注解定义（@Table, @Column, @Key, @Index）、实体基类（BaseDO）、条件查询构建器（ConditionUtil）、数据模型（TableInfo, ColumnInfo）—— 所有模块共享的基础。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">⚙️ j-jdbc-core — 引擎核心</div>
+        <p class="screen-text" style="margin-bottom:0;">BaseDao/BaseDaoImpl、SQL 生成器（支持 MySQL）、AES 加密、雪花 ID 生成器、DML 事件总线。这是整个框架的大脑。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">🚀 j-jdbc-starter — Spring Boot 自动配置</div>
+        <p class="screen-text" style="margin-bottom:0;">自动建表（3 种模式）、数据库 ID 生成器、SQL 日志 AOP —— 开箱即用的 Spring Boot Starter。</p>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>j-jdbc 的命名本身就是一种聪明：</strong> "j" 既是 "Java" 也是你名字的缩写；"jdbc" 精确地指向了它的根基 —— Spring JdbcTemplate。没有选择 Hibernate 那样的重量级 ORM，也没有用 MyBatis 那样的 XML 映射，而是<strong>恰到好处地</strong>在 JdbcTemplate 之上增加了一层注解驱动的便利。</p>
+      </div>
+    </div>
+
+    <!-- Screen 5: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>j-jdbc 的核心思想是什么？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>用 XML 文件配置数据库映射
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>用 Java 注解描述数据结构，自动生成 SQL
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>完全替换 Spring JdbcTemplate
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>在运行时动态编译 SQL
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" j-jdbc 使用注解（@Table、@Column、@Key 等）来声明数据模型，然后自动生成并执行 SQL。它并没有替换 Spring，而是增强了它。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>要使用 j-jdbc 完成对一个表的 CRUD，最少需要编写几个 Java 接口/类？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>5 个
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>3 个（DO + Dao 接口 + DaoImpl）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>1 个
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>7 个
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 你只需要 3 个类：数据对象（DO，加注解）、DAO 接口（继承 BaseDao）、DAO 实现（继承 BaseDaoImpl）。然后 insert、update、find、query、delete 全部可用。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="module" id="module-2">
+  <div class="module-container">
+
+    <!-- Screen 1: Meet the annotations -->
+    <div class="screen">
+      <div class="module-number">模块 2 / 5</div>
+      <h2 class="module-title">用注解说清数据<br><span class="highlight">对象到数据库的映射</span></h2>
+      <p class="screen-text">
+        如果说 j-jdbc 是一门语言，那么 <strong>注解（Annotation）</strong> 就是它的词汇。你不需要学习 SQL 的语法，也不需要配置 XML 映射文件——只需要在 Java 类上<strong>贴标签</strong>，框架就知道你想怎么存储数据。
+      </p>
+      <p class="screen-text">
+        想象一下：你有一个"用户"的概念，它有名字、年龄、标签。在数据库中，它是一个表；在 Java 中，它是一个类。j-jdbc 的注解就是连接这两个世界的<strong>桥梁</strong>。
+      </p>
+    </div>
+
+    <!-- Screen 2: @Table -->
+    <div class="screen">
+      <h3 class="screen-title">@Table — 给类穿上数据库的外衣</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">@Table<span class="glossary-tooltip">表注解。加在类上，告诉 j-jdbc 这个 Java 类对应数据库中的哪张表。如果不指定表名，默认使用类名。</span></strong> 是最顶层的注解。它告诉框架："嘿，这个 Java 类对应一张数据库表。"
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code>@<span class="code-type">Table</span>(
+    value   = <span class="code-string">"DEMO_USER"</span>,  <span class="code-comment">// 数据库中实际的表名</span>
+    comment = <span class="code-string">"用户表"</span>    <span class="code-comment">// 建表时用的备注</span>
+)
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDO</span> {
+    <span class="code-comment">// 字段...</span>
+}</code>
+      </div>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ Java 代码</span>
+          <span class="lang-label zh">中 文 解 释</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span style="color:var(--accent);">@Table</span>(value = "DEMO_USER")</div>
+          <div class="translation-zh">"这个类对应数据库中的 <strong>DEMO_USER</strong> 表"</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span style="color:var(--accent);">@Table</span>(comment = "用户表")</div>
+          <div class="translation-zh">"给这个表加个备注：<strong>用户表</strong>"</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-keyword">public class</span> UserDO</div>
+          <div class="translation-zh"><strong>UserDO</strong> 就是这张表的 Java 化身</div>
+        </div>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>注意看 "Table" 注解的拼写：</strong> 它没有写成标准的 "Table"，而是使用了正确的拼写 "Table"。开发者通过这种一致性设计告诉我们：<strong>注解的命名可以直接映射到其作用</strong>——要让名称清晰到不需要文档也能猜到用法。</p>
+      </div>
+    </div>
+
+    <!-- Screen 3: @Column -->
+    <div class="screen">
+      <h3 class="screen-title">@Column — 精确控制每一列</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">@Column<span class="glossary-tooltip">列注解。加在字段上，定义数据库列名、长度、类型、是否加密、是否 JSON 存储等属性。如果不指定，默认使用字段名作为列名。</span></strong> 是 j-jdbc 最强大的注解。它不仅能控制列名和长度，还能指定<strong>加密方式、JSON 序列化、数据类型推断</strong>等高级功能。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 简单用法 — 列名等于字段名</span>
+@<span class="code-type">Column</span>
+<span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+<span class="code-comment">// 指定列名和备注</span>
+@<span class="code-type">Column</span>(value = <span class="code-string">"NICK_NAME_TT4"</span>, comment = <span class="code-string">"昵称"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> nickname;
+
+<span class="code-comment">// JSON 格式存储 + 加密</span>
+@<span class="code-type">Column</span>(json = <span class="code-keyword">true</span>, encryptType = <span class="code-type">EncryptType</span>.FIXED,
+        encryptKey = <span class="code-string">"abcd"</span>, length = <span class="code-number">1000</span>)
+<span class="code-keyword">private</span> <span class="code-type">List</span>&lt;<span class="code-type">String</span>&gt; tags;
+
+<span class="code-comment">// 不可变字段（创建后不能改）</span>
+@<span class="code-type">Column</span>(immutable = <span class="code-keyword">true</span>, order = <span class="code-number">1001</span>, comment = <span class="code-string">"创建时间"</span>)
+<span class="code-keyword">private</span> <span class="code-type">Long</span> createdAt;</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>数据类型自动推断：</strong> j-jdbc 会查看字段的 Java 类型，自动选择最合适的 MySQL 数据类型。`int` → INT, `String` 且长度小于 5000 → VARCHAR, `String` 且长度 ≥ 5000 → TEXT, `BigDecimal` → DECIMAL, `LocalDateTime` → DATETIME, `List` 且 `json=true` → JSON……你不用记住这些映射，框架会帮你处理。
+      </p>
+    </div>
+
+    <!-- Screen 4: @Key & @Index -->
+    <div class="screen">
+      <h3 class="screen-title">@Key — 主键 & @Index — 索引</h3>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 主键 — 只能是 Long 或 String</span>
+@<span class="code-type">Key</span>(generatorIfNotSet = <span class="code-keyword">true</span>)  <span class="code-comment">// 如果没设置值，自动生成</span>
+@<span class="code-type">Column</span>(comment = <span class="code-string">"主键"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> id;
+
+<span class="code-comment">// 单字段索引</span>
+@<span class="code-type">Index</span>
+<span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+<span class="code-comment">// 复合索引（类级别）</span>
+@<span class="code-type">Index</span>({<span class="code-string">"age"</span>, <span class="code-string">"nickname"</span>})
+@<span class="code-type">Index</span>({<span class="code-string">"id"</span>, <span class="code-string">"name"</span>})
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> ...</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>主键（@Key）</strong> 是每个表的灵魂。j-jdbc 要求主键只能是 <strong>Long</strong> 或 <strong>String</strong> 类型。如果设置了 `generatorIfNotSet = true`，当你插入数据时没有设置主键值，框架会自动生成一个唯一 ID。
+      </p>
+      <p class="screen-text">
+        <strong>索引（@Index）</strong> 可以在字段上（单字段索引）或类上（复合索引）使用。数据库索引就像是书的目录——它让查询速度从"逐页翻找"变成"直接翻到正确的页码"。在第 4 课中，我们会详细讲解主键是如何生成的。
+      </p>
+    </div>
+
+    <!-- Screen 5: Group Chat -->
+    <div class="screen">
+      <h3 class="screen-title">注解们的群聊时间 💬</h3>
+      <p class="screen-text">想象一下，当 j-jdbc 启动时，注解们正在群里讨论今天的工作：</p>
+
+      <div class="chat-container" style="max-width:500px;">
+        <div class="chat-message">
+          <div class="chat-avatar tab">T</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Table</span>
+            大家早上好！我是 DEMO_USER 表的注解。今天我们的任务是搞定新来的 UserDO 类。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar col">C</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Column</span>
+            收到！我已经把 <code>age</code> 映射成了 INT，<code>nickname</code> 是 VARCHAR(255)，<code>tags</code> 是 JSON 类型。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar key">K</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Key</span>
+            主键 <code>id</code> 归我管！String 类型，如果用户没提供，我就让 ID 生成器自动分配一个。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar obj">I</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Index</span>
+            好的，我已经给 <code>age</code> 创建了索引。再加上 <code>(age, nickname)</code> 的复合索引——这样按年龄和昵称查就飞快了！
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar tab">T</div>
+          <div class="chat-bubble">
+            完美！@TableInfo 你把我们的配置整理成建表 SQL，发给 SqlGenerator4Mysql 执行吧。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar sql">S</div>
+          <div class="chat-bubble">
+            <span class="chat-name">SqlGenerator</span>
+            收到！<code>CREATE TABLE IF NOT EXISTS DEMO_USER (id VARCHAR(50), age INT, nickname VARCHAR(255), tags JSON, ...) COMMENT='用户表'</code> —— 搞定！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 6: TableInfo engine -->
+    <div class="screen">
+      <h3 class="screen-title">幕后引擎：TableInfo 是如何工作的</h3>
+      <p class="screen-text">
+        所有的注解魔法都归结于一个核心类——<strong>TableInfo</strong>。它读取类上的所有注解、字段、以及父类的字段，构建出一张完整的"元数据地图"。
+      </p>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ TableInfo 构造函数</span>
+          <span class="lang-label zh">它做了三件事</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">tableName = clazz.getSimpleName();</div>
+          <div class="translation-zh">1️⃣ 先以<strong>类名</strong>作为默认表名</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">@Table table = clazz.getAnnotation(Table.class);</div>
+          <div class="translation-zh">2️⃣ 检查是否有 <strong>@Table</strong> 注解 → 有的话<strong>覆盖</strong>表名</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">Field[] fields = c.getDeclaredFields();<br>for (Field field : fields) {<br>  ColumnInfo beanColumn = new ColumnInfo(field);<br>  addColumnInfo(beanColumn);<br>}</div>
+          <div class="translation-zh">3️⃣ 遍历所有字段→每个字段变成 <strong>ColumnInfo</strong> 对象→添加到地图中</div>
+        </div>
+      </div>
+
+      <p class="screen-text">
+        注意：它会遍历整个类继承树（从当前类一直往上到 Object），确保父类如 <code>BaseDO</code> 中的 <code>createdAt</code>、<code>updatedAt</code>、<code>deletedAt</code> 字段也被纳入。
+      </p>
+    </div>
+
+    <!-- Screen 7: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>如果一个类上没有 @Table 注解，j-jdbc 会怎么处理？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>抛出异常
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>使用类名作为表名
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>使用父类的表名
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>随机生成一个表名
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" TableInfo 的构造函数首先用类名作为默认表名（tableName = clazz.getSimpleName()），然后才检查是否有 @Table 注解来覆盖。所以不加注解也能工作——只是表名就是类名本身。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>主键（@Key）支持哪些 Java 类型？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>任何类型
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">B</span>String 和 Integer
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">C</span>Long 和 String 及其原始类型
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>只有 Long
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 代码中 ALLOWED_KEY_TYPES 明确的定义了允许的主键类型集合：Long.class、long.class、String.class。其他类型会抛出 IllegalTypeException。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="module" id="module-3">
+  <div class="module-container">
+
+    <!-- Screen 1: Overview -->
+    <div class="screen">
+      <div class="module-number">模块 3 / 5</div>
+      <h2 class="module-title">数据的旅程<br><span class="highlight">CRUD 的生命之旅</span></h2>
+      <p class="screen-text">
+        现在你已经知道了 j-jdbc 用注解来描述数据。但当你调用 <code>userDao.insert(user)</code> 时——<strong>按下键盘到数据落库，中间发生了什么？</strong>
+      </p>
+      <p class="screen-text">
+        这一章我们将追踪一条数据从 Java 代码到数据库的完整旅程。你会发现 j-jdbc 的 <strong>SQL 生成器</strong>是真正的幕后英雄——它把简单的 Java 方法调用，翻译成精确的 SQL 语句。
+      </p>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：外卖配送</div>
+        <p>
+          调用 <code>userDao.insert(user)</code> 就像在手机上点外卖。<strong>你（代码）</strong>只做了一件事——点了一下"下单"按钮。<strong>BaseDaoImpl</strong> 是外卖平台，接收你的订单。<strong>SqlGenerator</strong> 是厨房里的厨师，根据订单（注解信息）准备餐食（生成 SQL）。<strong>NamedParameterJdbcTemplate</strong> 是骑手，把餐食送到你的数据库门口。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 2: Data Flow Animation -->
+    <div class="screen">
+      <h3 class="screen-title">一次查询的完整旅程</h3>
+      <p class="screen-text">
+        当你调用 <code>userDao.find("U123@abc")</code>，从方法调用到数据库查询结果返回，经历了这些步骤：
+      </p>
+
+      <div class="flow-animation" data-steps='[
+        {"label": "UserDao.find()", "iconClass": "dao", "icon": "U"},
+        {"label": "构造条件", "iconClass": "app", "icon": "⚡"},
+        {"label": "SqlGenerator\n生成SQL", "iconClass": "gen", "icon": "⚙"},
+        {"label": "参数化查询\nWHERE id=:id", "iconClass": "sql", "icon": "SELECT"},
+        {"label": "MySQL\n执行", "iconClass": "db", "icon": "DB"},
+        {"label": "返回结果", "iconClass": "app", "icon": "✓"}
+      ]'></div>
+
+      <div class="code-block">
+        <span class="code-label">java — BaseDaoImpl.find()</span>
+        <code>@<span class="code-type">Override</span>
+<span class="code-keyword">public</span> <span class="code-type">Optional</span>&lt;<span class="code-type">T</span>&gt; find(<span class="code-type">Object</span> id) {
+    <span class="code-comment">// 1. 检查ID不为空</span>
+    Preconditions.checkNotNull(id, <span class="code-string">"id is null"</span>);
+
+    <span class="code-comment">// 2. 用 ConditionUtil 构建查询条件</span>
+    <span class="code-type">List</span>&lt;<span class="code-type">Condition</span>&gt; conditions = ConditionUtil
+        .newInstance()
+        .field(key()).eq(id)
+        .conditions();
+
+    <span class="code-comment">// 3. 调用 queryField → SqlGenerator → 生成 SQL</span>
+    <span class="code-type">List</span>&lt;<span class="code-type">T</span>&gt; ts = queryField(conditions, <span class="code-keyword">null</span>);
+
+    <span class="code-comment">// 4. 返回第一个结果</span>
+    <span class="code-keyword">return</span> ts.stream().findFirst();
+}</code>
+      </div>
+    </div>
+
+    <!-- Screen 3: Condition Builder -->
+    <div class="screen">
+      <h3 class="screen-title">ConditionUtil — 用 Java 写 WHERE 子句</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">ConditionUtil<span class="glossary-tooltip">条件查询构建工具。提供链式调用 API 来构造 SQL 的 WHERE 条件，支持 eq、ne、gt、lt、gte、lte、like、in、notIn、between、empty 等操作。</span></strong> 是 j-jdbc 中最常用的工具之一。它让你用<strong>链式调用</strong>的方式构建查询条件，而不用手写 SQL。
+      </p>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ Java 条件代码</span>
+          <span class="lang-label zh">生 成 的 SQL</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">ConditionUtil.newInstance()<br>  .field("age").gt(20).lte(89)<br>  .field("nickname").like("%张三%")<br>  .conditions()</div>
+          <div class="translation-zh"><code>WHERE age &gt; 20 AND age &lt;= 89<br>  AND nickname LIKE '%张三%'</code></div>
+        </div>
+      </div>
+
+      <p class="screen-text">
+        支持的所有条件操作：
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);">
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.eq(val)</span>等于 =</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.ne(val)</span>不等于 &lt;&gt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.gt(val)</span>大于 &gt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.lt(val)</span>小于 &lt;</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.gte(val)</span>大于等于 &gt;=</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.lte(val)</span>小于等于 &lt;=</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.like(str)</span>LIKE 模糊匹配</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.in(list)</span>IN 列表包含</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.notIn(list)</span>NOT IN 排除</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.between(a,b)</span>BETWEEN 范围</div>
+        <div class="pattern-card" style="margin:0;"><span class="pattern-title">.empty(bool)</span>IS NULL / IS NOT NULL</div>
+      </div>
+    </div>
+
+    <!-- Screen 4: SQL Generation -->
+    <div class="screen">
+      <h3 class="screen-title">SQL 生成器 — Java 到 SQL 的自动翻译</h3>
+      <p class="screen-text">
+        j-jdbc 的 SQL 生成器体系由 <strong>SqlGenerator 接口</strong>定义，<strong>AbstractSqlGenerator</strong> 提供通用实现，<strong>SqlGenerator4Mysql</strong> 提供 MySQL 特化版本。这种设计让 j-jdbc 可以轻松支持其他数据库——只需要写一个新的实现类。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — SqlGenerator 接口</span>
+        <code><span class="code-keyword">public interface</span> <span class="code-type">SqlGenerator</span>&lt;<span class="code-type">T</span>&gt; {
+    SqlPrepared query(...);        <span class="code-comment">// SELECT 查询</span>
+    SqlPrepared queryLimit(...);   <span class="code-comment">// 分页查询（带 LIMIT）</span>
+    SqlPrepared count(...);        <span class="code-comment">// SELECT COUNT(*)</span>
+    SqlPrepared insert(...);       <span class="code-comment">// INSERT</span>
+    SqlPrepared update(...);       <span class="code-comment">// UPDATE</span>
+    SqlPrepared delete(...);       <span class="code-comment">// DELETE</span>
+    List&lt;SqlPrepared&gt; createTableSql(); <span class="code-comment">// CREATE TABLE</span>
+    SqlPrepared dropTableSql();    <span class="code-comment">// DROP TABLE</span>
+    SqlPrepared addColumn(...);    <span class="code-comment">// ALTER TABLE ADD COLUMN</span>
+    String doc();                  <span class="code-comment">// 生成 Markdown 文档</span>
+}</code>
+      </div>
+
+      <p class="screen-text">
+        看那个 <strong>where()</strong> 方法是如何将 Condition 对象翻译成 SQL 条件的——它遍历每个条件，检查哪个字段被设置了（eq、gt、like 等），然后拼装对应的 SQL 片段。这就像是一个精心设计的状态机！
+      </p>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>「参数化查询」是 j-jdbc 默认的安全保障：</strong> 所有的 SQL 参数都使用命名参数（如 <code>:id__eq</code>）而不是拼字符串。这意味着 <strong>SQL 注入攻击从一开始就被杜绝了</strong>——你不需要额外做任何安全配置。这是框架设计者的明智决定。</p>
+      </div>
+    </div>
+
+    <!-- Screen 5: Insert & Update -->
+    <div class="screen">
+      <h3 class="screen-title">插入与更新 — 智能的 null 处理</h3>
+      <p class="screen-text">
+        j-jdbc 有一个非常贴心的设计：<strong>null 值不插入，null 值不更新</strong>。这意味着你可以只设置你想操作的字段，其他字段保持不变。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — 智能 null</span>
+        <code><span class="code-comment">// 插入时：只有设置了值的字段会出现在 INSERT 语句中</span>
+<span class="code-type">UserDO</span> user = <span class="code-keyword">new</span> <span class="code-type">UserDO</span>();
+user.setName(<span class="code-string">"Alice"</span>);
+user.setAge(<span class="code-number">25</span>);
+<span class="code-comment">// tags 为 null → 不会出现在 INSERT 中</span>
+userDao.insert(user);
+<span class="code-comment">// → INSERT INTO DEMO_USER (id, name, age) VALUES (..., :name, :age)</span>
+
+<span class="code-comment">// 更新时：只有非 null 字段会更新</span>
+user.setAge(<span class="code-number">26</span>);
+userDao.update(user);
+<span class="code-comment">// → UPDATE DEMO_USER SET age=:age__set WHERE id=:id__eq</span>
+<span class="code-comment">// name 不会被更新！</span></code>
+      </div>
+
+      <p class="screen-text">
+        更酷的是，如果你<strong>确实想把某个字段更新为 null</strong>，可以实现 <code>updateNullFields()</code> 方法告诉框架："这个字段我不是忘了设置，我是想把它清空。"
+      </p>
+    </div>
+
+    <!-- Screen 6: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>调用 userDao.update(user) 时，user 中为 null 的字段会怎样？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>被更新为数据库的 NULL
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>不会被包含在 UPDATE 语句中
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>抛出 NullPointerException
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>被更新为空字符串
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" AbstractSqlGenerator 的 update() 方法会跳过值为 null 的字段（if (isEmpty(value)) { continue; }）。这是为了防止意外覆盖掉数据库里的数据。如果需要置空，需要在 updateNullFields() 中声明。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>SqlGenerator 为什么设计成接口 + 抽象类 + 具体实现的模式？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>因为 Java 不支持多重继承
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>为了支持多种数据库（MySQL、PostgreSQL 等）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>为了加密 SQL
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>因为代码太多需要一个文件放不下
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 通过接口定义通用规范、抽象类提供通用逻辑（如 where() 条件的拼接）、具体子类处理数据库特有的语法（如 MySQL 的 LIMIT、引号 `、建表语句），使得 j-jdbc 可以轻松扩展支持其他数据库。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="module" id="module-4">
+  <div class="module-container">
+
+    <!-- Screen 1: Overview -->
+    <div class="screen">
+      <div class="module-number">模块 4 / 5</div>
+      <h2 class="module-title">隐藏的超能力<br><span class="highlight">加密、ID 生成与安全删除</span></h2>
+      <p class="screen-text">
+        如果说前面三章是 j-jdbc 的"基础技能"，那这一章就是它的<strong>隐藏超能力</strong>。很多 CRUD 框架只能做增删改查，但 j-jdbc 内置了几个大多数开发者需要但懒得实现的特性——<strong>字段加密、分布式 ID 生成、逻辑删除和事件通知</strong>。
+      </p>
+      <p class="screen-text">
+        作为直觉型编程者，了解这些能力极其有价值：当你的 AI 助手建议在数据库中存储敏感数据时，你可以说"用 j-jdbc 的字段加密，别存明文"——这听起来就像你是个真正的后端架构师。
+      </p>
+    </div>
+
+    <!-- Screen 2: Field Encryption -->
+    <div class="screen">
+      <h3 class="screen-title">🔐 字段级加密 — 透明保护</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">字段加密<span class="glossary-tooltip">在数据写入数据库时自动加密指定字段，读取时自动解密。对应用程序代码完全透明——你读写的是明文，数据库里存的是密文。</span></strong> 意味着你可以在 Java 代码中正常读写数据，但数据库里存的是<strong>密文</strong>。即使数据库被拖库，黑客看到的也是一堆乱码。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// ===== FIXED 加密 =====</span>
+<span class="code-comment">// 用固定密钥 "abcd" 加密。查询时框架自动加密比较。</span>
+@<span class="code-type">Column</span>(encryptType = <span class="code-type">EncryptType</span>.FIXED,
+        encryptKey = <span class="code-string">"abcd"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> encryptTest;
+<span class="code-comment">// ✓ 支持 eq, neq, in, notIn 查询</span>
+<span class="code-comment">// ✗ 不支持 like 模糊查询</span>
+
+<span class="code-comment">// ===== FIELD 加密 =====</span>
+<span class="code-comment">// 用另一个字段 "id" 的值作为加密密钥</span>
+@<span class="code-type">Column</span>(encryptType = <span class="code-type">EncryptType</span>.FLIED,
+        encryptKey = <span class="code-string">"id"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> name;
+<span class="code-comment">// ✗ 每条记录密钥不同，不能作为查询条件</span>
+<span class="code-comment">// ✓ 更安全 —— 泄露一条不影响其他数据</span></code>
+      </div>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ 加密方式选择</span>
+          <span class="lang-label zh">什 么 时 候 用</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.FIXED</div>
+          <div class="translation-zh"><strong>固定密钥：</strong>需要作为查询条件的字段（如手机号、邮箱），所有记录使用同一个密钥加密</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.FLIED</div>
+          <div class="translation-zh"><strong>属性密钥：</strong>不需要查询的敏感字段（如密码、地址），每条记录使用不同的密钥（用其他字段的值加密）</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-type">EncryptType</span>.NONE</div>
+          <div class="translation-zh"><strong>不加密：</strong>默认选项</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: AES Encryption -->
+    <div class="screen">
+      <h3 class="screen-title">底层加密：AES 算法</h3>
+      <p class="screen-text">
+        j-jdbc 默认使用 <strong>AES</strong>（高级加密标准）来加密数据。AES 是目前最广泛使用的对称加密算法——从银行系统到 WhatsApp 都在用它。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — Aes.java</span>
+        <code><span class="code-keyword">public class</span> <span class="code-type">Aes</span> <span class="code-keyword">implements</span> <span class="code-type">Encryption</span> {
+    <span class="code-comment">// 加密流程：</span>
+    <span class="code-keyword">public</span> <span class="code-type">String</span> encrypt(<span class="code-type">String</span> content, <span class="code-type">String</span> password) {
+        <span class="code-comment">// 1. 用密码生成加密密钥</span>
+        <span class="code-type">KeyGenerator</span> keyGen = <span class="code-type">KeyGenerator</span>.getInstance(<span class="code-string">"Aes"</span>);
+        <span class="code-type">SecureRandom</span> random = <span class="code-type">SecureRandom</span>
+            .getInstance(<span class="code-string">"SHA1PRNG"</span>);
+        random.setSeed(password.getBytes(<span class="code-string">"utf-8"</span>));
+        keyGen.init(<span class="code-number">128</span>, random);
+
+        <span class="code-comment">// 2. 初始化密码器（加密模式）</span>
+        <span class="code-type">Cipher</span> cipher = <span class="code-type">Cipher</span>.getInstance(<span class="code-string">"Aes"</span>);
+        cipher.init(<span class="code-type">Cipher</span>.ENCRYPT_MODE, secretKey);
+
+        <span class="code-comment">// 3. 加密 & Base64 编码</span>
+        <span class="code-keyword">byte</span>[] result = cipher.doFinal(content.getBytes(<span class="code-string">"utf-8"</span>));
+        <span class="code-keyword">return</span> <span class="code-type">Base64</span>.getEncoder().encodeToString(result);
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        你也可以通过 <strong>EncryptionProvider</strong> 设置自己的加密算法——只需实现 <code>Encryption</code> 接口（encrypt/decrypt 两个方法），然后调用 <code>EncryptionProvider.setEncryption(yourImpl)</code>。
+      </p>
+    </div>
+
+    <!-- Screen 4: Snowflake ID Generator -->
+    <div class="screen">
+      <h3 class="screen-title">❄️ 雪花 ID — 分布式系统的身份证</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">雪花算法（Snowflake）<span class="glossary-tooltip">Twitter 开源的一种分布式 ID 生成算法，生成 64 位的唯一整数。结构：时间戳（41位）+ 工作节点（10位）+ 序列号（12位）。可以在不依赖数据库的情况下生成全局唯一 ID。支持 1024 个节点，每毫秒单节点生成 4096 个 ID。</span></strong> 是 Twitter 发明的一种分布式 ID 生成算法。j-jdbc 的 <strong>DefaultKeyGenerator</strong> 是它的改进版。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — DefaultKeyGenerator</span>
+        <code><span class="code-comment">// 雪花 ID 的位分布（64位）</span>
+<span class="code-comment">// ┌──────────────┬──────────────┬──────────────┐</span>
+<span class="code-comment">// │ 时间戳(41位)  │ 工作节点(10位)│ 序列号(12位)  │</span>
+<span class="code-comment">// └──────────────┴──────────────┴──────────────┘</span>
+
+<span class="code-comment">// 生成逻辑：</span>
+<span class="code-keyword">return</span> ((currentMillis - EPOCH) &lt;&lt; TIMESTAMP_LEFT_SHIFT_BITS)
+       | (workerId &lt;&lt; WORKER_ID_LEFT_SHIFT_BITS)
+       | sequence;
+
+<span class="code-comment">// j-jdbc 的改进：奇偶间隔生成</span>
+<span class="code-comment">// 在同一个毫秒内，序列号从上一个值继续递增</span>
+<span class="code-comment">// 而不是每一毫秒都从 0 开始</span>
+<span class="code-comment">// → 这在某些分库分表场景下性能更好</span></code>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-title">⏰ EPOCH = 2016-11-01</div>
+        <p class="screen-text" style="margin-bottom:0;">j-jdbc 的雪花 ID 以 <strong>2016年11月1日</strong> 为纪元起点。这意味着 ID 将从大约 41 位时间戳的中间值开始，保证在很长一段时间内不会溢出。</p>
+      </div>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：酒店房卡系统</div>
+        <p>
+          雪花 ID 就像一家连锁酒店的<strong>房卡系统</strong>。<strong>时间戳</strong> = 入住日期（41 位日期码，可以覆盖 69 年）。<strong>工作节点</strong> = 酒店分店编号（每个分店有自己的一盒房卡）。<strong>序列号</strong> = 当天第几位客人。即使两个分店的客人同时入住，也绝不会拿到相同的房间号。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 5: DB-backed ID Generator -->
+    <div class="screen">
+      <h3 class="screen-title">🗄️ 数据库 ID 生成器</h3>
+      <p class="screen-text">
+        除了雪花算法，j-jdbc-starter 模块还提供了一种<strong>基于数据库表</strong>的 ID 生成器——<strong>DbKeyGenerator</strong>。它适用于需要严格控制 ID 生成进度的场景。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — DbKeyGenerator</span>
+        <code><span class="code-keyword">public class</span> <span class="code-type">DbKeyGenerator</span> <span class="code-keyword">implements</span> <span class="code-type">KeyGenerator</span> {
+    <span class="code-comment">// 内存中的 ID 缓存（每类一个计数器）</span>
+    <span class="code-keyword">private static final</span> <span class="code-type">Map</span>&lt;<span class="code-type">String</span>, <span class="code-type">AtomicLong</span>&gt; MAP = ...;
+
+    <span class="code-keyword">public</span> <span class="code-type">long</span> generateKey(<span class="code-type">String</span> type) {
+        <span class="code-comment">// 1. 第一次：从数据库读取种子值 (STEP &lt;&lt; 4 = 16384)</span>
+        <span class="code-type">AtomicLong</span> counter = MAP.computeIfAbsent(type,
+            idType -&gt; <span class="code-keyword">new</span> <span class="code-type">AtomicLong</span>(idHelper.get(idType)));
+
+        <span class="code-comment">// 2. 自增获取下一个 ID</span>
+        <span class="code-type">long</span> result = counter.incrementAndGet();
+
+        <span class="code-comment">// 3. 每消耗 1024 个 ID，批量更新数据库中的种子</span>
+        <span class="code-keyword">if</span> (result % <span class="code-type">IdHelper</span>.STEP == <span class="code-number">0</span>) {
+            execHelper.exec(() -&gt; idHelper.update(type, result));
+        }
+        <span class="code-keyword">return</span> result;
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>关键是批量预分配：</strong>每次从数据库中取出一段连续的 ID（16384 个），在内存中分配。只有在用完了这一批之后才会再次访问数据库。这样既保证了 ID 的连续性，又减少了数据库压力。
+      </p>
+    </div>
+
+    <!-- Screen 6: Soft Delete & Event Bus -->
+    <div class="screen">
+      <h3 class="screen-title">♻️ 软删除 — 给数据第二次生命</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">软删除<span class="glossary-tooltip">逻辑删除。数据不会物理删除，而是通过标记一个 deletedAt 字段表示"已删除"。查询时默认过滤删除的数据。可以随时恢复（undelete）。</span></strong> 意味着当你"删除"一条数据时，它并没有从数据库消失——而是在 <strong>deletedAt</strong> 字段上打了一个时间戳。这是企业级应用的标配做法。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — BaseDO</span>
+        <code><span class="code-keyword">public abstract class</span> <span class="code-type">BaseDO</span> {
+    @<span class="code-type">Column</span>(order = <span class="code-number">1003</span>, comment = <span class="code-string">"删除时间"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">Long</span> deletedAt;   <span class="code-comment">// null 或 Constant.NO_DELETE = 未删除</span>
+
+    <span class="code-keyword">public</span> <span class="code-type">void</span> forDelete() {
+        deletedAt = System.currentTimeMillis();   <span class="code-comment">// 👈 "删除"就是打个时间戳</span>
+    }
+
+    <span class="code-keyword">public</span> <span class="code-type">void</span> forUndelete() {
+        deletedAt = Constant.NO_DELETE;           <span class="code-comment">// 👈 "恢复"就是重置为 0</span>
+    }
+}</code>
+      </div>
+
+      <h3 class="screen-title" style="margin-top:var(--space-lg);">📢 DML 事件总线 — 监听每一次数据变更</h3>
+      <p class="screen-text">
+        <strong>DmlEventBus</strong> 是 j-jdbc 的通知系统。每次数据创建、更新、删除时，它都会通过 <strong>Guava EventBus</strong> 发布事件。你只需要注册监听器，就能在数据变更时获得通知。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 注册监听器：</span>
+<span class="code-type">DmlEventBus</span>.getEventBus(<span class="code-type">DmlType</span>.CREATE)
+    .register(<span class="code-keyword">new</span> <span class="code-type">Object</span>() {
+        @<span class="code-type">Subscribe</span>
+        <span class="code-keyword">public void</span> handle(<span class="code-type">UserDO</span> user) {
+            log.info(<span class="code-string">"新用户创建了：{}"</span>, user.getName());
+        }
+    });
+
+<span class="code-comment">// 内置事件点（BaseDaoImpl 中）：</span>
+<span class="code-type">DmlEventBus</span>.onCreate(t);     <span class="code-comment">// insert 后</span>
+<span class="code-type">DmlEventBus</span>.onUpdate(t);     <span class="code-comment">// update 后</span>
+<span class="code-type">DmlEventBus</span>.onDelete(t);     <span class="code-comment">// delete 后</span></code>
+      </div>
+    </div>
+
+    <!-- Screen 7: Group Chat -->
+    <div class="screen">
+      <h3 class="screen-title">ID 生成器们的辩论 💬</h3>
+
+      <div class="chat-container" style="max-width:500px;">
+        <div class="chat-message">
+          <div class="chat-avatar snf">❄</div>
+          <div class="chat-bubble">
+            <span class="chat-name">Snowflake（雪花）</span>
+            我是纯内存计算，<strong>零数据库依赖</strong>！每毫秒能生成 4096 个唯一 ID，整个系统也不过 69 年才会用完。集群部署，<strong>无需加锁</strong>。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar enc">🗄</div>
+          <div class="chat-bubble">
+            <span class="chat-name">DbGenerator（数据库）</span>
+            你说得对，但我的 ID 是<strong>连续且可预测的</strong>。适合做订单号、流水号这种需要直观排序的场景。而且我一次预取 16384 个 ID，数据库访问很少。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar snf">❄</div>
+          <div class="chat-bubble">
+            连续？你依赖数据库，万一数据库挂了怎么办？我的时间戳+机器+序列结构保证了<strong>全局唯一且随时间递增</strong>，即使跨数据中心也不冲突。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar enc">🗄</div>
+          <div class="chat-bubble">
+            我是 Starter 模块默认的——和 Spring Boot 配合使用，自动配置、自动建表。<strong>开箱即用</strong>不需要额外设置工作节点 ID。我们各有千秋！
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar ann">⚙</div>
+          <div class="chat-bubble">
+            <span class="chat-name">KeyGeneratorProvider</span>
+            好了好了，你们俩都是好样的。开发者可以通过我自由选择——<code>KeyGeneratorProvider.setKeyGenerator(...)</code>，喜欢谁就用谁！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 8: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>哪种加密方式允许在查询条件中使用？（即支持 WHERE field = ?）</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">A</span>FIXED 加密
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">B</span>FIELD 加密
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>两种都支持
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>两种都不支持
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" FIXED 加密使用固定密钥，框架会在查询时自动对条件值进行相同的加密，然后比较密文。FIELD 加密每条记录使用不同密钥，无法在数据库层面进行比较。在 AbstractSqlGenerator 的 where() 方法中，只有 encryptType == FIXED 会在 eq/neq/in/notIn 时自动加密。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>雪花 ID（DefaultKeyGenerator）的 64 位结构中，哪一部分占的位数最多？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>工作节点 ID（10 位）
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>时间戳（41 位）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>序列号（12 位）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>它们平均分配
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 时间戳占 41 位，工作节点占 10 位，序列号占 12 位。时间戳是 ID 的主要组成部分——它保证了 ID 随时间的递增性和全局唯一性。41 位时间戳可以覆盖约 69 年（从 2016 年到 2085 年）。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section class="module" id="module-5">
+  <div class="module-container">
+
+    <!-- Screen 1: Overview -->
+    <div class="screen">
+      <div class="module-number">模块 5 / 5</div>
+      <h2 class="module-title">企业级能力<br><span class="highlight">自动建表、分片与全局图景</span></h2>
+      <p class="screen-text">
+        任何框架在学习阶段看起来都不错——但真正的考验是<strong>上了生产环境之后</strong>。你如何管理 20 张表的版本更新？如何应对每月增长 500 万条的数据？如何在不重启的情况下修复表结构？
+      </p>
+      <p class="screen-text">
+        j-jdbc 的这最后一套能力，专为<strong>真实世界的运维场景</strong>而设计。它们是区分"玩具框架"和"生产级框架"的关键。
+      </p>
+    </div>
+
+    <!-- Screen 2: Auto Table Management -->
+    <div class="screen">
+      <h3 class="screen-title">📋 三种建表模式</h3>
+      <p class="screen-text">
+        j-jdbc-starter 模块中的 <strong>JdbcAutoConfiguration</strong> 提供了三种建表策略——通过一个配置项 <code>j-jdbc.tableInit</code> 控制。这是从开发到生产的进阶之路：
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">yml — application.yml</span>
+        <code><span class="code-comment"># 模式 1: 仅创建不存在的表（开发环境推荐）</span>
+j-jdbc:
+  tableInit: 1
+
+<span class="code-comment"># 模式 2: 先删后建（测试环境快速重置）</span>
+j-jdbc:
+  tableInit: 2
+
+<span class="code-comment"># 模式 3: 自动添加缺少的列（生产环境安全升级）</span>
+j-jdbc:
+  tableInit: 3</code>
+      </div>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ JdbcAutoConfiguration</span>
+          <span class="lang-label zh">三 种 模 式 对 比</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-comment">// Mode 1</span> CREATE_TABLE</div>
+          <div class="translation-zh">表不存在才创建 → <strong>安全、适合开发</strong></div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-comment">// Mode 2</span> DROP_CREATE_TABLE</div>
+          <div class="translation-zh">表存在则删掉重建 → <strong>⚠️ 会丢数据！仅测试用</strong></div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-comment">// Mode 3</span> UPDATE_TABLE</div>
+          <div class="translation-zh">对比现有表和注解定义，<strong>自动添加缺失的列</strong> → 生产环境升级表结构！</div>
+        </div>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>模式 3 的原理非常巧妙：</strong> 它先执行 <code>SELECT * FROM table WHERE 1=2</code>（查询空结果），然后通过 JDBC 的 <code>SqlRowSetMetaData.getColumnNames()</code> 获取当前表的所有列名。接着与 TableInfo 中定义的列做对比——<strong>差集就是需要新加的列</strong>。整个过程不需要维护版本号或迁移脚本。</p>
+      </div>
+    </div>
+
+    <!-- Screen 3: UpdateTable in detail -->
+    <div class="screen">
+      <h3 class="screen-title">updateTable() — 安全演进</h3>
+      <p class="screen-text">
+        让我们深入 Mode 3 的 <strong>updateTable()</strong> 方法，它是生产环境中最有价值的特性：
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — BaseDaoImpl.updateTable()</span>
+        <code><span class="code-keyword">public int</span> updateTable() {
+    <span class="code-comment">// 1. 查询空结果，获取当前表的元数据</span>
+    SqlRowSet rowSet = template.queryForRowSet(
+        selectNull().getSql(), ...);
+    SqlRowSetMetaData md = rowSet.getMetaData();
+
+    <span class="code-comment">// 2. 收集现有列名</span>
+    <span class="code-type">Set</span>&lt;<span class="code-type">String</span>&gt; cn = <span class="code-keyword">new</span> <span class="code-type">HashSet</span>&lt;&gt;();
+    <span class="code-keyword">for</span> (String columnName : md.getColumnNames()) {
+        cn.add(columnName.toLowerCase());
+    }
+
+    <span class="code-comment">// 3. 找到"应有"但"没有"的列</span>
+    <span class="code-type">List</span>&lt;<span class="code-type">ColumnInfo</span>&gt; columnInfos = columns.stream()
+        .filter(c -&gt; !cn.contains(
+            c.getColumnName().toLowerCase()))
+        .collect(Collectors.toList());
+
+    <span class="code-comment">// 4. 逐列执行 ALTER TABLE ADD COLUMN</span>
+    <span class="code-keyword">for</span> (ColumnInfo columnInfo : columnInfos) {
+        SqlPrepared sql = sqlGenerator()
+            .addColumn(columnInfo);
+        template.update(sql.getSql(), sql.getParams());
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>这解决了一个真实痛点：</strong>在传统开发中，每次新增字段都要写一个数据库迁移脚本。有了 j-jdbc，你只需要在 Java 类中添加一个新字段和 <code>@Column</code> 注解，重启应用，框架就会自动帮你 <code>ALTER TABLE</code>。
+      </p>
+    </div>
+
+    <!-- Screen 4: Sharding -->
+    <div class="screen">
+      <h3 class="screen-title">🔄 分库分表 — 应对海量数据</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">分库分表<span class="glossary-tooltip">当单表数据量过大（>几千万行），将数据分散到多个数据库或多个表中存储。分片（Shard）是指按某种规则（如 ID 取模）决定数据放在哪个分片中。跨分片的聚合操作会更复杂。</span></strong> 是大型系统的必备技能。j-jdbc 通过 <strong>Apache ShardingSphere</strong> 的集成实现了这一点。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java — ModPreciseShardingAlgorithm</span>
+        <code><span class="code-keyword">public class</span> <span class="code-type">ModPreciseShardingAlgorithm</span>&lt;<span class="code-type">T</span>&gt;
+    <span class="code-keyword">implements</span> <span class="code-type">PreciseShardingAlgorithm</span>&lt;<span class="code-type">T</span>&gt; {
+
+    <span class="code-keyword">public</span> <span class="code-type">String</span> doSharding(
+            <span class="code-type">Collection</span>&lt;<span class="code-type">String</span>&gt; targets,
+            <span class="code-type">PreciseShardingValue</span>&lt;<span class="code-type">T</span>&gt; value) {
+
+        <span class="code-comment">// 取出 ID 中的数字部分 → 取模 → 决定去哪个分片</span>
+        <span class="code-type">long</span> va = StringUtil.getNumber(
+            String.valueOf(value.getValue()));
+        <span class="code-type">String</span> suffix = StringUtil.getShardingSuffix(
+            va % targets.size());
+
+        <span class="code-comment">// 返回匹配的分片名，如 ds_0, ds_1</span>
+        <span class="code-keyword">return</span> targets.stream()
+            .filter(t -&gt; t.endsWith(suffix))
+            .findFirst()
+            .orElseThrow(() -&gt; <span class="code-keyword">new</span> <span class="code-type">IllegalArgumentException</span>());
+    }
+}</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>j-jdbc-sharding</strong> 模块支持四种数据源模式：
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);">
+        <div class="pattern-card" style="margin:0;">
+          <span class="pattern-title">普通数据源</span>
+          单库单表，最简单模式
+        </div>
+        <div class="pattern-card" style="margin:0;">
+          <span class="pattern-title">分片数据源</span>
+          多库 or 多表，ID 取模路由
+        </div>
+        <div class="pattern-card" style="margin:0;">
+          <span class="pattern-title">主从数据源</span>
+          一主多从，读写分离
+        </div>
+        <div class="pattern-card" style="margin:0;">
+          <span class="pattern-title">分片+主从</span>
+          分库分表 + 读写分离
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5: Full Architecture Diagram -->
+    <div class="screen">
+      <h3 class="screen-title">🏗️ 全局架构图</h3>
+      <p class="screen-text">
+        现在你已经了解了 j-jdbc 的每一个角落。这是整个框架的完整架构——从顶层的注解到底层的 SQL 执行：
+      </p>
+
+      <div class="diagram" style="align-items:stretch;">
+        <div style="text-align:center;font-weight:700;color:var(--text-muted);font-size:0.8rem;letter-spacing:0.1em;">📦 用户代码</div>
+        <div class="diagram-row" style="justify-content:center;">
+          <div class="diagram-box level-1" style="min-width:100px;">@Table / @Column<br>@Key / @Index</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-1" style="min-width:100px;">UserDO<br>数据对象</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-1" style="min-width:100px;">UserDao<br>BaseDaoImpl</div>
+        </div>
+
+        <div style="border-top:1px solid var(--border-light);margin:var(--space-sm) 0;"></div>
+        <div style="text-align:center;font-weight:700;color:var(--text-muted);font-size:0.8rem;letter-spacing:0.1em;">⚙️ j-jdbc 核心</div>
+        <div class="diagram-row" style="justify-content:center;">
+          <div class="diagram-box level-2" style="min-width:90px;">TableInfo<br>元数据引擎</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-2" style="min-width:90px;">SqlGenerator<br>SQL 生成器</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-2" style="min-width:90px;">Encryption<br>AES / Offset</div>
+        </div>
+        <div class="diagram-row" style="justify-content:center;">
+          <div class="diagram-box level-2" style="min-width:90px;">KeyGenerator<br>雪花 / 数据库</div>
+          <span class="diagram-arrow"></span>
+          <div class="diagram-box level-2" style="min-width:90px;">DmlEventBus<br>事件通知</div>
+          <span class="diagram-arrow"></span>
+          <div class="diagram-box level-2" style="min-width:90px;">ShardingSphere<br>分片路由</div>
+        </div>
+
+        <div style="border-top:1px solid var(--border-light);margin:var(--space-sm) 0;"></div>
+        <div style="text-align:center;font-weight:700;color:var(--text-muted);font-size:0.8rem;letter-spacing:0.1em;">🗄️ 基础设施</div>
+        <div class="diagram-row" style="justify-content:center;">
+          <div class="diagram-box level-4" style="min-width:100px;">Spring 的<br>NamedParameterJdbcTemplate</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-4" style="min-width:100px;">HikariCP<br>连接池</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-4" style="min-width:80px;">MySQL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 6: When things go wrong -->
+    <div class="screen">
+      <h3 class="screen-title">🔍 出错时的诊断指南</h3>
+      <p class="screen-text">
+        作为直觉型编程者，遇到错误时知道 <strong>去哪里看、找什么</strong>，就是最实用的技能。以下是 j-jdbc 中常见的错误场景：
+      </p>
+
+      <div class="pattern-card">
+        <div class="pattern-title">❌ "class UserDO is not set key"</div>
+        <p class="screen-text" style="margin-bottom:0;">你的 DO 类没有设置 <strong>@Key</strong> 主键。j-jdbc 要求必须有主键才能使用 find/findByIds 方法。在字段上添加 <code>@Key</code> 注解即可解决。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">❌ "nothing to update"</div>
+        <p class="screen-text" style="margin-bottom:0;">你调用了 update() 但所有字段都是 null。j-jdbc 的智能 null 处理导致了"没有字段需要更新"。确保至少设置了一个非 null 字段，或者使用 <code>updateNullFields()</code> 主动声明要置空的字段。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">❌ 主键类型错误</div>
+        <p class="screen-text" style="margin-bottom:0;">"@Key must be Long or String"——@Key 只支持 <strong>Long/long</strong> 和 <strong>String</strong> 类型。使用了 Integer 或其他类型会抛出 IllegalTypeException。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">❌ 加密查询失败</div>
+        <p class="screen-text" style="margin-bottom:0;">如果你对某个 FIXED 加密字段用了 like 查询，会得到错误。在 where() 方法中，FIXED 加密只支持 eq/neq/in/notIn，不支持 like/between/gt/lt。设计上这是为了安全——加密字段不能做模糊匹配。</p>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">💡 AI 编码提示</div>
+        <p>当你的 AI 助手生成的代码遇到 "nothing to update" 错误时，告诉它：<strong>"去检查 BaseDaoImpl.update() 方法中跳过 null 字段的逻辑，检查你传入的对象是否在调 update 前设置过字段值。使用 updateNullFields() 方法来处理需要置空的字段。"</strong>——这会让 AI 立刻意识到问题出在 null 处理上，而不是数据库连接。</p>
+      </div>
+    </div>
+
+    <!-- Screen 7: Final Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">最终测验</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>生产环境中应该使用哪种 tableInit 模式？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">A</span>模式 3（自动添加缺失的列）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">B</span>模式 1（仅创建不存在的表）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>模式 2（先删后建）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>不使用自动建表
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 模式 3（UPDATE_TABLE）会对比现有表和注解定义，只添加缺失的列——这是最安全的生产环境升级方式。模式 1 适合开发，模式 2 会丢数据只能用在测试环境。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>j-jdbc 的软删除（soft delete）是如何实现的？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>使用触发器在数据库层面实现
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>在 deletedAt 字段上设置时间戳，查询时默认过滤
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>把被删除的数据移到备份表
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>使用 DELETE 语句删除但不提交事务
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" BaseDO 有一个 deletedAt（Long 类型）字段。delete() 时设置当前时间戳相当于标记删除；undelete() 时重置为 NO_DELETE 相当于恢复。查询时可以通过 ConditionUtil.noDeleted() 或 .deleted() 来控制是否过滤已删除数据。"></div>
+      </div>
+    </div>
+
+    <!-- Screen 8: Congratulations -->
+    <div class="screen">
+      <h3 class="screen-title">🎉 恭喜完成</h3>
+      <p class="screen-text" style="font-size:1.2rem;text-align:center;">
+        你刚刚了解了 <strong>j-jdbc</strong> 的完整设计——从顶层的注解到底层的 SQL 执行，从字段加密到分布式 ID，从软删到分库分表。
+      </p>
+      <p class="screen-text" style="text-align:center;">
+        现在你知道了什么是 <strong>@Table</strong>、<strong>SqlGenerator</strong>、<strong>雪花算法</strong>、<strong>DmlEventBus</strong>……这些术语就是你和 AI 编码工具沟通的<strong>共同词汇</strong>。
+      </p>
+      <p class="screen-text" style="text-align:center;">
+        下次遇到数据库相关的代码，你可以自信地说：
+      </p>
+      <div style="background:var(--accent-light);border-radius:var(--radius-lg);padding:var(--space-lg);text-align:center;max-width:500px;margin:var(--space-lg) auto;">
+        <p style="font-size:1.1rem;font-weight:600;color:var(--text-primary);">
+          "用注解声明实体，让框架生成 SQL。字段记得加密，主键别忘了 @Key。"
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  </main>
+
+  <footer class="course-footer">
+  <p>由 <strong>j-jdbc</strong> 代码库自动生成</p>
+  <p style="font-size:0.8rem;opacity:0.6;">基于 Spring JDBC Template 的 CRUD 增强框架 — 以注解驱动的数据库开发</p>
+</footer>
+
+
+  <script src="main.js"></script>
+</body>
+</html>

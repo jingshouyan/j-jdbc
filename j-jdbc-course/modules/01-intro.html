@@ -1,0 +1,162 @@
+<section class="module" id="module-1">
+  <div class="module-container">
+
+    <!-- Screen 1: The Problem -->
+    <div class="screen">
+      <div class="module-number">模块 1 / 5</div>
+      <h2 class="module-title">j-jdbc 是什么？<br><span class="highlight">让数据库操作变简单</span></h2>
+      <p class="screen-text">
+        你是否曾经用 Java 写过数据库代码？如果你写过，你一定经历过这个循环：打开连接 → 创建语句 → 执行查询 → 处理结果集 → 关闭连接 → 关闭语句 → 捕获异常……<strong>重复几十次</strong>。更糟糕的是，你的代码里到处都是 SQL 字符串，拼错一个字就会在运行时崩溃。
+      </p>
+      <p class="screen-text">
+        <strong class="glossary-term">j-jdbc<span class="glossary-tooltip">一个基于 Spring JDBC Template 的 CRUD 增强框架，通过注解自动生成 SQL 语句，大幅减少数据库操作的样板代码。</span></strong> 就是为了解决这个问题而生的。它是一个轻量级的 Java 库，工作方式是：<strong>"你告诉我数据结构，我来搞定数据库。"</strong>
+      </p>
+    </div>
+
+    <!-- Screen 2: The Core Idea -->
+    <div class="screen">
+      <h3 class="screen-title">「声明式」的魔法</h3>
+      <p class="screen-text">
+        j-jdbc 的核心思想是 <strong>声明式编程</strong>：你不用<em>告诉</em>代码"怎么"做（写 SQL），你只需要<em>声明</em>"是什么"（用注解描述数据）。框架会<strong>自动生成</strong>所有 SQL。
+      </p>
+      <p class="screen-text">
+        想象一下：你创建一个普通的 Java 类，加上几个注解，然后——<strong>嘭！</strong>——完整的增删改查、分页查询、条件过滤全部自动可用。不需要写一行 SQL。
+      </p>
+
+      <div class="metaphor-box">
+        <div class="metaphor-title">🧩 隐喻：智能家居</div>
+        <p>
+          传统 JDBC 编程就像手动操作家里每一个电灯开关——你得知道每个开关在哪、怎么按、哪个控制哪个房间。<strong>j-jdbc</strong> 就像一个智能家居系统：你只需要告诉它"客厅需要灯光"（声明一个带注解的对象），它就会自动帮你打开正确的开关、调节亮度、甚至在日落时自动亮起（自动生成 SQL、管理连接、处理分页）。
+        </p>
+      </div>
+    </div>
+
+    <!-- Screen 3: Concrete Example -->
+    <div class="screen">
+      <h3 class="screen-title">一行代码，一个世界</h3>
+      <p class="screen-text">
+        这是 j-jdbc 最令人惊叹的地方：你只需要 <strong>4 个文件</strong> 就能完成一个完整的数据库操作。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 1️⃣ 数据库对象 — 加注解描述表结构</span>
+@<span class="code-type">Table</span>(value = <span class="code-string">"DEMO_USER"</span>, comment = <span class="code-string">"用户表"</span>)
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDO</span> {
+    @<span class="code-type">Key</span>
+    @<span class="code-type">Column</span>(comment = <span class="code-string">"主键"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">String</span> id;
+
+    @<span class="code-type">Column</span>
+    <span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+    @<span class="code-type">Column</span>(value = <span class="code-string">"NICK_NAME_TT4"</span>)
+    <span class="code-keyword">private</span> <span class="code-type">String</span> nickname;
+}
+
+<span class="code-comment">// 2️⃣ DAO 接口 — 就一行！</span>
+<span class="code-keyword">public interface</span> <span class="code-type">UserDao</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDao</span>&lt;<span class="code-type">UserDO</span>&gt; {}
+
+<span class="code-comment">// 3️⃣ DAO 实现 — 也是一行！</span>
+@<span class="code-type">Repository</span>
+<span class="code-keyword">public class</span> <span class="code-type">UserDaoImpl</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDaoImpl</span>&lt;<span class="code-type">UserDO</span>&gt;
+    <span class="code-keyword">implements</span> <span class="code-type">UserDao</span> {}
+
+<span class="code-comment">// 4️⃣ 使用 — 直接调用</span>
+userDao.insert(user);                 <span class="code-comment">// 插入</span>
+userDao.update(user);                 <span class="code-comment">// 更新</span>
+userDao.find(<span class="code-string">"U123@abc"</span>);          <span class="code-comment">// 按主键查询</span>
+userDao.query(conditions);            <span class="code-comment">// 条件查询</span>
+userDao.delete(<span class="code-string">"U123@abc"</span>);        <span class="code-comment">// 删除</span></code>
+      </div>
+
+      <p class="screen-text">
+        看到没？<strong>没有 SQL，没有连接管理，没有资源释放。</strong> 所有的数据库细节都被封装在 `BaseDaoImpl` 中。你可以把精力放在业务逻辑上，而不是重复编写 CRUD 代码。
+      </p>
+    </div>
+
+    <!-- Screen 4: Architecture overview -->
+    <div class="screen">
+      <h3 class="screen-title">j-jdbc 的「角色阵容」</h3>
+      <p class="screen-text">
+        这个代码库有 <strong>6 个模块</strong>，每个模块有明确的分工。下面是最重要的几个：
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-row">
+          <div class="diagram-box level-2">j-jdbc-common</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-1">j-jdbc-core</div>
+          <span class="diagram-arrow">→</span>
+          <div class="diagram-box level-4">j-jdbc-starter</div>
+        </div>
+        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;justify-content:center;">
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-sharding</div>
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-data-init</div>
+          <div class="diagram-box level-3" style="font-size:0.75rem;">j-jdbc-test</div>
+        </div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-title">📦 j-jdbc-common — 共享工具箱</div>
+        <p class="screen-text" style="margin-bottom:0;">注解定义（@Table, @Column, @Key, @Index）、实体基类（BaseDO）、条件查询构建器（ConditionUtil）、数据模型（TableInfo, ColumnInfo）—— 所有模块共享的基础。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">⚙️ j-jdbc-core — 引擎核心</div>
+        <p class="screen-text" style="margin-bottom:0;">BaseDao/BaseDaoImpl、SQL 生成器（支持 MySQL）、AES 加密、雪花 ID 生成器、DML 事件总线。这是整个框架的大脑。</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">🚀 j-jdbc-starter — Spring Boot 自动配置</div>
+        <p class="screen-text" style="margin-bottom:0;">自动建表（3 种模式）、数据库 ID 生成器、SQL 日志 AOP —— 开箱即用的 Spring Boot Starter。</p>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>j-jdbc 的命名本身就是一种聪明：</strong> "j" 既是 "Java" 也是你名字的缩写；"jdbc" 精确地指向了它的根基 —— Spring JdbcTemplate。没有选择 Hibernate 那样的重量级 ORM，也没有用 MyBatis 那样的 XML 映射，而是<strong>恰到好处地</strong>在 JdbcTemplate 之上增加了一层注解驱动的便利。</p>
+      </div>
+    </div>
+
+    <!-- Screen 5: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>j-jdbc 的核心思想是什么？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>用 XML 文件配置数据库映射
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>用 Java 注解描述数据结构，自动生成 SQL
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>完全替换 Spring JdbcTemplate
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>在运行时动态编译 SQL
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" j-jdbc 使用注解（@Table、@Column、@Key 等）来声明数据模型，然后自动生成并执行 SQL。它并没有替换 Spring，而是增强了它。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>要使用 j-jdbc 完成对一个表的 CRUD，最少需要编写几个 Java 接口/类？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>5 个
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>3 个（DO + Dao 接口 + DaoImpl）
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>1 个
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>7 个
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 你只需要 3 个类：数据对象（DO，加注解）、DAO 接口（继承 BaseDao）、DAO 实现（继承 BaseDaoImpl）。然后 insert、update、find、query、delete 全部可用。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>

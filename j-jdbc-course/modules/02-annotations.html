@@ -1,0 +1,244 @@
+<section class="module" id="module-2">
+  <div class="module-container">
+
+    <!-- Screen 1: Meet the annotations -->
+    <div class="screen">
+      <div class="module-number">模块 2 / 5</div>
+      <h2 class="module-title">用注解说清数据<br><span class="highlight">对象到数据库的映射</span></h2>
+      <p class="screen-text">
+        如果说 j-jdbc 是一门语言，那么 <strong>注解（Annotation）</strong> 就是它的词汇。你不需要学习 SQL 的语法，也不需要配置 XML 映射文件——只需要在 Java 类上<strong>贴标签</strong>，框架就知道你想怎么存储数据。
+      </p>
+      <p class="screen-text">
+        想象一下：你有一个"用户"的概念，它有名字、年龄、标签。在数据库中，它是一个表；在 Java 中，它是一个类。j-jdbc 的注解就是连接这两个世界的<strong>桥梁</strong>。
+      </p>
+    </div>
+
+    <!-- Screen 2: @Table -->
+    <div class="screen">
+      <h3 class="screen-title">@Table — 给类穿上数据库的外衣</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">@Table<span class="glossary-tooltip">表注解。加在类上，告诉 j-jdbc 这个 Java 类对应数据库中的哪张表。如果不指定表名，默认使用类名。</span></strong> 是最顶层的注解。它告诉框架："嘿，这个 Java 类对应一张数据库表。"
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code>@<span class="code-type">Table</span>(
+    value   = <span class="code-string">"DEMO_USER"</span>,  <span class="code-comment">// 数据库中实际的表名</span>
+    comment = <span class="code-string">"用户表"</span>    <span class="code-comment">// 建表时用的备注</span>
+)
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> <span class="code-keyword">extends</span> <span class="code-type">BaseDO</span> {
+    <span class="code-comment">// 字段...</span>
+}</code>
+      </div>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ Java 代码</span>
+          <span class="lang-label zh">中 文 解 释</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span style="color:var(--accent);">@Table</span>(value = "DEMO_USER")</div>
+          <div class="translation-zh">"这个类对应数据库中的 <strong>DEMO_USER</strong> 表"</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span style="color:var(--accent);">@Table</span>(comment = "用户表")</div>
+          <div class="translation-zh">"给这个表加个备注：<strong>用户表</strong>"</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code"><span class="code-keyword">public class</span> UserDO</div>
+          <div class="translation-zh"><strong>UserDO</strong> 就是这张表的 Java 化身</div>
+        </div>
+      </div>
+
+      <div class="aha-box">
+        <div class="aha-title">🤯 啊哈！时刻</div>
+        <p><strong>注意看 "Table" 注解的拼写：</strong> 它没有写成标准的 "Table"，而是使用了正确的拼写 "Table"。开发者通过这种一致性设计告诉我们：<strong>注解的命名可以直接映射到其作用</strong>——要让名称清晰到不需要文档也能猜到用法。</p>
+      </div>
+    </div>
+
+    <!-- Screen 3: @Column -->
+    <div class="screen">
+      <h3 class="screen-title">@Column — 精确控制每一列</h3>
+      <p class="screen-text">
+        <strong class="glossary-term">@Column<span class="glossary-tooltip">列注解。加在字段上，定义数据库列名、长度、类型、是否加密、是否 JSON 存储等属性。如果不指定，默认使用字段名作为列名。</span></strong> 是 j-jdbc 最强大的注解。它不仅能控制列名和长度，还能指定<strong>加密方式、JSON 序列化、数据类型推断</strong>等高级功能。
+      </p>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 简单用法 — 列名等于字段名</span>
+@<span class="code-type">Column</span>
+<span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+<span class="code-comment">// 指定列名和备注</span>
+@<span class="code-type">Column</span>(value = <span class="code-string">"NICK_NAME_TT4"</span>, comment = <span class="code-string">"昵称"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> nickname;
+
+<span class="code-comment">// JSON 格式存储 + 加密</span>
+@<span class="code-type">Column</span>(json = <span class="code-keyword">true</span>, encryptType = <span class="code-type">EncryptType</span>.FIXED,
+        encryptKey = <span class="code-string">"abcd"</span>, length = <span class="code-number">1000</span>)
+<span class="code-keyword">private</span> <span class="code-type">List</span>&lt;<span class="code-type">String</span>&gt; tags;
+
+<span class="code-comment">// 不可变字段（创建后不能改）</span>
+@<span class="code-type">Column</span>(immutable = <span class="code-keyword">true</span>, order = <span class="code-number">1001</span>, comment = <span class="code-string">"创建时间"</span>)
+<span class="code-keyword">private</span> <span class="code-type">Long</span> createdAt;</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>数据类型自动推断：</strong> j-jdbc 会查看字段的 Java 类型，自动选择最合适的 MySQL 数据类型。`int` → INT, `String` 且长度小于 5000 → VARCHAR, `String` 且长度 ≥ 5000 → TEXT, `BigDecimal` → DECIMAL, `LocalDateTime` → DATETIME, `List` 且 `json=true` → JSON……你不用记住这些映射，框架会帮你处理。
+      </p>
+    </div>
+
+    <!-- Screen 4: @Key & @Index -->
+    <div class="screen">
+      <h3 class="screen-title">@Key — 主键 & @Index — 索引</h3>
+
+      <div class="code-block">
+        <span class="code-label">java</span>
+        <code><span class="code-comment">// 主键 — 只能是 Long 或 String</span>
+@<span class="code-type">Key</span>(generatorIfNotSet = <span class="code-keyword">true</span>)  <span class="code-comment">// 如果没设置值，自动生成</span>
+@<span class="code-type">Column</span>(comment = <span class="code-string">"主键"</span>)
+<span class="code-keyword">private</span> <span class="code-type">String</span> id;
+
+<span class="code-comment">// 单字段索引</span>
+@<span class="code-type">Index</span>
+<span class="code-keyword">private</span> <span class="code-type">Integer</span> age;
+
+<span class="code-comment">// 复合索引（类级别）</span>
+@<span class="code-type">Index</span>({<span class="code-string">"age"</span>, <span class="code-string">"nickname"</span>})
+@<span class="code-type">Index</span>({<span class="code-string">"id"</span>, <span class="code-string">"name"</span>})
+<span class="code-keyword">public class</span> <span class="code-type">UserDO</span> ...</code>
+      </div>
+
+      <p class="screen-text">
+        <strong>主键（@Key）</strong> 是每个表的灵魂。j-jdbc 要求主键只能是 <strong>Long</strong> 或 <strong>String</strong> 类型。如果设置了 `generatorIfNotSet = true`，当你插入数据时没有设置主键值，框架会自动生成一个唯一 ID。
+      </p>
+      <p class="screen-text">
+        <strong>索引（@Index）</strong> 可以在字段上（单字段索引）或类上（复合索引）使用。数据库索引就像是书的目录——它让查询速度从"逐页翻找"变成"直接翻到正确的页码"。在第 4 课中，我们会详细讲解主键是如何生成的。
+      </p>
+    </div>
+
+    <!-- Screen 5: Group Chat -->
+    <div class="screen">
+      <h3 class="screen-title">注解们的群聊时间 💬</h3>
+      <p class="screen-text">想象一下，当 j-jdbc 启动时，注解们正在群里讨论今天的工作：</p>
+
+      <div class="chat-container" style="max-width:500px;">
+        <div class="chat-message">
+          <div class="chat-avatar tab">T</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Table</span>
+            大家早上好！我是 DEMO_USER 表的注解。今天我们的任务是搞定新来的 UserDO 类。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar col">C</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Column</span>
+            收到！我已经把 <code>age</code> 映射成了 INT，<code>nickname</code> 是 VARCHAR(255)，<code>tags</code> 是 JSON 类型。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar key">K</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Key</span>
+            主键 <code>id</code> 归我管！String 类型，如果用户没提供，我就让 ID 生成器自动分配一个。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar obj">I</div>
+          <div class="chat-bubble">
+            <span class="chat-name">@Index</span>
+            好的，我已经给 <code>age</code> 创建了索引。再加上 <code>(age, nickname)</code> 的复合索引——这样按年龄和昵称查就飞快了！
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar tab">T</div>
+          <div class="chat-bubble">
+            完美！@TableInfo 你把我们的配置整理成建表 SQL，发给 SqlGenerator4Mysql 执行吧。
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="chat-avatar sql">S</div>
+          <div class="chat-bubble">
+            <span class="chat-name">SqlGenerator</span>
+            收到！<code>CREATE TABLE IF NOT EXISTS DEMO_USER (id VARCHAR(50), age INT, nickname VARCHAR(255), tags JSON, ...) COMMENT='用户表'</code> —— 搞定！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 6: TableInfo engine -->
+    <div class="screen">
+      <h3 class="screen-title">幕后引擎：TableInfo 是如何工作的</h3>
+      <p class="screen-text">
+        所有的注解魔法都归结于一个核心类——<strong>TableInfo</strong>。它读取类上的所有注解、字段、以及父类的字段，构建出一张完整的"元数据地图"。
+      </p>
+
+      <div class="code-translation">
+        <div class="translation-header">
+          <span class="lang-label java">☕ TableInfo 构造函数</span>
+          <span class="lang-label zh">它做了三件事</span>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">tableName = clazz.getSimpleName();</div>
+          <div class="translation-zh">1️⃣ 先以<strong>类名</strong>作为默认表名</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">@Table table = clazz.getAnnotation(Table.class);</div>
+          <div class="translation-zh">2️⃣ 检查是否有 <strong>@Table</strong> 注解 → 有的话<strong>覆盖</strong>表名</div>
+        </div>
+        <div class="translation-row">
+          <div class="translation-code">Field[] fields = c.getDeclaredFields();<br>for (Field field : fields) {<br>  ColumnInfo beanColumn = new ColumnInfo(field);<br>  addColumnInfo(beanColumn);<br>}</div>
+          <div class="translation-zh">3️⃣ 遍历所有字段→每个字段变成 <strong>ColumnInfo</strong> 对象→添加到地图中</div>
+        </div>
+      </div>
+
+      <p class="screen-text">
+        注意：它会遍历整个类继承树（从当前类一直往上到 Object），确保父类如 <code>BaseDO</code> 中的 <code>createdAt</code>、<code>updatedAt</code>、<code>deletedAt</code> 字段也被纳入。
+      </p>
+    </div>
+
+    <!-- Screen 7: Quiz -->
+    <div class="screen">
+      <h3 class="screen-title">检验你的理解</h3>
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q1</span>如果一个类上没有 @Table 注解，j-jdbc 会怎么处理？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>抛出异常
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">B</span>使用类名作为表名
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">C</span>使用父类的表名
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>随机生成一个表名
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" TableInfo 的构造函数首先用类名作为默认表名（tableName = clazz.getSimpleName()），然后才检查是否有 @Table 注解来覆盖。所以不加注解也能工作——只是表名就是类名本身。"></div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-question"><span class="q-number">Q2</span>主键（@Key）支持哪些 Java 类型？</div>
+        <div class="quiz-options">
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">A</span>任何类型
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">B</span>String 和 Integer
+          </div>
+          <div class="quiz-option" data-correct="true">
+            <span class="letter">C</span>Long 和 String 及其原始类型
+          </div>
+          <div class="quiz-option" data-correct="false">
+            <span class="letter">D</span>只有 Long
+          </div>
+        </div>
+        <div class="quiz-feedback" data-explain=" 代码中 ALLOWED_KEY_TYPES 明确的定义了允许的主键类型集合：Long.class、long.class、String.class。其他类型会抛出 IllegalTypeException。"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
